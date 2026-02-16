@@ -1,0 +1,11 @@
+{
+  "login": {
+    "access_your_account": "Accesează contul tău",
+    "email": "E-mail",
+    "enter_email": "Introdu adresa de e-mail",
+    "password": "Parolă",
+    "enter_password": "Introdu parola",
+    "login": "Autentificare",
+    "dont_have_account": "Nu ai un cont? Înregistrează-te"
+  }
+}

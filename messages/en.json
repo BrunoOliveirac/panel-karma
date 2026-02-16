@@ -1,0 +1,11 @@
+{
+  "login": {
+    "access_your_account": "Access your account",
+    "email": "E-mail",
+    "enter_email": "Enter e-mail",
+    "password": "Password",
+    "enter_password": "Enter password",
+    "login": "Login",
+    "dont_have_account": "Don't have an account? Sign up"
+  }
+}
