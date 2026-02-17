@@ -7,5 +7,27 @@
     "enter_password": "Introduza a sua palavra-passe",
     "login": "Iniciar sessão",
     "dont_have_account": "Não tem uma conta? Registe-se"
+  },
+  "register": {
+    "create_your_account": "Crie a sua conta",
+    "register": "Registar",
+    "login": "Iniciar sessão",
+    "name": "Nome",
+    "enter_name": "Introduza o seu nome",
+    "email": "Email",
+    "enter_email": "Introduza o seu email",
+    "password": "Palavra-passe",
+    "enter_password": "Introduza a sua palavra-passe",
+    "confirm_password": "Confirmar palavra-passe"
+  },
+  "validation": {
+    "required": "Este campo é obrigatório",
+    "email": "Este não é um email válido",
+    "password_min": "A palavra-passe deve ter pelo menos 8 caracteres",
+    "password_upper": "Deve conter pelo menos uma letra maiúscula",
+    "password_lower": "Deve conter pelo menos uma letra minúscula",
+    "password_number": "Deve conter pelo menos um número",
+    "password_special": "Deve conter pelo menos um carácter especial",
+    "password_match": "As palavras-passe não coincidem"
   }
 }

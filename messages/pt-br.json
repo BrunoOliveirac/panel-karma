@@ -1,11 +1,33 @@
 {
   "login": {
-    "access_your_account": "Acesse sua conta",
+    "access_your_account": "Acesse a sua conta",
     "email": "E-mail",
     "enter_email": "Digite seu e-mail",
     "password": "Senha",
     "enter_password": "Digite sua senha",
     "login": "Entrar",
     "dont_have_account": "Não tem uma conta? Inscreva-se"
+  },
+  "register": {
+    "create_your_account": "Crie sua conta",
+    "register": "Cadastrar",
+    "login": "Entrar",
+    "name": "Nome",
+    "enter_name": "Digite seu nome",
+    "email": "E-mail",
+    "enter_email": "Digite seu e-mail",
+    "password": "Senha",
+    "enter_password": "Digite sua senha",
+    "confirm_password": "Confirmar senha"
+  },
+  "validation": {
+    "required": "Este campo é obrigatório",
+    "email": "Este não é um e-mail válido",
+    "password_min": "A senha deve ter pelo menos 8 caracteres",
+    "password_upper": "Deve conter ao menos uma letra maiúscula",
+    "password_lower": "Deve conter ao menos uma letra minúscula",
+    "password_number": "Deve conter ao menos um número",
+    "password_special": "Deve conter ao menos um caractere especial",
+    "password_match": "As senhas não coincidem"
   }
 }

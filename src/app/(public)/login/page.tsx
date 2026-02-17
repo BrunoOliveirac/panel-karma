@@ -8,10 +8,11 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { useLocale } from "@/core/hooks/use-locale";
+import { useLocale } from "@/lib/hooks/use-locale";
 import { EyeOffIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Login() {
@@ -28,8 +29,8 @@ export default function Login() {
     <div className="flex justify-center items-center p-6 w-dvw h-dvh">
       <div className="bg-[#111] border border-primary/40 max-w-md w-full rounded-xl p-6">
         <Image
-          width={225}
-          height={135}
+          width={150}
+          height={75}
           loading="eager"
           alt="Auth Image"
           className="mx-auto"
@@ -76,13 +77,12 @@ export default function Login() {
           </Field>
         </form>
 
-        <Button
-          type="button"
-          variant="link"
-          className="flex justify-self-center text-center text-gray-600 dark:text-gray-400 cursor-pointer my-4"
+        <Link
+          href="/register"
+          className="flex justify-self-center text-sm text-gray-600 dark:text-gray-400 cursor-pointer py-4"
         >
           {t("dont_have_account")}
-        </Button>
+        </Link>
 
         <div className="flex justify-center gap-4">
           {languages.map((language) => (

@@ -7,5 +7,27 @@
     "enter_password": "Introdu parola",
     "login": "Autentificare",
     "dont_have_account": "Nu ai un cont? Înregistrează-te"
+  },
+  "register": {
+    "create_your_account": "Creează-ți contul",
+    "register": "Înregistrare",
+    "login": "Autentificare",
+    "name": "Nume",
+    "enter_name": "Introdu numele",
+    "email": "Email",
+    "enter_email": "Introdu emailul",
+    "password": "Parolă",
+    "enter_password": "Introdu parola",
+    "confirm_password": "Confirmă parola"
+  },
+  "validation": {
+    "required": "Acest câmp este obligatoriu",
+    "email": "Acesta nu este un email valid",
+    "password_min": "Parola trebuie să aibă cel puțin 8 caractere",
+    "password_upper": "Trebuie să conțină cel puțin o literă mare",
+    "password_lower": "Trebuie să conțină cel puțin o literă mică",
+    "password_number": "Trebuie să conțină cel puțin un număr",
+    "password_special": "Trebuie să conțină cel puțin un caracter special",
+    "password_match": "Parolele nu coincid"
   }
 }
