@@ -1,4 +1,31 @@
 {
+  "topbar": {
+    "notifications_not_found": "No se encontraron notificaciones"
+  },
+  "sidebar": {
+    "dashboard": "Panel",
+    "supports": "Soportes",
+    "settings": "Ajustes",
+    "chat": "Chat",
+    "profile": "Perfil",
+    "home": "Inicio",
+    "crm": "CRM",
+    "arka": "ARKA",
+    "clients": "Clientes",
+    "projects": "Proyectos",
+    "sectors": "Sectores",
+    "logout": "Cerrar sesión"
+  },
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "email": "Este no es un correo electrónico válido",
+    "password_min": "La contraseña debe tener al menos 8 caracteres",
+    "password_upper": "Debe contener al menos una letra mayúscula",
+    "password_lower": "Debe contener al menos una letra minúscula",
+    "password_number": "Debe contener al menos un número",
+    "password_special": "Debe contener al menos un carácter especial",
+    "password_match": "Las contraseñas no coinciden"
+  },
   "login": {
     "access_your_account": "Accede a tu cuenta",
     "email": "Correo electrónico",
@@ -6,7 +33,9 @@
     "password": "Contraseña",
     "enter_password": "Introduce tu contraseña",
     "login": "Iniciar sesión",
-    "dont_have_account": "¿No tienes una cuenta? Regístrate"
+    "dont_have_account": "¿No tienes una cuenta? Regístrate",
+    "error": "No hemos podido iniciar sesión en tu cuenta!",
+    "invalid_credentials": "Credenciales no válidas!"
   },
   "register": {
     "create_your_account": "Crea tu cuenta",
@@ -18,16 +47,14 @@
     "enter_email": "Ingresa tu correo electrónico",
     "password": "Contraseña",
     "enter_password": "Ingresa tu contraseña",
-    "confirm_password": "Confirmar contraseña"
+    "confirm_password": "Confirmar contraseña",
+    "error": "No hemos podido crear tu cuenta!",
+    "success": "¡Cuenta creada con éxito!"
   },
-  "validation": {
-    "required": "Este campo es obligatorio",
-    "email": "Este no es un correo electrónico válido",
-    "password_min": "La contraseña debe tener al menos 8 caracteres",
-    "password_upper": "Debe contener al menos una letra mayúscula",
-    "password_lower": "Debe contener al menos una letra minúscula",
-    "password_number": "Debe contener al menos un número",
-    "password_special": "Debe contener al menos un carácter especial",
-    "password_match": "Las contraseñas no coinciden"
+  "home": {
+    "home": "Home"
+  },
+  "crm": {
+    "crm": "CRM"
   }
 }

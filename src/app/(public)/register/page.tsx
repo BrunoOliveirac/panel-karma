@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -8,16 +7,19 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { SpinnerButton } from "@/components/ui/spinner-button";
 import { useLocale } from "@/lib/hooks/use-locale";
+import { AuthService } from "@/lib/services/auth.service";
 import { registerValidator } from "@/lib/validators/register.validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeOffIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm, UseFormReturn, useWatch } from "react-hook-form";
-import z from "zod";
+import { toast } from "sonner";
 
 interface RegisterForm {
   name: string;
@@ -27,9 +29,12 @@ interface RegisterForm {
 }
 
 export default function Login() {
+  const router = useRouter();
   const { changeLocale } = useLocale();
+  const authService = new AuthService();
   const registerT = useTranslations("register");
   const validationT = useTranslations("validation");
+  const [submitting, setSubmitting] = useState(false);
   const [seePassword, setSeePassword] = useState(false);
   const languages = ["en", "es", "pt-br", "pt-pt", "ro"] as string[];
 
@@ -56,8 +61,18 @@ export default function Login() {
     document.title = `${registerT("register")} | Kizuna`;
   }, [registerT]);
 
-  const onSubmit = async (data: z.infer<typeof registerValidator>) => {
-    console.log(data);
+  const onSubmit = async (data: Omit<RegisterForm, "confirmPassword">) => {
+    try {
+      setSubmitting(true);
+      await authService.register(data);
+      toast.success(registerT("success"));
+      router.replace("/");
+    } catch (error) {
+      console.error(error);
+      toast.error(registerT("error"));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -65,7 +80,7 @@ export default function Login() {
       <div className="bg-[#111] border border-primary/40 max-w-md w-full rounded-xl p-6">
         <Image
           width={150}
-          height={75}
+          height={90}
           loading="eager"
           alt="Auth Image"
           className="mx-auto"
@@ -76,7 +91,7 @@ export default function Login() {
           {registerT("create_your_account")}
         </h2>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="  space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <Controller
             name="name"
             control={control}
@@ -210,13 +225,14 @@ export default function Login() {
           </ul>
 
           <Field>
-            <Button
+            <SpinnerButton
               size="lg"
               type="submit"
+              loading={submitting}
               className="max-w-28 mx-auto rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
             >
               {registerT("register")}
-            </Button>
+            </SpinnerButton>
           </Field>
         </form>
 

@@ -55,16 +55,6 @@
 
   /* Transitions */
   --default-transition-duration: 300ms;
-
-  /* Colors */
-  --primary: #7c79d4;
-  --secondary: #f1f1f1;
-  --tertiary: #f1f1f1;
-  --warn: #bb8111;
-  --info: #06638d;
-  --danger: #bc5557;
-  --success: #5bda1f;
-  --gray: #333333;
 }
 
 :root {
@@ -100,6 +90,16 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Colors */
+  --primary: #7c79d4 !important;
+  --secondary: #f1f1f1 !important;
+  --tertiary: #f1f1f1 !important;
+  --warn: #bb8111 !important;
+  --info: #06638d !important;
+  --danger: #bc5557 !important;
+  --success: #5bda1f !important;
+  --gray: #333 !important;
 }
 
 .dark {
@@ -137,9 +137,15 @@
 
   --color-gray-400: var(--muted-foreground);
 
-  --secondary: #242424;
-  --tertiary: #111;
-  --gray: #333;
+  /* Colors */
+  --primary: #7c79d4 !important;
+  --secondary: #242424 !important;
+  --tertiary: #111 !important;
+  --warn: #bb8111 !important;
+  --info: #06638d !important;
+  --danger: #bc5557 !important;
+  --success: #5bda1f !important;
+  --gray: #333 !important;
 }
 
 @layer base {
@@ -150,8 +156,17 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 html {
   font-size: 90%;
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }

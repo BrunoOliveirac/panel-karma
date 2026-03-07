@@ -3,6 +3,9 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  images: {
+    domains: ["ui-avatars.com"],
+  },
 };
 
 const withNextIntl = createNextIntlPlugin();
