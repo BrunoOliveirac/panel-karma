@@ -1,4 +1,31 @@
 {
+  "topbar": {
+    "notifications_not_found": "Nu s-au găsit notificări"
+  },
+  "sidebar": {
+    "dashboard": "Panou de control",
+    "supports": "Suporturi",
+    "settings": "Setări",
+    "chat": "Chat",
+    "profile": "Profil",
+    "home": "Acasă",
+    "crm": "CRM",
+    "arka": "ARKA",
+    "clients": "Clienti",
+    "projects": "Proiecte",
+    "sectors": "Sectoare",
+    "logout": "Deconectare"
+  },
+  "validation": {
+    "required": "Acest câmp este obligatoriu",
+    "email": "Acesta nu este un email valid",
+    "password_min": "Parola trebuie să aibă cel puțin 8 caractere",
+    "password_upper": "Trebuie să conțină cel puțin o literă mare",
+    "password_lower": "Trebuie să conțină cel puțin o literă mică",
+    "password_number": "Trebuie să conțină cel puțin un număr",
+    "password_special": "Trebuie să conțină cel puțin un caracter special",
+    "password_match": "Parolele nu coincid"
+  },
   "login": {
     "access_your_account": "Accesează contul tău",
     "email": "E-mail",
@@ -6,6 +33,28 @@
     "password": "Parolă",
     "enter_password": "Introdu parola",
     "login": "Autentificare",
-    "dont_have_account": "Nu ai un cont? Înregistrează-te"
+    "dont_have_account": "Nu ai un cont? Înregistrează-te",
+    "error": "Nu a putut fi autentificat contul tău!",
+    "invalid_credentials": "Credențiale invalide!"
+  },
+  "register": {
+    "create_your_account": "Creează-ți contul",
+    "register": "Înregistrare",
+    "login": "Autentificare",
+    "name": "Nume",
+    "enter_name": "Introdu numele",
+    "email": "Email",
+    "enter_email": "Introdu emailul",
+    "password": "Parolă",
+    "enter_password": "Introdu parola",
+    "confirm_password": "Confirmă parola",
+    "error": "Nu a putut fi creat contul tău!",
+    "success": "Cont creat cu succes!"
+  },
+  "home": {
+    "home": "Home"
+  },
+  "crm": {
+    "crm": "CRM"
   }
 }
