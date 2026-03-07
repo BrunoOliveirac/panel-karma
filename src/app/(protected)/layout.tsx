@@ -3,6 +3,7 @@
 import Sidebar from "@/components/layout/sidebar";
 import Topbar from "@/components/layout/topbar";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useInactivityLogout } from "@/lib/hooks/use-inactivity-logout";
 import Image from "next/image";
 
 export default function ProtectedLayout({
@@ -10,6 +11,7 @@ export default function ProtectedLayout({
 }: {
   children: React.ReactNode;
 }) {
+  useInactivityLogout();
   const { isLoading } = useAuth();
 
   if (isLoading) {
