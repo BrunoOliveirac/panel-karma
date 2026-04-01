@@ -9,14 +9,27 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { LoggedUser } from "../types/logged-user";
+import { LocaleType } from "../types/locale-type";
 
-function fetchAuth(): { user: LoggedUser; expiresAt: Date } {
+interface FetchAuth {
+  user: LoggedUser;
+  expiresAt: Date;
+  locale: LocaleType;
+}
+
+function fetchAuth(): FetchAuth {
   const user = Cookies.get("user");
   const expiresAt = Cookies.get("expiresAt");
-
+  const locale = Cookies.get("locale") as LocaleType | undefined;
+  // o cookie não atualiza ao entrar na modal de cliente, ou seja,
+  //  quando altero de EN para RO, o data.locale ainda é EN
   if (!expiresAt || !user) throw new Error("Unauthenticated");
 
-  return { user: JSON.parse(user), expiresAt: JSON.parse(expiresAt) };
+  return {
+    user: JSON.parse(user),
+    locale: locale || "en",
+    expiresAt: JSON.parse(expiresAt),
+  };
 }
 
 export function useAuth() {
@@ -24,14 +37,13 @@ export function useAuth() {
   const router = useRouter();
   const hasRedirected = useRef(false);
 
-  const query: UseQueryResult<{ user: LoggedUser; expiresAt: Date }, Error> =
-    useQuery({
-      retry: false,
-      queryKey: ["auth"],
-      queryFn: fetchAuth,
-      staleTime: Infinity,
-      refetchOnWindowFocus: true,
-    });
+  const query: UseQueryResult<FetchAuth, Error> = useQuery({
+    retry: false,
+    queryKey: ["auth"],
+    queryFn: fetchAuth,
+    staleTime: Infinity,
+    refetchOnWindowFocus: true,
+  });
 
   // Automatic timer based on the expiration date
   useEffect(() => {

@@ -6,6 +6,6 @@ type AppStore = {
 };
 
 export const useAppStore = create<AppStore>((set) => ({
-  title: "",
+  title: "Kizuna",
   setTitle: (value) => set({ title: value }),
 }));

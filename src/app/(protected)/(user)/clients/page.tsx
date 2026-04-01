@@ -1,13 +1,13 @@
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
-import Register from "./register";
+import ListClients from "./list-clients";
 
 export async function generateMetadata() {
   const locale = (await cookies()).get("locale")?.value || "en";
-  const t = await getTranslations({ locale, namespace: "register" });
-  return { title: `${t("register")} | Kizuna` };
+  const t = await getTranslations({ locale, namespace: "list_clients" });
+  return { title: `${t("clients")} | Kizuna` };
 }
 
 export default async function Page() {
-  return <Register />;
+  return <ListClients />;
 }

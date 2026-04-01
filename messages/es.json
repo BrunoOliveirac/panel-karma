@@ -4,8 +4,8 @@
   },
   "sidebar": {
     "dashboard": "Panel",
-    "supports": "Soportes",
-    "settings": "Ajustes",
+    "supports": "Soporte",
+    "settings": "Configuración",
     "chat": "Chat",
     "profile": "Perfil",
     "home": "Inicio",
@@ -26,16 +26,20 @@
     "password_special": "Debe contener al menos un carácter especial",
     "password_match": "Las contraseñas no coinciden"
   },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
   "login": {
     "access_your_account": "Accede a tu cuenta",
     "email": "Correo electrónico",
-    "enter_email": "Introduce tu correo electrónico",
+    "enter_email": "Ingresa el correo electrónico",
     "password": "Contraseña",
-    "enter_password": "Introduce tu contraseña",
+    "enter_password": "Ingresa la contraseña",
     "login": "Iniciar sesión",
     "dont_have_account": "¿No tienes una cuenta? Regístrate",
-    "error": "No hemos podido iniciar sesión en tu cuenta!",
-    "invalid_credentials": "Credenciales no válidas!"
+    "error": "¡No pudimos iniciar sesión en tu cuenta!",
+    "invalid_credentials": "¡Credenciales inválidas!"
   },
   "register": {
     "create_your_account": "Crea tu cuenta",
@@ -48,13 +52,51 @@
     "password": "Contraseña",
     "enter_password": "Ingresa tu contraseña",
     "confirm_password": "Confirmar contraseña",
-    "error": "No hemos podido crear tu cuenta!",
+    "error": "¡No pudimos crear tu cuenta!",
     "success": "¡Cuenta creada con éxito!"
   },
   "home": {
-    "home": "Home"
+    "home": "Inicio"
   },
   "crm": {
     "crm": "CRM"
+  },
+  "list_clients": {
+    "clients": "Clientes",
+    "client_list": "Lista de clientes",
+    "add_client": "Agregar cliente",
+    "edit_client": "Editar cliente",
+    "search": "Buscar clientes",
+    "no_clients": "No se encontraron clientes",
+    "manage_clients": "Gestionar clientes",
+    "all_clients": "Todos los clientes",
+    "favorites": "Favoritos",
+    "create_client": "Crear cliente",
+    "from": "Desde",
+    "sector": "Sector",
+    "budget": "Presupuesto",
+    "client_unfavorited": "Cliente eliminado de favoritos con éxito",
+    "client_favorited": "Cliente agregado a favoritos con éxito",
+    "could_not_favorite": "¡No se pudo marcar como favorito!",
+    "could_not_delete": "¡No se pudo eliminar el cliente!",
+    "client_deleted": "Cliente eliminado con éxito"
+  },
+  "upsert_client": {
+    "client_details": "Detalles del cliente",
+    "name": "Nombre",
+    "enter_name": "Ingresa el nombre",
+    "email": "Correo electrónico",
+    "enter_email": "Ingresa el correo electrónico",
+    "phone": "Teléfono",
+    "enter_phone": "Ingresa el teléfono",
+    "budget": "Presupuesto",
+    "enter_budget": "Ingresa el presupuesto",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "client_created": "Cliente creado con éxito",
+    "client_updated": "Cliente actualizado con éxito",
+    "could_not_create": "¡No se pudo crear el cliente!",
+    "invalid_email": "¡Este correo ya está en uso!",
+    "format_is_not_valid": "¡El formato no es válido!"
   }
 }

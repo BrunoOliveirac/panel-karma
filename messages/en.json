@@ -26,6 +26,10 @@
     "password_special": "Must contain at least one special character",
     "password_match": "Passwords do not match"
   },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
   "login": {
     "access_your_account": "Access your account",
     "email": "E-mail",
@@ -56,5 +60,43 @@
   },
   "crm": {
     "crm": "CRM"
+  },
+  "list_clients": {
+    "clients": "Clients",
+    "client_list": "Client List",
+    "add_client": "Add Client",
+    "edit_client": "Edit Client",
+    "search": "Search clients",
+    "no_clients": "No clients found",
+    "manage_clients": "Manage Clients",
+    "all_clients": "All Clients",
+    "favorites": "Favorites",
+    "create_client": "Create client",
+    "from": "From",
+    "sector": "Sector",
+    "budget": "Budget",
+    "client_unfavorited": "Client unfavorited successfully!",
+    "client_favorited": "Client favorited successfully!",
+    "could_not_favorite": "Could not favorite the client!",
+    "could_not_delete": "Could not delete the client!",
+    "client_deleted": "Client deleted successfully!"
+  },
+  "upsert_client": {
+    "client_details": "Client Details",
+    "name": "Name",
+    "enter_name": "Enter your name",
+    "email": "Email",
+    "enter_email": "Enter your email",
+    "phone": "Phone",
+    "enter_phone": "Enter your phone",
+    "budget": "Budget",
+    "enter_budget": "Enter your budget",
+    "cancel": "Cancel",
+    "save": "Save",
+    "client_created": "Client created successfully!",
+    "client_updated": "Client updated successfully!",
+    "could_not_create": "Could not create the client!",
+    "invalid_email": "This e-mail is already in use!",
+    "format_is_not_valid": "Format is not valid!"
   }
 }

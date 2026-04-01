@@ -5,6 +5,7 @@ export interface Client extends BaseModel {
   email: string;
   phone: string;
   notes: string;
+  userId: string;
   budget: number;
-  preferred: boolean;
+  favorite: boolean;
 }
