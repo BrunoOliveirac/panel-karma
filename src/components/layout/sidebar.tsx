@@ -1,7 +1,7 @@
 import { useAuth } from "@/lib/hooks/use-auth";
 import { useLocale } from "@/lib/hooks/use-locale";
 import { useLogout } from "@/lib/hooks/use-logout";
-import { SidebarItemMock } from "@/lib/mocks/SidebarItemMock";
+import { SidebarItemMock } from "@/lib/mocks/sidebar-item.mock";
 import { LocaleOptions, LocaleType } from "@/lib/types/locale-type";
 import { LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";

@@ -54,6 +54,7 @@ export default function PaginationControls({
           return (
             <PaginationItem key={index}>
               <PaginationLink
+                page={p}
                 isActive={p === page}
                 onClick={() => onPageChange(p)}
               >

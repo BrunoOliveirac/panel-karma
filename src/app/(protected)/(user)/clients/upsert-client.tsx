@@ -93,17 +93,26 @@ export default function UpsertClient({
         return false;
       }
 
-      if (client?.id && email === client?.email) return true;
+      const formattedEmail = email.trim().toLowerCase();
+      if (client?.id && formattedEmail === client?.email) return true;
 
-      const isValid = await clientService.checkEmail(email);
-      if (!isValid) toast.error(t("invalid_email"));
+      const isValid = await clientService.checkEmail(formattedEmail);
+      if (!isValid) toast.error(t("email_in_use"));
 
       return isValid;
     } catch (error) {
       console.error(error);
-      toast.error("E-mail is already in use!");
+      toast.error(t("invalid_email"));
       return false;
     }
+  };
+
+  /**
+   * Copy the current url to the clipboard.
+   */
+  const onCopy = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast.success(t("link_copied"));
   };
 
   if (loading) {
@@ -115,8 +124,20 @@ export default function UpsertClient({
   }
 
   return (
-    <>
-      <p className="text-xl font-medium mb-8">{t("client_details")}</p>
+    <section data-slot="upsert-client-modal">
+      <div className="w-full h-20 bg-[#767676] dark:bg-[#858585]"></div>
+
+      <div className="flex justify-between gap-4 mt-4 mx-4">
+        <div className="w-20 h-20 border-2 bg-primary border-primary rounded-full -mt-14"></div>
+
+        {client?.id && (
+          <Button data-slot="copy-link" onClick={onCopy}>
+            {t("copy_link")}
+          </Button>
+        )}
+      </div>
+
+      <p className="text-xl font-medium mt-2 mb-8">{t("client_details")}</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Controller
@@ -129,6 +150,7 @@ export default function UpsertClient({
               <Input
                 {...field}
                 placeholder={t("enter_name")}
+                data-slot="upsert-client-name"
                 data-invalid={fieldState.invalid}
               />
 
@@ -148,8 +170,12 @@ export default function UpsertClient({
                 {...field}
                 type="email"
                 placeholder={t("enter_email")}
+                data-slot="upsert-client-email"
                 data-invalid={fieldState.invalid}
-                onBlur={(e) => validateEmail(e.target.value)}
+                onBlur={(e) => {
+                  field.onBlur();
+                  validateEmail(e.target.value);
+                }}
               />
 
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -181,7 +207,11 @@ export default function UpsertClient({
           render={({ field, fieldState }) => (
             <Field>
               <FieldLabel>{t("budget")}</FieldLabel>
-              <InputCurrency {...field} data-invalid={fieldState.invalid} />
+              <InputCurrency
+                {...field}
+                dataSlot="upsert-client-budget"
+                data-invalid={fieldState.invalid}
+              />
 
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
@@ -189,30 +219,31 @@ export default function UpsertClient({
         />
 
         <div className="flex justify-end items-center gap-6 mt-8">
-          <Field>
+          <Field className="w-fit">
             <Button
               size="lg"
               type="button"
               disabled={submitting}
               onClick={() => closeModal()}
-              className="max-w-28 mx-auto rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
+              className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
             >
               {t("cancel")}
             </Button>
           </Field>
 
-          <Field>
+          <Field className="w-fit">
             <SpinnerButton
               size="lg"
               type="submit"
               loading={submitting}
-              className="max-w-28 mx-auto rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
+              dataSlot="upsert-client-save"
+              className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
             >
               {t("save")}
             </SpinnerButton>
           </Field>
         </div>
       </form>
-    </>
+    </section>
   );
 }

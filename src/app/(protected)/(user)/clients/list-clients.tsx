@@ -1,6 +1,7 @@
 "use client";
 
 import PaginationControls from "@/components/global/pagination-controls";
+import Swal from "sweetalert2";
 import UserAvatar from "@/components/global/user-avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -56,8 +57,7 @@ export default function ListClients() {
         (client) =>
           client.name.toLowerCase().includes(term) ||
           client.email.toLowerCase().includes(term) ||
-          client.phone.toLowerCase().includes(term) ||
-          client.notes.toLowerCase().includes(term),
+          client.notes?.toLowerCase().includes(term),
       );
     }
 
@@ -164,7 +164,7 @@ export default function ListClients() {
       toast.success(t(`client_${!client.favorite ? "" : "un"}favorited`));
     } catch (error) {
       console.error(error);
-      toast.error(t("could_not_favorite"));
+      toast.error(t(`could_not_${!client.favorite ? "" : "un"}favorite`));
     }
   };
 
@@ -174,6 +174,19 @@ export default function ListClients() {
    */
   const deleteClient = async (client: Client) => {
     try {
+      const response = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        theme: "auto",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (!response?.isConfirmed) return;
+
       await clientService.deleteClient(client.id);
       toast.success(t("client_deleted"));
       setMainClients((clients) => clients.filter((c) => c.id !== client.id));
@@ -201,6 +214,7 @@ export default function ListClients() {
           </InputGroup>
 
           <button
+            data-slot="create-client"
             onClick={() => openUpsertClientModal()}
             className="bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-8 px-3 rounded-full transition-all place-content-center hover:brightness-90"
           >
@@ -213,6 +227,7 @@ export default function ListClients() {
         {categories.map((category) => (
           <button
             key={category.id}
+            data-slot={`category-${category.id}`}
             onClick={() => toggleCategory(category.id)}
             className={`${selectedCategory === category.id ? "gradient-border" : ""} text-sm! h-8 px-3 w-max rounded-full! transition-all!`}
           >
@@ -228,7 +243,7 @@ export default function ListClients() {
       ) : !paginatedClients.length ? (
         <div className="flex flex-col items-center justify-center gap-2 text-gray-400">
           <PackageOpenIcon size={40} strokeWidth="1.5" />
-          <p>{t("no_clients")}</p>
+          <p>{t("clients_not_found")}</p>
         </div>
       ) : (
         <ClientList
@@ -243,7 +258,7 @@ export default function ListClients() {
         <PaginationControls
           page={page}
           onPageChange={setPage}
-          totalPages={filteredClients.length / pageSize}
+          totalPages={Math.ceil(filteredClients.length / pageSize)}
         />
       ) : null}
     </>
@@ -290,24 +305,26 @@ function ClientList({
   };
 
   return (
-    <div className="min-h-[calc(100dvh-320px)] max-h-[calc(100dvh-12.75rem)] sm:overflow-visible">
+    <div className="min-h-[calc(100dvh-20rem)] max-h-[calc(100dvh-204px)] sm:overflow-visible">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {clients.map((client) => (
           <Card
             key={client.id}
+            data-slot="client-card"
             onClick={() => handleUpdateClientModal(client)}
             className="cursor-pointer transition-all hover:scale-105 hover:z-10 group"
           >
             <CardContent>
               <div className="flex justify-evenly items-center mb-3">
                 <button
+                  data-slot={`favorite-client-${client.id}`}
                   onClick={(e) => handleToggleFavorite(e, client)}
                   className={`border border-transparent rounded-full h-fit p-2 transition-all md:opacity-0 md:group-hover:opacity-100! ${client.favorite ? "hover:border-(--warn) hover:bg-(--warn)/10" : "hover:border-primary"}`}
                 >
                   <Image
-                    alt=""
                     width={20}
                     height={20}
+                    alt={client.favorite ? "favorited" : "unfavorited"}
                     src={`/icons/star${client.favorite ? "" : "-outline"}.svg`}
                   />
                 </button>
@@ -315,6 +332,7 @@ function ClientList({
                 <UserAvatar size={44} name="client.name" />
 
                 <button
+                  data-slot={`delete-client-${client.id}`}
                   onClick={(e) => handleDeleteClient(e, client)}
                   className="border border-transparent rounded-full h-fit p-2 transition-all hover:border-(--danger) md:opacity-0 md:group-hover:opacity-100!"
                 >

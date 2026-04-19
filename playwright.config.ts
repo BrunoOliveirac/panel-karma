@@ -12,7 +12,7 @@ import { defineConfig, devices } from "@playwright/test";
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: "./src/tests",
+  testDir: "./src/e2e",
   testMatch: "**/*.spec.ts",
 
   /* Run tests in files in parallel */
@@ -27,9 +27,9 @@ export default defineConfig({
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    testIdAttribute: "data-test",
+    testIdAttribute: "data-slot",
     /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: "http://localhost:5175",
+    baseURL: "http://localhost:3000",
     headless: true,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */

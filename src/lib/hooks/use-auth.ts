@@ -21,8 +21,7 @@ function fetchAuth(): FetchAuth {
   const user = Cookies.get("user");
   const expiresAt = Cookies.get("expiresAt");
   const locale = Cookies.get("locale") as LocaleType | undefined;
-  // o cookie não atualiza ao entrar na modal de cliente, ou seja,
-  //  quando altero de EN para RO, o data.locale ainda é EN
+
   if (!expiresAt || !user) throw new Error("Unauthenticated");
 
   return {
@@ -47,7 +46,7 @@ export function useAuth() {
 
   // Automatic timer based on the expiration date
   useEffect(() => {
-    const expiresAt = query.data?.expiresAt;
+    const expiresAt = query?.data?.expiresAt;
     if (!expiresAt) return;
 
     const now = Date.now();
@@ -71,7 +70,7 @@ export function useAuth() {
     }, timeLeft);
 
     return () => clearTimeout(timeout);
-  }, [query.data?.expiresAt, router, queryClient]);
+  }, [query?.data?.expiresAt, router, queryClient]);
 
   // When the backend invalidates before the token expires
   // useEffect(() => {
@@ -85,5 +84,5 @@ export function useAuth() {
   //   }
   // }, [query.isError, router, queryClient]);
 
-  return query;
+  return query ?? {};
 }
