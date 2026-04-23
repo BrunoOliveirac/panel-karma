@@ -101,5 +101,11 @@
     "copy_link": "Copiar enlace",
     "link_copied": "Enlace copiado al portapapeles!",
     "email_in_use": "¡Este correo ya está en uso!"
+  },
+  "dashboard": {
+    "dashboard": "Panel"
+  },
+  "chat": {
+    "chat": "Chat"
   }
 }

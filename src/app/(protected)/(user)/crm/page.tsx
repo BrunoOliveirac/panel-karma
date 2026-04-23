@@ -9,7 +9,7 @@ export default function CRM() {
   const setTitle = useAppStore((state) => state.setTitle);
 
   useEffect(() => {
-    document.title = `${t("crm")} | Kizuna`;
+    document.title = `${t("crm")} | Karma`;
     setTitle(t("crm"));
   }, [setTitle, t]);
 

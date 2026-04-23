@@ -1,5 +1,6 @@
 "use client";
 
+import SelectLanguage from "@/components/global/select-language";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -8,7 +9,6 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { SpinnerButton } from "@/components/ui/spinner-button";
-import { useLocale } from "@/lib/hooks/use-locale";
 import { AuthService } from "@/lib/services/auth.service";
 import { registerValidator } from "@/lib/validators/register.validator";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,13 +30,12 @@ interface RegisterForm {
 
 export default function Login() {
   const router = useRouter();
-  const { changeLocale } = useLocale();
   const authService = new AuthService();
   const registerT = useTranslations("register");
   const validationT = useTranslations("validation");
   const [submitting, setSubmitting] = useState(false);
   const [seePassword, setSeePassword] = useState(false);
-  const languages = ["en", "es", "pt-br", "pt-pt", "ro"] as string[];
+  const [seeConfirmPassword, setSeeConfirmPassword] = useState(false);
 
   const {
     control,
@@ -83,7 +82,10 @@ export default function Login() {
           src="/images/logo.svg"
         />
 
-        <h2 className="text-center text-xl font-medium mt-4 mb-8">
+        <h2
+          data-slot="register-title"
+          className="text-center text-xl font-medium mt-4 mb-8"
+        >
           {registerT("create_your_account")}
         </h2>
 
@@ -116,8 +118,8 @@ export default function Login() {
                 <Input
                   {...field}
                   type="email"
-                  placeholder={registerT("enter_email")}
                   data-invalid={fieldState.invalid}
+                  placeholder={registerT("enter_email")}
                 />
 
                 {fieldState.invalid && (
@@ -166,13 +168,13 @@ export default function Login() {
                   <InputGroupInput
                     {...field}
                     placeholder={registerT("enter_password")}
-                    type={seePassword ? "text" : "password"}
+                    type={seeConfirmPassword ? "text" : "password"}
                   />
 
                   <InputGroupAddon align="inline-end">
                     <EyeOffIcon
                       className="cursor-pointer"
-                      onClick={() => setSeePassword(!seePassword)}
+                      onClick={() => setSeeConfirmPassword(!seeConfirmPassword)}
                     />
                   </InputGroupAddon>
                 </InputGroup>
@@ -239,22 +241,7 @@ export default function Login() {
           {registerT("login")}
         </Link>
 
-        <div className="flex justify-center gap-4">
-          {languages.map((language) => (
-            <button
-              key={language}
-              className="cursor-pointer"
-              onClick={() => changeLocale(language)}
-            >
-              <Image
-                width={30}
-                height={20}
-                alt={`${language} flag`}
-                src={`/images/flags/${language}.svg`}
-              />
-            </button>
-          ))}
-        </div>
+        <SelectLanguage />
       </div>
     </div>
   );

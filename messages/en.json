@@ -101,5 +101,11 @@
     "copy_link": "Copy link",
     "link_copied": "Link copied to clipboard!",
     "email_in_use": "This e-mail is already in use!"
+  },
+  "dashboard": {
+    "dashboard": "Dashboard"
+  },
+  "chat": {
+    "chat": "Chat"
   }
 }

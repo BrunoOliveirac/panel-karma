@@ -9,7 +9,7 @@ export default function Home() {
   const setTitle = useAppStore((state) => state.setTitle);
 
   useEffect(() => {
-    document.title = `${t("home")} | Kizuna`;
+    document.title = `${t("home")} | Karma`;
     setTitle(t("home"));
   }, [setTitle, t]);
 

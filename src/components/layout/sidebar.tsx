@@ -20,7 +20,7 @@ export default function Sidebar() {
   const languages = LocaleOptions;
   const t = useTranslations("sidebar");
   const { changeLocale } = useLocale();
-  const sidebarItems = new SidebarItemMock().get(data?.user?.type);
+  const sidebarItems = new SidebarItemMock().get(data!.user!.type);
   const [selectedLocale, setSelectedLocale] = useState(data?.locale);
 
   const changeLanguage = (locale: LocaleType) => {

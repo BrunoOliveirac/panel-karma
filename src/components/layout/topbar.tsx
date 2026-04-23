@@ -13,7 +13,7 @@ export default function Topbar() {
   const pathname = usePathname();
   const { setTheme, resolvedTheme } = useTheme();
   const title = useAppStore((state) => state.title);
-  const displayBackButton = UserRouteMap.get(data?.user.type) !== pathname;
+  const displayBackButton = UserRouteMap.get(data!.user.type) !== pathname;
 
   return (
     <div className="flex justify-between items-center gap-4 px-4 md:px-8 h-14 w-full mb-2">

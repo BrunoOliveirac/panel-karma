@@ -1,4 +1,4 @@
-import type { UserTypeEnum } from "@enums/UserTypeEnum";
+import { UserTypeEnum } from "../enums/user-type.enum";
 import { BaseModel } from "./base-model";
 
 export interface Support extends BaseModel {

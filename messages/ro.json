@@ -101,5 +101,11 @@
     "copy_link": "Copiază link",
     "link_copied": "Link copiat în clipboard!",
     "email_in_use": "Acest email este deja folosit!"
+  },
+  "dashboard": {
+    "dashboard": "Panou"
+  },
+  "chat": {
+    "chat": "Chat"
   }
 }

@@ -16,9 +16,9 @@ import { UserTypeEnum } from "../enums/user-type.enum";
 
 export class SidebarItemMock {
   public ADMIN_SIDEBAR_ITEMS: SidebarItem[] = [
-    { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-    { name: "Supports", path: "/supports", icon: UserRoundCog },
-    { name: "Settings", path: "/settings", icon: Settings },
+    { name: "dashboard", path: "/dashboard", icon: LayoutDashboard },
+    { name: "supports", path: "/supports", icon: UserRoundCog },
+    { name: "settings", path: "/settings", icon: Settings },
   ];
 
   public SUPPORT_SIDEBAR_ITEMS: SidebarItem[] = [
@@ -30,7 +30,7 @@ export class SidebarItemMock {
     { name: "home", path: "/home", icon: Home },
     { name: "crm", path: "/crm", icon: LayoutList },
     { name: "chat", path: "/chat", icon: MessageCircle },
-    { name: "arka", path: "/arka", icon: Bot }, // ARKA: AI-Ready Kizuna Assistant
+    { name: "arka", path: "/arka", icon: Bot }, // ARKA: AI-Ready Karma Assistant
     { name: "clients", path: "/clients", icon: Contact },
     { name: "projects", path: "/projects", icon: FolderOpenDot },
     { name: "sectors", path: "/sectors", icon: Factory },
