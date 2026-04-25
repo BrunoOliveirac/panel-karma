@@ -71,7 +71,10 @@ export default function Login() {
           src="/images/logo.svg"
         />
 
-        <h2 className="text-center text-xl font-medium mt-4 mb-8">
+        <h2
+          data-slot="login-title"
+          className="text-center text-xl font-medium mt-4 mb-8"
+        >
           {t("access_your_account")}
         </h2>
 

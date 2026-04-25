@@ -96,10 +96,12 @@ export default function Login() {
             render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>{registerT("name")}</FieldLabel>
+
                 <Input
                   {...field}
-                  placeholder={registerT("enter_name")}
+                  data-slot="register-name"
                   data-invalid={fieldState.invalid}
+                  placeholder={registerT("enter_name")}
                 />
 
                 {fieldState.invalid && (
@@ -115,9 +117,11 @@ export default function Login() {
             render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>{registerT("email")}</FieldLabel>
+
                 <Input
                   {...field}
                   type="email"
+                  data-slot="register-email"
                   data-invalid={fieldState.invalid}
                   placeholder={registerT("enter_email")}
                 />
@@ -139,6 +143,7 @@ export default function Login() {
                 <InputGroup data-invalid={fieldState.invalid}>
                   <InputGroupInput
                     {...field}
+                    dataSlot="register-password"
                     placeholder={registerT("enter_password")}
                     type={seePassword ? "text" : "password"}
                   />
@@ -164,9 +169,11 @@ export default function Login() {
             render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>{registerT("confirm_password")}</FieldLabel>
+
                 <InputGroup data-invalid={fieldState.invalid}>
                   <InputGroupInput
                     {...field}
+                    dataSlot="register-confirm-password"
                     placeholder={registerT("enter_password")}
                     type={seeConfirmPassword ? "text" : "password"}
                   />
@@ -227,6 +234,7 @@ export default function Login() {
               size="lg"
               type="submit"
               loading={submitting}
+              dataSlot="register-submit"
               className="max-w-28 mx-auto rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
             >
               {registerT("register")}
@@ -236,6 +244,7 @@ export default function Login() {
 
         <Link
           href="/login"
+          data-slot="login-link"
           className="flex justify-self-center text-sm text-gray-600 dark:text-gray-400 cursor-pointer py-4"
         >
           {registerT("login")}
