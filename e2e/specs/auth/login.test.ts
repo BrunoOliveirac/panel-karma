@@ -20,7 +20,6 @@ test("User Login successfully", async ({ page }) => {
 
   await page.waitForURL("/home");
   await expect(page).toHaveTitle(/Home/);
-  await page.context().storageState({ path: "playwright/.auth/user.json" });
 });
 
 test("Support Login successfully", async ({ page }) => {

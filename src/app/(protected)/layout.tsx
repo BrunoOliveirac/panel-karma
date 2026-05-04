@@ -37,7 +37,7 @@ export default function ProtectedLayout({
       <div className="w-full">
         <Topbar />
 
-        <div className="px-4 md:px-8">
+        <div className="flex flex-col flex-1 overflow-hidden px-4 md:px-8 max-h-[calc(100dvh-4.5rem)] h-full">
           <ModalProvider>{children}</ModalProvider>
         </div>
       </div>

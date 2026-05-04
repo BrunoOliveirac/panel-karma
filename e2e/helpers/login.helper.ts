@@ -1,30 +1,25 @@
 import { UserTypeEnum } from "@/lib/enums/user-type.enum";
 import type { Page } from "@playwright/test";
 
-export async function login(
-  page: Page,
-  type: UserTypeEnum,
-  redirectUrl: string,
-) {
-  await page.addInitScript(
-    async ({ type }) => {
-      document.cookie = "token=fake-token-123; path=/";
+interface LoginParams {
+  page: Page;
+  email: string;
+  password: string;
+  type: UserTypeEnum;
+}
 
-      document.cookie =
-        "user=" +
-        encodeURIComponent(
-          JSON.stringify({
-            type,
-            id: "1",
-            active: true,
-            name: "Usuário Mock",
-            email: "mock@email.com",
-          }),
-        ) +
-        "; path=/";
-    },
-    { type },
-  );
+const initialPageMap = new Map<UserTypeEnum, string>([
+  [UserTypeEnum.USER, "/home"],
+  [UserTypeEnum.ADMIN, "/dashboard"],
+  [UserTypeEnum.SUPPORT, "/chat"],
+]);
 
-  await page.goto(`/${redirectUrl}`);
+export async function login({ page, type, email, password }: LoginParams) {
+  await page.goto("/login");
+  await page.getByTestId("login-email").fill(email);
+  await page.getByTestId("login-password").fill(password);
+  await page.getByTestId("login-submit").click();
+  await page.waitForTimeout(1000);
+
+  await page.waitForURL(initialPageMap.get(type)!);
 }

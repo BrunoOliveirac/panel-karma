@@ -175,14 +175,15 @@ export default function ListClients() {
   const deleteClient = async (client: Client) => {
     try {
       const response = await Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: t("are_you_sure"),
+        text: t("you_wont_be"),
         icon: "warning",
         showCancelButton: true,
         theme: "auto",
-        confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: t("cancel"),
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: t("confirm"),
       });
 
       if (!response?.isConfirmed) return;
@@ -197,14 +198,15 @@ export default function ListClients() {
   };
 
   return (
-    <>
-      <div className="grid sm:flex flex-1 justify-between items-center flex-wrap gap-4">
+    <div className="flex-1 flex flex-col overflow-hidden gap-6 pb-6">
+      <div className="shrink-0 max-h-fit grid sm:flex flex-1 justify-between items-center flex-wrap gap-4">
         <p className="text-lg font-medium">{t("manage_clients")}</p>
 
         <div className="flex flex-1 justify-end items-center gap-4">
-          <InputGroup className="min-w-44 max-w-fit">
+          <InputGroup className="md:min-w-44 max-w-fit">
             <InputGroupInput
               placeholder={t("search")}
+              dataSlot="list-clients-search"
               onChange={(e) => setSearch(e.target.value)}
             />
 
@@ -216,14 +218,14 @@ export default function ListClients() {
           <button
             data-slot="create-client"
             onClick={() => openUpsertClientModal()}
-            className="bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-8 px-3 rounded-full transition-all place-content-center hover:brightness-90"
+            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-8 px-3 rounded-full transition-all place-content-center hover:brightness-90"
           >
             {t("create_client")}
           </button>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 flex-wrap my-7">
+      <div className="shrink-0 flex items-center gap-3 flex-wrap">
         {categories.map((category) => (
           <button
             key={category.id}
@@ -246,22 +248,26 @@ export default function ListClients() {
           <p>{t("clients_not_found")}</p>
         </div>
       ) : (
-        <ClientList
-          clients={paginatedClients}
-          deleteClient={deleteClient}
-          toggleFavorite={toggleFavorite}
-          handleUpdateClientModal={openUpsertClientModal}
-        />
-      )}
+        <>
+          <ClientList
+            clients={paginatedClients}
+            deleteClient={deleteClient}
+            toggleFavorite={toggleFavorite}
+            handleUpdateClientModal={openUpsertClientModal}
+          />
 
-      {filteredClients.length ? (
-        <PaginationControls
-          page={page}
-          onPageChange={setPage}
-          totalPages={Math.ceil(filteredClients.length / pageSize)}
-        />
-      ) : null}
-    </>
+          {filteredClients.length ? (
+            <div className="shrink-0">
+              <PaginationControls
+                page={page}
+                onPageChange={setPage}
+                totalPages={Math.ceil(filteredClients.length / pageSize)}
+              />
+            </div>
+          ) : null}
+        </>
+      )}
+    </div>
   );
 }
 
@@ -305,20 +311,22 @@ function ClientList({
   };
 
   return (
-    <div className="min-h-[calc(100dvh-20rem)] max-h-[calc(100dvh-204px)] sm:overflow-visible">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <div className="flex-1 overflow-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 py-4 px-1">
         {clients.map((client) => (
           <Card
+            id={client.id}
             key={client.id}
             data-slot="client-card"
             onClick={() => handleUpdateClientModal(client)}
-            className="cursor-pointer transition-all hover:scale-105 hover:z-10 group"
+            className="cursor-pointer transition-all hover:shadow-lg hover:shadow-primary/25 hover:z-10 group"
           >
             <CardContent>
               <div className="flex justify-evenly items-center mb-3">
                 <button
                   data-slot={`favorite-client-${client.id}`}
                   onClick={(e) => handleToggleFavorite(e, client)}
+                  id={`${client.favorite ? "" : "un"}favorited-client`}
                   className={`border border-transparent rounded-full h-fit p-2 transition-all md:opacity-0 md:group-hover:opacity-100! ${client.favorite ? "hover:border-(--warn) hover:bg-(--warn)/10" : "hover:border-primary"}`}
                 >
                   <Image
@@ -340,11 +348,11 @@ function ClientList({
                 </button>
               </div>
 
-              <p className="text-sm text-center text-white font-medium">
+              <p className="text-sm text-center text-black dark:text-white font-medium">
                 {client.name}
               </p>
 
-              <p className="text-xs text-center text-gray-400">
+              <p className="text-xs text-center text-gray-700 dark:text-gray-400">
                 {client.email}
               </p>
 
@@ -352,19 +360,19 @@ function ClientList({
 
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div className="text-xs">
-                  <p className="text-white">{t("from")}</p>
-                  <p className="text-gray-300">-</p>
+                  <p className="text-black dark:text-white">{t("from")}</p>
+                  <p className="text-gray-700 dark:text-gray-300">-</p>
                 </div>
 
                 <div className="text-xs">
-                  <p className="text-white">{t("sector")}</p>
-                  <p className="text-gray-300">-</p>
+                  <p className="text-black dark:text-white">{t("sector")}</p>
+                  <p className="text-gray-700 dark:text-gray-300">-</p>
                 </div>
 
                 <div className="text-xs">
-                  <p className="text-white">{t("budget")}</p>
+                  <p className="text-black dark:text-white">{t("budget")}</p>
 
-                  <p className="text-gray-300">
+                  <p className="text-gray-700 dark:text-gray-300">
                     {FormatCurrency(client.budget)}
                   </p>
                 </div>

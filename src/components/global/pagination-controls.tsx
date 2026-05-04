@@ -40,7 +40,7 @@ export default function PaginationControls({
   const pages = generatePagination(page, totalPages);
 
   return (
-    <Pagination className="h-8">
+    <Pagination className="h-9">
       <PaginationContent>
         {pages.map((p, index) => {
           if (p === "...") {

@@ -61,10 +61,10 @@ export default function Login() {
 
   return (
     <div className="flex justify-center items-center p-6 w-dvw h-dvh">
-      <div className="bg-[#111] border border-primary/40 max-w-md w-full rounded-xl p-6">
+      <div className="bg-[#f7f7f7] dark:bg-[#111] border border-primary/40 max-w-md w-full rounded-xl p-6">
         <Image
           width={150}
-          height={90}
+          height={52}
           loading="eager"
           alt="Auth Image"
           className="mx-auto"

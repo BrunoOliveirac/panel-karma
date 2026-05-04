@@ -80,7 +80,11 @@
     "could_not_unfavorite": "¡No se pudo eliminar como favorito!",
     "could_not_favorite": "¡No se pudo marcar como favorito!",
     "could_not_delete": "¡No se pudo eliminar el cliente!",
-    "client_deleted": "Cliente eliminado con éxito"
+    "client_deleted": "Cliente eliminado con éxito",
+    "are_you_sure": "¿Estás seguro?",
+    "you_wont_be": "¡No podrás revertir esto!",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar"
   },
   "upsert_client": {
     "client_details": "Detalles del cliente",

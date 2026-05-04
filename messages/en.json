@@ -80,7 +80,11 @@
     "could_not_unfavorite": "Could not unfavorite the client!",
     "could_not_favorite": "Could not favorite the client!",
     "could_not_delete": "Could not delete the client!",
-    "client_deleted": "Client deleted successfully!"
+    "client_deleted": "Client deleted successfully!",
+    "are_you_sure": "Are you sure?",
+    "you_wont_be": "You won't be able to revert this!",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   },
   "upsert_client": {
     "client_details": "Client Details",

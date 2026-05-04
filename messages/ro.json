@@ -80,7 +80,11 @@
     "could_not_unfavorite": "Nu s-a putut elimina din favorite!",
     "could_not_favorite": "Nu s-a putut adăuga la favorite!",
     "could_not_delete": "Nu s-a putut șterge clientul!",
-    "client_deleted": "Client șters cu succes!"
+    "client_deleted": "Client șters cu succes!",
+    "are_you_sure": "Ești sigur?",
+    "you_wont_be": "Nu vei putea reveni aceasta!",
+    "cancel": "Anulează",
+    "confirm": "Confirmă"
   },
   "upsert_client": {
     "client_details": "Detalii client",

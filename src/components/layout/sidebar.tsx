@@ -40,7 +40,7 @@ export default function Sidebar() {
           <Image
             alt="Logo"
             width={25}
-            height={31}
+            height={24}
             src="/images/logo-icon.svg"
           />
         </button>
