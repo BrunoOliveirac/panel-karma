@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { UserRouteMap } from "./lib/enums/user-type.enum";
-import { SidebarItemMock } from "./lib/mocks/SidebarItemMock";
+import { SidebarItemMock } from "./lib/mocks/sidebar-item.mock";
 import { LoggedUser } from "./lib/types/logged-user";
 
 export async function proxy(request: NextRequest) {

@@ -3,9 +3,9 @@
     "notifications_not_found": "Nenhuma notificação encontrada"
   },
   "sidebar": {
-    "dashboard": "Painel",
-    "supports": "Suportes",
-    "settings": "Definições",
+    "dashboard": "Dashboard",
+    "supports": "Suporte",
+    "settings": "Configurações",
     "chat": "Chat",
     "profile": "Perfil",
     "home": "Início",
@@ -13,7 +13,7 @@
     "arka": "ARKA",
     "clients": "Clientes",
     "projects": "Projetos",
-    "sectors": "Sectores",
+    "sectors": "Setores",
     "logout": "Sair"
   },
   "validation": {
@@ -26,15 +26,19 @@
     "password_special": "Deve conter ao menos um caractere especial",
     "password_match": "As senhas não coincidem"
   },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Próximo"
+  },
   "login": {
-    "access_your_account": "Acesse a sua conta",
+    "access_your_account": "Acesse sua conta",
     "email": "E-mail",
-    "enter_email": "Digite seu e-mail",
+    "enter_email": "Digite o e-mail",
     "password": "Senha",
-    "enter_password": "Digite sua senha",
+    "enter_password": "Digite a senha",
     "login": "Entrar",
-    "dont_have_account": "Não tem uma conta? Inscreva-se",
-    "error": "Não foi possível entrar na sua conta!",
+    "dont_have_account": "Não tem uma conta? Cadastre-se",
+    "error": "Não foi possível acessar sua conta!",
     "invalid_credentials": "Credenciais inválidas!"
   },
   "register": {
@@ -52,9 +56,60 @@
     "success": "Conta criada com sucesso!"
   },
   "home": {
-    "home": "Home"
+    "home": "Início"
   },
   "crm": {
     "crm": "CRM"
+  },
+  "list_clients": {
+    "clients": "Clientes",
+    "client_list": "Lista de clientes",
+    "add_client": "Adicionar cliente",
+    "edit_client": "Editar cliente",
+    "search": "Buscar clientes",
+    "clients_not_found": "Nenhum cliente encontrado",
+    "manage_clients": "Gerenciar clientes",
+    "all_clients": "Todos os clientes",
+    "favorites": "Favoritos",
+    "create_client": "Criar cliente",
+    "from": "De",
+    "sector": "Setor",
+    "budget": "Orçamento",
+    "client_unfavorited": "Cliente removido dos favoritos com sucesso!",
+    "client_favorited": "Cliente adicionado aos favoritos com sucesso!",
+    "could_not_unfavorite": "Não foi possível remover do favorito!",
+    "could_not_favorite": "Não foi possível favoritar o cliente!",
+    "could_not_delete": "Não foi possível excluir o cliente!",
+    "client_deleted": "Cliente excluído com sucesso!",
+    "are_you_sure": "Tem certeza?",
+    "you_wont_be": "Você não poderá reverter isso!",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar"
+  },
+  "upsert_client": {
+    "client_details": "Detalhes do cliente",
+    "name": "Nome",
+    "enter_name": "Digite o nome",
+    "email": "E-mail",
+    "enter_email": "Digite o e-mail",
+    "phone": "Telefone",
+    "enter_phone": "Digite o telefone",
+    "budget": "Orçamento",
+    "enter_budget": "Digite o orçamento",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "client_created": "Cliente criado com sucesso!",
+    "client_updated": "Cliente atualizado com sucesso!",
+    "could_not_create": "Não foi possível criar o cliente!",
+    "format_is_not_valid": "Formato inválido!",
+    "copy_link": "Copiar link",
+    "link_copied": "Link copiado para a área de transferência!",
+    "email_in_use": "Este e-mail já está em uso!"
+  },
+  "dashboard": {
+    "dashboard": "Dashboard"
+  },
+  "chat": {
+    "chat": "Chat"
   }
 }

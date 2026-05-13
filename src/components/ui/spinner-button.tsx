@@ -42,6 +42,7 @@ const spinnerButtonVariants = cva(
 );
 
 function SpinnerButton({
+  dataSlot,
   children,
   className,
   loading = false,
@@ -52,6 +53,7 @@ function SpinnerButton({
 }: React.ComponentProps<"button"> &
   VariantProps<typeof spinnerButtonVariants> & {
     loading: boolean;
+    dataSlot?: string;
     asChild?: boolean;
   }) {
   const Comp = asChild ? Slot.Root : "button";
@@ -59,8 +61,8 @@ function SpinnerButton({
   return (
     <Comp
       data-size={size}
-      data-slot="button"
       disabled={loading}
+      data-slot={dataSlot}
       data-variant={variant}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}

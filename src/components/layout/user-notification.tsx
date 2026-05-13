@@ -15,7 +15,7 @@ export default function UserNotification() {
         </button>
       </PopoverTrigger>
 
-      <PopoverContent>
+      <PopoverContent className="w-72">
         <p>{t("notifications_not_found")}</p>
       </PopoverContent>
     </Popover>

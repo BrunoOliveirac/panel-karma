@@ -4,6 +4,7 @@ import Sidebar from "@/components/layout/sidebar";
 import Topbar from "@/components/layout/topbar";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { useInactivityLogout } from "@/lib/hooks/use-inactivity-logout";
+import { ModalProvider } from "@/lib/providers/modal-provider";
 import Image from "next/image";
 
 export default function ProtectedLayout({
@@ -36,7 +37,9 @@ export default function ProtectedLayout({
       <div className="w-full">
         <Topbar />
 
-        <div className="px-3">{children}</div>
+        <div className="flex flex-col flex-1 overflow-hidden px-4 md:px-8 max-h-[calc(100dvh-4.5rem)] h-full">
+          <ModalProvider>{children}</ModalProvider>
+        </div>
       </div>
     </div>
   );
