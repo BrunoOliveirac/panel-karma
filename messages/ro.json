@@ -1,11 +1,115 @@
 {
+  "topbar": {
+    "notifications_not_found": "Nu au fost găsite notificări"
+  },
+  "sidebar": {
+    "dashboard": "Panou",
+    "supports": "Suport",
+    "settings": "Setări",
+    "chat": "Chat",
+    "profile": "Profil",
+    "home": "Acasă",
+    "crm": "CRM",
+    "arka": "ARKA",
+    "clients": "Clienți",
+    "projects": "Proiecte",
+    "sectors": "Sectoare",
+    "logout": "Deconectare"
+  },
+  "validation": {
+    "required": "Acest câmp este obligatoriu",
+    "email": "Acesta nu este un email valid",
+    "password_min": "Parola trebuie să aibă cel puțin 8 caractere",
+    "password_upper": "Trebuie să conțină cel puțin o literă mare",
+    "password_lower": "Trebuie să conțină cel puțin o literă mică",
+    "password_number": "Trebuie să conțină cel puțin un număr",
+    "password_special": "Trebuie să conțină cel puțin un caracter special",
+    "password_match": "Parolele nu coincid"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Următor"
+  },
   "login": {
     "access_your_account": "Accesează contul tău",
-    "email": "E-mail",
-    "enter_email": "Introdu adresa de e-mail",
+    "email": "Email",
+    "enter_email": "Introdu emailul",
     "password": "Parolă",
     "enter_password": "Introdu parola",
     "login": "Autentificare",
-    "dont_have_account": "Nu ai un cont? Înregistrează-te"
+    "dont_have_account": "Nu ai cont? Înregistrează-te",
+    "error": "Nu am putut accesa contul!",
+    "invalid_credentials": "Date de autentificare invalide!"
+  },
+  "register": {
+    "create_your_account": "Creează-ți contul",
+    "register": "Înregistrare",
+    "login": "Autentificare",
+    "name": "Nume",
+    "enter_name": "Introdu numele",
+    "email": "Email",
+    "enter_email": "Introdu emailul",
+    "password": "Parolă",
+    "enter_password": "Introdu parola",
+    "confirm_password": "Confirmă parola",
+    "error": "Nu am putut crea contul!",
+    "success": "Cont creat cu succes!"
+  },
+  "home": {
+    "home": "Acasă"
+  },
+  "crm": {
+    "crm": "CRM"
+  },
+  "list_clients": {
+    "clients": "Clienți",
+    "client_list": "Lista clienților",
+    "add_client": "Adaugă client",
+    "edit_client": "Editează client",
+    "search": "Caută clienți",
+    "clients_not_found": "Nu au fost găsiți clienți",
+    "manage_clients": "Gestionează clienți",
+    "all_clients": "Toți clienții",
+    "favorites": "Favorite",
+    "create_client": "Creează client",
+    "from": "De la",
+    "sector": "Sector",
+    "budget": "Buget",
+    "client_unfavorited": "Client eliminat din favorite cu succes!",
+    "client_favorited": "Client adăugat la favorite cu succes!",
+    "could_not_unfavorite": "Nu s-a putut elimina din favorite!",
+    "could_not_favorite": "Nu s-a putut adăuga la favorite!",
+    "could_not_delete": "Nu s-a putut șterge clientul!",
+    "client_deleted": "Client șters cu succes!",
+    "are_you_sure": "Ești sigur?",
+    "you_wont_be": "Nu vei putea reveni aceasta!",
+    "cancel": "Anulează",
+    "confirm": "Confirmă"
+  },
+  "upsert_client": {
+    "client_details": "Detalii client",
+    "name": "Nume",
+    "enter_name": "Introdu numele",
+    "email": "Email",
+    "enter_email": "Introdu emailul",
+    "phone": "Telefon",
+    "enter_phone": "Introdu telefonul",
+    "budget": "Buget",
+    "enter_budget": "Introdu bugetul",
+    "cancel": "Anulează",
+    "save": "Salvează",
+    "client_created": "Client creat cu succes!",
+    "client_updated": "Client actualizat cu succes!",
+    "could_not_create": "Nu s-a putut crea clientul!",
+    "format_is_not_valid": "Format invalid!",
+    "copy_link": "Copiază link",
+    "link_copied": "Link copiat în clipboard!",
+    "email_in_use": "Acest email este deja folosit!"
+  },
+  "dashboard": {
+    "dashboard": "Panou"
+  },
+  "chat": {
+    "chat": "Chat"
   }
 }

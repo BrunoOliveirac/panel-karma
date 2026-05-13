@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "react-phone-input-2/lib/style.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -55,16 +56,6 @@
 
   /* Transitions */
   --default-transition-duration: 300ms;
-
-  /* Colors */
-  --primary: #7c79d4;
-  --secondary: #f1f1f1;
-  --tertiary: #f1f1f1;
-  --warn: #bb8111;
-  --info: #06638d;
-  --danger: #bc5557;
-  --success: #5bda1f;
-  --gray: #333333;
 }
 
 :root {
@@ -100,6 +91,16 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Colors */
+  --primary: #7c79d4 !important;
+  --secondary: #f1f1f1 !important;
+  --tertiary: #f1f1f1 !important;
+  --warn: #bb8111 !important;
+  --info: #06638d !important;
+  --danger: #bc5557 !important;
+  --success: #5bda1f !important;
+  --gray: #333 !important;
 }
 
 .dark {
@@ -137,9 +138,15 @@
 
   --color-gray-400: var(--muted-foreground);
 
-  --secondary: #242424;
-  --tertiary: #111;
-  --gray: #333;
+  /* Colors */
+  --primary: #7c79d4 !important;
+  --secondary: #242424 !important;
+  --tertiary: #111 !important;
+  --warn: #bb8111 !important;
+  --info: #06638d !important;
+  --danger: #bc5557 !important;
+  --success: #5bda1f !important;
+  --gray: #333 !important;
 }
 
 @layer base {
@@ -150,4 +157,67 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+html {
+  font-size: 90%;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+.gradient-border {
+  z-index: 0;
+  position: relative;
+}
+
+.gradient-border::before {
+  content: "";
+  inset: 0;
+  padding: 1px;
+  position: absolute;
+  border-radius: inherit;
+  background: linear-gradient(45deg, var(--primary), var(--info)) !important;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+}
+
+/* Phone input */
+.react-tel-input .form-control,
+.react-tel-input .flag-dropdown {
+  @apply bg-input/30! border-primary/40! focus-visible:border-ring! focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive! dark:aria-invalid:border-destructive/50! h-9! rounded! border! py-1! text-base! transition-colors focus-visible:ring-[3px] aria-invalid:ring-[3px] md:text-sm! placeholder:text-muted-foreground! min-w-0 outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-[invalid=true]:border-red-900 data-[invalid=true]:ring-red-900;
+}
+
+.react-tel-input .form-control {
+  @apply w-full!;
+}
+
+.react-tel-input .flag-dropdown {
+  @apply border-e-0! rounded-e-none!;
+}
+
+.react-tel-input .flag-dropdown:hover {
+  @apply bg-input/10!;
+}
+
+.react-tel-input .selected-flag {
+  background: transparent !important;
+}
+
+.react-tel-input .country-list {
+  @apply bg-background!;
+}
+
+.react-tel-input .country-list .country {
+  background-color: transparent !important;
 }

@@ -1,7 +1,9 @@
-import { QueryProvider } from "@/core/providers/query-provider";
-import { ThemeProvider } from "next-themes";
-import "./globals.css";
+import { QueryProvider } from "@/lib/providers/query-provider";
 import { NextIntlClientProvider } from "next-intl";
+import { ThemeProvider } from "next-themes";
+import { Toaster } from "sonner";
+import "./globals.css";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function RootLayout({
   children,
@@ -11,9 +13,13 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <body>
+        <Toaster position="top-right" className="sonner" richColors={true} />
+
         <QueryProvider>
           <ThemeProvider enableSystem attribute="class" defaultTheme="system">
-            <NextIntlClientProvider>{children}</NextIntlClientProvider>
+            <NextIntlClientProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </NextIntlClientProvider>
           </ThemeProvider>
         </QueryProvider>
       </body>

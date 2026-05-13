@@ -1,22 +1,39 @@
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { UserRouteMap } from "./lib/enums/user-type.enum";
+import { SidebarItemMock } from "./lib/mocks/sidebar-item.mock";
+import { LoggedUser } from "./lib/types/logged-user";
 
-export function proxy(req: NextRequest) {
-  const token = req.cookies.get("auth");
+export async function proxy(request: NextRequest) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token");
+  const userCookie = cookieStore.get("user");
+  const user: LoggedUser = JSON.parse(userCookie?.value ?? "null");
 
-  const isProtected = req.nextUrl.pathname === "/";
-  const isLogin = req.nextUrl.pathname === "/login";
+  const isAuthRoute = ["/login", "/register"].includes(
+    request.nextUrl.pathname,
+  );
 
-  if (!token && isProtected) {
-    return NextResponse.redirect(new URL("/login", req.url));
+  if (!token && !isAuthRoute) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (token && isLogin) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+  const sidebarPathItems = user?.type
+    ? new SidebarItemMock().getPaths(user.type)
+    : [];
+
+  if (
+    (token && (isAuthRoute || request.nextUrl.pathname === "/")) ||
+    (user && !sidebarPathItems.includes(request.nextUrl.pathname))
+  ) {
+    return NextResponse.redirect(
+      new URL(UserRouteMap.get(user.type) ?? "/home", request.url),
+    );
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!_next|favicon.ico|.*\\..*).*)"],
+  matcher: ["/((?!api|_next|favicon.ico|.*\\..*).*)"],
 };
