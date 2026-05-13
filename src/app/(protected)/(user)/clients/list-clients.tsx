@@ -190,6 +190,9 @@ export default function ListClients() {
 
       await clientService.deleteClient(client.id);
       toast.success(t("client_deleted"));
+
+      if (paginatedClients.length === 1) setPage(page - 1);
+
       setMainClients((clients) => clients.filter((c) => c.id !== client.id));
     } catch (error) {
       console.error(error);
@@ -348,11 +351,17 @@ function ClientList({
                 </button>
               </div>
 
-              <p className="text-sm text-center text-black dark:text-white font-medium">
+              <p
+                data-slot="client-name"
+                className="text-sm text-center text-black dark:text-white font-medium"
+              >
                 {client.name}
               </p>
 
-              <p className="text-xs text-center text-gray-700 dark:text-gray-400">
+              <p
+                data-slot="client-email"
+                className="text-xs text-center text-gray-700 dark:text-gray-400"
+              >
                 {client.email}
               </p>
 

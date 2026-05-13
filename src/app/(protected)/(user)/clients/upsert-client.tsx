@@ -207,6 +207,7 @@ export default function UpsertClient({
           render={({ field, fieldState }) => (
             <Field>
               <FieldLabel>{t("budget")}</FieldLabel>
+
               <InputCurrency
                 {...field}
                 dataSlot="upsert-client-budget"
@@ -225,6 +226,7 @@ export default function UpsertClient({
               type="button"
               disabled={submitting}
               onClick={() => closeModal()}
+              data-slot="upsert-client-cancel"
               className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
             >
               {t("cancel")}
