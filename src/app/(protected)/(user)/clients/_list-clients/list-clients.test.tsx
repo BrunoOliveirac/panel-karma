@@ -2,7 +2,7 @@ import { renderWithProviders } from "@/lib/mocks/render-with-providers.mock";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Swal from "sweetalert2";
-import ListClients from "./list-clients";
+import ListClients from "../list-clients";
 
 const deleteClientMock = jest.fn();
 const getAllClientsMock = jest.fn();

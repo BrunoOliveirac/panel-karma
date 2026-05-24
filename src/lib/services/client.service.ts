@@ -56,9 +56,9 @@ export class ClientService {
 
   /**
    * Delete a client.
-   * @param clientId Client ID to delete.
+   * @param client Client to delete.
    */
-  public deleteClient = async (clientId: string): Promise<void> => {
-    await api.delete(`/clients/${clientId}`);
+  public deleteClient = async (client: Client): Promise<void> => {
+    await api.delete(`/clients/delete/`, { data: client });
   };
 }

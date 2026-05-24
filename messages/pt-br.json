@@ -3,8 +3,8 @@
     "notifications_not_found": "Nenhuma notificação encontrada"
   },
   "sidebar": {
-    "dashboard": "Dashboard",
-    "supports": "Suporte",
+    "dashboard": "Painel",
+    "supports": "Suportes",
     "settings": "Configurações",
     "chat": "Chat",
     "profile": "Perfil",
@@ -16,15 +16,33 @@
     "sectors": "Setores",
     "logout": "Sair"
   },
+  "shared": {
+    "are_you_sure": "Tem certeza?",
+    "you_wont_be": "Você não poderá reverter isso!",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Salvar",
+    "name": "Nome",
+    "created_at": "Criado em",
+    "status": "Status",
+    "actions": "Ações",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "enter_name": "Digite o nome",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "activate": "Ativar",
+    "deactivate": "Desativar"
+  },
   "validation": {
     "required": "Este campo é obrigatório",
-    "email": "Este não é um e-mail válido",
+    "email": "Este e-mail não é válido",
     "password_min": "A senha deve ter pelo menos 8 caracteres",
     "password_upper": "Deve conter ao menos uma letra maiúscula",
     "password_lower": "Deve conter ao menos uma letra minúscula",
     "password_number": "Deve conter ao menos um número",
     "password_special": "Deve conter ao menos um caractere especial",
-    "password_match": "As senhas não coincidem"
+    "password_match": "As senhas não correspondem"
   },
   "pagination": {
     "previous": "Anterior",
@@ -67,7 +85,7 @@
     "add_client": "Adicionar cliente",
     "edit_client": "Editar cliente",
     "search": "Buscar clientes",
-    "clients_not_found": "Nenhum cliente encontrado",
+    "clients_not_found": "Clientes não encontrados",
     "manage_clients": "Gerenciar clientes",
     "all_clients": "Todos os clientes",
     "favorites": "Favoritos",
@@ -77,27 +95,19 @@
     "budget": "Orçamento",
     "client_unfavorited": "Cliente removido dos favoritos com sucesso!",
     "client_favorited": "Cliente adicionado aos favoritos com sucesso!",
-    "could_not_unfavorite": "Não foi possível remover do favorito!",
-    "could_not_favorite": "Não foi possível favoritar o cliente!",
+    "could_not_unfavorite": "Não foi possível remover o cliente dos favoritos!",
+    "could_not_favorite": "Não foi possível adicionar o cliente aos favoritos!",
     "could_not_delete": "Não foi possível excluir o cliente!",
-    "client_deleted": "Cliente excluído com sucesso!",
-    "are_you_sure": "Tem certeza?",
-    "you_wont_be": "Você não poderá reverter isso!",
-    "cancel": "Cancelar",
-    "confirm": "Confirmar"
+    "client_deleted": "Cliente excluído com sucesso!"
   },
   "upsert_client": {
     "client_details": "Detalhes do cliente",
-    "name": "Nome",
-    "enter_name": "Digite o nome",
     "email": "E-mail",
     "enter_email": "Digite o e-mail",
     "phone": "Telefone",
     "enter_phone": "Digite o telefone",
     "budget": "Orçamento",
     "enter_budget": "Digite o orçamento",
-    "cancel": "Cancelar",
-    "save": "Salvar",
     "client_created": "Cliente criado com sucesso!",
     "client_updated": "Cliente atualizado com sucesso!",
     "could_not_create": "Não foi possível criar o cliente!",
@@ -106,8 +116,30 @@
     "link_copied": "Link copiado para a área de transferência!",
     "email_in_use": "Este e-mail já está em uso!"
   },
+  "list_sectors": {
+    "sectors": "Setores",
+    "sector_list": "Lista de setores",
+    "all_sectors": "Todos os setores",
+    "manage_sectors": "Gerenciar setores",
+    "create_sector": "Criar setor",
+    "search": "Buscar setores",
+    "sectors_not_found": "Setores não encontrados",
+    "sector_deleted": "Setor excluído com sucesso!",
+    "could_not_delete": "Não foi possível excluir o setor!",
+    "successfully_activated": "Setor ativado com sucesso!",
+    "successfully_deactivated": "Setor desativado com sucesso!",
+    "could_not_activate": "Não foi possível ativar o setor!",
+    "could_not_deactivate": "Não foi possível desativar o setor!"
+  },
+  "upsert_sector": {
+    "sector_details": "Detalhes do setor",
+    "status": "Setor ativo",
+    "sector_created": "Setor criado com sucesso!",
+    "sector_updated": "Setor atualizado com sucesso!",
+    "could_not_create": "Não foi possível criar o setor!"
+  },
   "dashboard": {
-    "dashboard": "Dashboard"
+    "dashboard": "Painel"
   },
   "chat": {
     "chat": "Chat"

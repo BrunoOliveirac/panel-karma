@@ -2,7 +2,7 @@ import { renderWithProviders } from "@/lib/mocks/render-with-providers.mock";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { toast } from "sonner";
-import ListClients from "./list-clients";
+import ListClients from "../_list-clients/list-clients";
 
 const checkEmailMock = jest.fn();
 const upsertClientMock = jest.fn();

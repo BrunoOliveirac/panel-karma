@@ -21,8 +21,9 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import UpsertClient from "./upsert-client";
+import UpsertClient from "../_upsert-client/upsert-client";
 import { toast } from "sonner";
+import DocumentTabs from "@/components/global/document-tabs";
 
 export default function ListClients() {
   const pageSize = 10;
@@ -32,14 +33,15 @@ export default function ListClients() {
   const [page, setPage] = useState(1);
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
+  const sharedT = useTranslations("shared");
   const t = useTranslations("list_clients");
   const [loading, setLoading] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("all");
   const setTitle = useAppStore((state) => state.setTitle);
   const [mainClients, setMainClients] = useState<Client[]>([]);
   const clientService = useMemo(() => new ClientService(), []);
-  const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const categories = [
+  const tabs = [
     { name: t("all_clients"), id: "all" },
     { name: t("favorites"), id: "favorite" },
   ];
@@ -48,7 +50,7 @@ export default function ListClients() {
     let clients = mainClients;
     const term = search.trim().toLowerCase();
 
-    if (selectedCategory === "favorite") {
+    if (selectedTab === "favorite") {
       clients = clients.filter((client) => client.favorite);
     }
 
@@ -62,7 +64,7 @@ export default function ListClients() {
     }
 
     return clients;
-  }, [mainClients, search, selectedCategory]);
+  }, [mainClients, search, selectedTab]);
 
   const paginatedClients = useMemo(() => {
     const start = (page - 1) * pageSize;
@@ -139,14 +141,6 @@ export default function ListClients() {
   }, [clientService, openUpsertClientModal, searchParams, setTitle, t]);
 
   /**
-   * Toggle the selected category, reseting the filter and filtering the clients.
-   * @param categoryId The id of the category to toggle.
-   */
-  const toggleCategory = (categoryId: string) => {
-    setSelectedCategory(categoryId);
-  };
-
-  /**
    * Toggle the favorite status of a client.
    * @param client The client to toggle the favorite status.
    */
@@ -175,20 +169,20 @@ export default function ListClients() {
   const deleteClient = async (client: Client) => {
     try {
       const response = await Swal.fire({
-        title: t("are_you_sure"),
-        text: t("you_wont_be"),
+        theme: "auto",
         icon: "warning",
         showCancelButton: true,
-        theme: "auto",
         cancelButtonColor: "#d33",
-        cancelButtonText: t("cancel"),
+        text: sharedT("you_wont_be"),
         confirmButtonColor: "#3085d6",
-        confirmButtonText: t("confirm"),
+        title: sharedT("are_you_sure"),
+        cancelButtonText: sharedT("cancel"),
+        confirmButtonText: sharedT("confirm"),
       });
 
       if (!response?.isConfirmed) return;
 
-      await clientService.deleteClient(client.id);
+      await clientService.deleteClient(client);
       toast.success(t("client_deleted"));
 
       if (paginatedClients.length === 1) setPage(page - 1);
@@ -228,18 +222,11 @@ export default function ListClients() {
         </div>
       </div>
 
-      <div className="shrink-0 flex items-center gap-3 flex-wrap">
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            data-slot={`category-${category.id}`}
-            onClick={() => toggleCategory(category.id)}
-            className={`${selectedCategory === category.id ? "gradient-border" : ""} text-sm! h-8 px-3 w-max rounded-full! transition-all!`}
-          >
-            {category.name}
-          </button>
-        ))}
-      </div>
+      <DocumentTabs
+        tabs={tabs}
+        selectedTab={selectedTab}
+        toggleTab={setSelectedTab}
+      />
 
       {loading ? (
         <div className="flex justify-center">

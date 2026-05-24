@@ -30,6 +30,7 @@ export default function UpsertClient({
   dismissModal,
 }: { client?: Client } & ModalInjectedProps<boolean>) {
   const clientService = new ClientService();
+  const sharedT = useTranslations("shared");
   const t = useTranslations("upsert_client");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -145,13 +146,13 @@ export default function UpsertClient({
           control={control}
           render={({ field, fieldState }) => (
             <Field>
-              <FieldLabel>{t("name")}</FieldLabel>
+              <FieldLabel>{sharedT("name")}</FieldLabel>
 
               <Input
                 {...field}
-                placeholder={t("enter_name")}
                 data-slot="upsert-client-name"
                 data-invalid={fieldState.invalid}
+                placeholder={sharedT("enter_name")}
               />
 
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -229,7 +230,7 @@ export default function UpsertClient({
               data-slot="upsert-client-cancel"
               className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
             >
-              {t("cancel")}
+              {sharedT("cancel")}
             </Button>
           </Field>
 
@@ -241,7 +242,7 @@ export default function UpsertClient({
               dataSlot="upsert-client-save"
               className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
             >
-              {t("save")}
+              {sharedT("save")}
             </SpinnerButton>
           </Field>
         </div>

@@ -1,9 +1,9 @@
 {
   "topbar": {
-    "notifications_not_found": "Nu au fost găsite notificări"
+    "notifications_not_found": "Notificări nu au fost găsite"
   },
   "sidebar": {
-    "dashboard": "Panou",
+    "dashboard": "Tablou de bord",
     "supports": "Suport",
     "settings": "Setări",
     "chat": "Chat",
@@ -16,15 +16,33 @@
     "sectors": "Sectoare",
     "logout": "Deconectare"
   },
+  "shared": {
+    "are_you_sure": "Ești sigur?",
+    "you_wont_be": "Nu vei putea reveni asupra acestei acțiuni!",
+    "cancel": "Anulează",
+    "confirm": "Confirmă",
+    "save": "Salvează",
+    "name": "Nume",
+    "created_at": "Creat la",
+    "status": "Stare",
+    "actions": "Acțiuni",
+    "active": "Activ",
+    "inactive": "Inactiv",
+    "enter_name": "Introduceți numele",
+    "delete": "Șterge",
+    "edit": "Editează",
+    "activate": "Activează",
+    "deactivate": "Dezactivează"
+  },
   "validation": {
     "required": "Acest câmp este obligatoriu",
-    "email": "Acesta nu este un email valid",
+    "email": "Acesta nu este un e-mail valid",
     "password_min": "Parola trebuie să aibă cel puțin 8 caractere",
     "password_upper": "Trebuie să conțină cel puțin o literă mare",
     "password_lower": "Trebuie să conțină cel puțin o literă mică",
     "password_number": "Trebuie să conțină cel puțin un număr",
     "password_special": "Trebuie să conțină cel puțin un caracter special",
-    "password_match": "Parolele nu coincid"
+    "password_match": "Parolele nu se potrivesc"
   },
   "pagination": {
     "previous": "Anterior",
@@ -32,25 +50,25 @@
   },
   "login": {
     "access_your_account": "Accesează contul tău",
-    "email": "Email",
-    "enter_email": "Introdu emailul",
+    "email": "E-mail",
+    "enter_email": "Introduceți e-mailul",
     "password": "Parolă",
-    "enter_password": "Introdu parola",
+    "enter_password": "Introduceți parola",
     "login": "Autentificare",
-    "dont_have_account": "Nu ai cont? Înregistrează-te",
-    "error": "Nu am putut accesa contul!",
-    "invalid_credentials": "Date de autentificare invalide!"
+    "dont_have_account": "Nu ai un cont? Înregistrează-te",
+    "error": "Nu am putut autentifica contul tău!",
+    "invalid_credentials": "Credențiale invalide!"
   },
   "register": {
     "create_your_account": "Creează-ți contul",
-    "register": "Înregistrare",
+    "register": "Înregistrează-te",
     "login": "Autentificare",
     "name": "Nume",
-    "enter_name": "Introdu numele",
-    "email": "Email",
-    "enter_email": "Introdu emailul",
+    "enter_name": "Introduceți numele",
+    "email": "E-mail",
+    "enter_email": "Introduceți e-mailul",
     "password": "Parolă",
-    "enter_password": "Introdu parola",
+    "enter_password": "Introduceți parola",
     "confirm_password": "Confirmă parola",
     "error": "Nu am putut crea contul!",
     "success": "Cont creat cu succes!"
@@ -67,7 +85,7 @@
     "add_client": "Adaugă client",
     "edit_client": "Editează client",
     "search": "Caută clienți",
-    "clients_not_found": "Nu au fost găsiți clienți",
+    "clients_not_found": "Clienți nu au fost găsiți",
     "manage_clients": "Gestionează clienți",
     "all_clients": "Toți clienții",
     "favorites": "Favorite",
@@ -77,37 +95,51 @@
     "budget": "Buget",
     "client_unfavorited": "Client eliminat din favorite cu succes!",
     "client_favorited": "Client adăugat la favorite cu succes!",
-    "could_not_unfavorite": "Nu s-a putut elimina din favorite!",
-    "could_not_favorite": "Nu s-a putut adăuga la favorite!",
+    "could_not_unfavorite": "Nu s-a putut elimina clientul din favorite!",
+    "could_not_favorite": "Nu s-a putut adăuga clientul la favorite!",
     "could_not_delete": "Nu s-a putut șterge clientul!",
     "client_deleted": "Client șters cu succes!",
-    "are_you_sure": "Ești sigur?",
-    "you_wont_be": "Nu vei putea reveni aceasta!",
-    "cancel": "Anulează",
-    "confirm": "Confirmă"
+    "successfully_activated": "Client activat cu succes!",
+    "successfully_deactivated": "Client dezactivat cu succes!",
+    "could_not_activate": "Nu s-a putut activa clientul!",
+    "could_not_deactivate": "Nu s-a putut dezactiva clientul!"
   },
   "upsert_client": {
     "client_details": "Detalii client",
-    "name": "Nume",
-    "enter_name": "Introdu numele",
-    "email": "Email",
-    "enter_email": "Introdu emailul",
+    "email": "E-mail",
+    "enter_email": "Introduceți e-mailul",
     "phone": "Telefon",
-    "enter_phone": "Introdu telefonul",
+    "enter_phone": "Introduceți telefonul",
     "budget": "Buget",
-    "enter_budget": "Introdu bugetul",
-    "cancel": "Anulează",
-    "save": "Salvează",
+    "enter_budget": "Introduceți bugetul",
     "client_created": "Client creat cu succes!",
     "client_updated": "Client actualizat cu succes!",
     "could_not_create": "Nu s-a putut crea clientul!",
     "format_is_not_valid": "Format invalid!",
     "copy_link": "Copiază link",
     "link_copied": "Link copiat în clipboard!",
-    "email_in_use": "Acest email este deja folosit!"
+    "email_in_use": "Acest e-mail este deja utilizat!"
+  },
+  "list_sectors": {
+    "sectors": "Sectoare",
+    "sector_list": "Lista sectoarelor",
+    "all_sectors": "Toate sectoarele",
+    "manage_sectors": "Gestionează sectoare",
+    "create_sector": "Creează sector",
+    "search": "Caută sectoare",
+    "sectors_not_found": "Sectoare nu au fost găsite",
+    "sector_deleted": "Sector șters cu succes!",
+    "could_not_delete": "Sectorul nu a putut fi șters!"
+  },
+  "upsert_sector": {
+    "sector_details": "Detalii sector",
+    "status": "Sector activ",
+    "sector_created": "Sector creat cu succes!",
+    "sector_updated": "Sector actualizat cu succes!",
+    "could_not_create": "Nu s-a putut crea sectorul!"
   },
   "dashboard": {
-    "dashboard": "Panou"
+    "dashboard": "Tablou de bord"
   },
   "chat": {
     "chat": "Chat"

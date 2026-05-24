@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/lib/hooks/use-auth";
-import { currencyLocaleMapper } from "@/lib/mappers/curerncy-locale.mapper";
+import { CurrencyLocaleMapper } from "@/lib/mappers/curerncy-locale.mapper";
 import { cn } from "@/lib/utils/cn";
 import React from "react";
 
@@ -19,7 +19,7 @@ export const InputCurrency = ({
   className,
 }: Props) => {
   const { data } = useAuth();
-  const config = currencyLocaleMapper[data?.locale ?? "en"];
+  const config = CurrencyLocaleMapper[data?.locale ?? "en"];
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat(config.locale, {
