@@ -61,6 +61,8 @@ export default function UpsertSector({
       const newSector = { ...sector, ...data, id: sector?.id } as Sector;
       newSector.id = await sectorService.upsertSector(newSector);
 
+      if (!sector) newSector.createdAt = new Date();
+
       toast.success(t(`sector_${sector ? "updated" : "created"}`));
       dismissModal(newSector);
     } catch (error) {

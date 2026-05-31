@@ -362,7 +362,10 @@ function ClientList({
 
                 <div className="text-xs">
                   <p className="text-black dark:text-white">{t("sector")}</p>
-                  <p className="text-gray-700 dark:text-gray-300">-</p>
+
+                  <p className="text-gray-700 dark:text-gray-300">
+                    {client.sector?.name ?? "-"}
+                  </p>
                 </div>
 
                 <div className="text-xs">

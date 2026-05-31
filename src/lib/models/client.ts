@@ -1,4 +1,5 @@
 import type { BaseModel } from "./base-model";
+import { Sector } from "./sector";
 
 export interface Client extends BaseModel {
   name: string;
@@ -7,5 +8,6 @@ export interface Client extends BaseModel {
   notes: string;
   userId: string;
   budget: number;
+  sector: Sector;
   favorite: boolean;
 }

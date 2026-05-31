@@ -1,9 +1,9 @@
 {
   "topbar": {
-    "notifications_not_found": "No se encontraron notificaciones"
+    "notifications_not_found": "Notificaciones no encontradas"
   },
   "sidebar": {
-    "dashboard": "Tablero",
+    "dashboard": "Panel",
     "supports": "Soportes",
     "settings": "Configuraciones",
     "chat": "Chat",
@@ -42,7 +42,8 @@
     "password_lower": "Debe contener al menos una letra minúscula",
     "password_number": "Debe contener al menos un número",
     "password_special": "Debe contener al menos un carácter especial",
-    "password_match": "Las contraseñas no coinciden"
+    "password_match": "Las contraseñas no coinciden",
+    "max_length": "Debe contener como máximo {max} caracteres"
   },
   "pagination": {
     "previous": "Anterior",
@@ -71,7 +72,7 @@
     "enter_password": "Ingrese su contraseña",
     "confirm_password": "Confirmar contraseña",
     "error": "¡No pudimos crear tu cuenta!",
-    "success": "¡Cuenta creada exitosamente!"
+    "success": "¡Cuenta creada con éxito!"
   },
   "home": {
     "home": "Inicio"
@@ -85,19 +86,19 @@
     "add_client": "Agregar cliente",
     "edit_client": "Editar cliente",
     "search": "Buscar clientes",
-    "clients_not_found": "No se encontraron clientes",
-    "manage_clients": "Administrar clientes",
+    "clients_not_found": "Clientes no encontrados",
+    "manage_clients": "Gestionar clientes",
     "all_clients": "Todos los clientes",
     "favorites": "Favoritos",
     "create_client": "Crear cliente",
-    "from": "De",
+    "from": "Desde",
     "sector": "Sector",
     "budget": "Presupuesto",
     "client_unfavorited": "¡Cliente eliminado de favoritos con éxito!",
     "client_favorited": "¡Cliente agregado a favoritos con éxito!",
-    "could_not_unfavorite": "¡No se pudo eliminar al cliente de favoritos!",
-    "could_not_favorite": "¡No se pudo agregar al cliente a favoritos!",
-    "could_not_delete": "¡No se pudo eliminar al cliente!",
+    "could_not_unfavorite": "¡No se pudo eliminar el cliente de favoritos!",
+    "could_not_favorite": "¡No se pudo agregar el cliente a favoritos!",
+    "could_not_delete": "¡No se pudo eliminar el cliente!",
     "client_deleted": "¡Cliente eliminado con éxito!"
   },
   "upsert_client": {
@@ -108,22 +109,27 @@
     "enter_phone": "Ingrese el teléfono",
     "budget": "Presupuesto",
     "enter_budget": "Ingrese el presupuesto",
+    "notes": "Notas",
+    "enter_notes": "Ingrese las notas",
     "client_created": "¡Cliente creado con éxito!",
     "client_updated": "¡Cliente actualizado con éxito!",
     "could_not_create": "¡No se pudo crear el cliente!",
+    "could_not_update": "¡No se pudo actualizar el cliente!",
     "format_is_not_valid": "¡El formato no es válido!",
     "copy_link": "Copiar enlace",
     "link_copied": "¡Enlace copiado al portapapeles!",
-    "email_in_use": "¡Este correo electrónico ya está en uso!"
+    "email_in_use": "¡Este correo electrónico ya está en uso!",
+    "select_sector": "Seleccione un sector",
+    "sector": "Sector"
   },
   "list_sectors": {
     "sectors": "Sectores",
     "sector_list": "Lista de sectores",
     "all_sectors": "Todos los sectores",
-    "manage_sectors": "Administrar sectores",
+    "manage_sectors": "Gestionar sectores",
     "create_sector": "Crear sector",
     "search": "Buscar sectores",
-    "sectors_not_found": "No se encontraron sectores",
+    "sectors_not_found": "Sectores no encontrados",
     "sector_deleted": "¡Sector eliminado con éxito!",
     "could_not_delete": "¡No se pudo eliminar el sector!",
     "successfully_activated": "¡Sector activado con éxito!",
@@ -136,10 +142,11 @@
     "status": "Sector activo",
     "sector_created": "¡Sector creado con éxito!",
     "sector_updated": "¡Sector actualizado con éxito!",
-    "could_not_create": "¡No se pudo crear el sector!"
+    "could_not_create": "¡No se pudo crear el sector!",
+    "could_not_update": "¡No se pudo actualizar el sector!"
   },
   "dashboard": {
-    "dashboard": "Tablero"
+    "dashboard": "Panel"
   },
   "chat": {
     "chat": "Chat"

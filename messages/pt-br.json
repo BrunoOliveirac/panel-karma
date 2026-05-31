@@ -1,6 +1,6 @@
 {
   "topbar": {
-    "notifications_not_found": "Nenhuma notificação encontrada"
+    "notifications_not_found": "Notificações não encontradas"
   },
   "sidebar": {
     "dashboard": "Painel",
@@ -36,13 +36,14 @@
   },
   "validation": {
     "required": "Este campo é obrigatório",
-    "email": "Este e-mail não é válido",
+    "email": "Este não é um e-mail válido",
     "password_min": "A senha deve ter pelo menos 8 caracteres",
-    "password_upper": "Deve conter ao menos uma letra maiúscula",
-    "password_lower": "Deve conter ao menos uma letra minúscula",
-    "password_number": "Deve conter ao menos um número",
-    "password_special": "Deve conter ao menos um caractere especial",
-    "password_match": "As senhas não correspondem"
+    "password_upper": "Deve conter pelo menos uma letra maiúscula",
+    "password_lower": "Deve conter pelo menos uma letra minúscula",
+    "password_number": "Deve conter pelo menos um número",
+    "password_special": "Deve conter pelo menos um caractere especial",
+    "password_match": "As senhas não coincidem",
+    "max_length": "Deve conter no máximo {max} caracteres"
   },
   "pagination": {
     "previous": "Anterior",
@@ -108,13 +109,18 @@
     "enter_phone": "Digite o telefone",
     "budget": "Orçamento",
     "enter_budget": "Digite o orçamento",
+    "notes": "Notas",
+    "enter_notes": "Digite as notas",
     "client_created": "Cliente criado com sucesso!",
     "client_updated": "Cliente atualizado com sucesso!",
     "could_not_create": "Não foi possível criar o cliente!",
-    "format_is_not_valid": "Formato inválido!",
+    "could_not_update": "Não foi possível atualizar o cliente!",
+    "format_is_not_valid": "O formato não é válido!",
     "copy_link": "Copiar link",
     "link_copied": "Link copiado para a área de transferência!",
-    "email_in_use": "Este e-mail já está em uso!"
+    "email_in_use": "Este e-mail já está em uso!",
+    "select_sector": "Selecione um setor",
+    "sector": "Setor"
   },
   "list_sectors": {
     "sectors": "Setores",
@@ -136,7 +142,8 @@
     "status": "Setor ativo",
     "sector_created": "Setor criado com sucesso!",
     "sector_updated": "Setor atualizado com sucesso!",
-    "could_not_create": "Não foi possível criar o setor!"
+    "could_not_create": "Não foi possível criar o setor!",
+    "could_not_update": "Não foi possível atualizar o setor!"
   },
   "dashboard": {
     "dashboard": "Painel"

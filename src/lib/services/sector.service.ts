@@ -14,6 +14,20 @@ export class SectorService {
   };
 
   /**
+   * Get all active sectors for the current user.
+   * @returns An array of active sectors.
+   */
+  public getAllActiveSectors = async (): Promise<Sector[]> => {
+    const user = JSON.parse(Cookies.get("user")!);
+
+    const sectors = (
+      await api.get<Sector[]>(`/sectors/list-actives/${user.id}`)
+    ).data;
+
+    return sectors;
+  };
+
+  /**
    * Create or update a sector.
    * @param sector The sector to create or update.
    * @returns The id of the created or updated sector.
