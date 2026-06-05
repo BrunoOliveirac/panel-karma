@@ -164,9 +164,9 @@ export default function ListSectors() {
 
   /**
    * Delete a sector.
-   * @param sector The sector to delete.
+   * @param sectorId The ID of the sector to delete.
    */
-  const deleteSector = async (sector: Sector) => {
+  const deleteSector = async (sectorId: string) => {
     try {
       const response = await Swal.fire({
         theme: "auto",
@@ -182,12 +182,12 @@ export default function ListSectors() {
 
       if (!response?.isConfirmed) return;
 
-      await sectorService.deleteSector(sector);
+      await sectorService.deleteSector(sectorId);
       toast.success(t("sector_deleted"));
 
       if (paginatedSectors.length === 1) setPage(page - 1);
 
-      setMainSectors((sectors) => sectors.filter((s) => s.id !== sector.id));
+      setMainSectors((sectors) => sectors.filter((s) => s.id !== sectorId));
     } catch (error) {
       console.error(error);
       toast.error(t("could_not_delete"));
@@ -320,7 +320,7 @@ export default function ListSectors() {
                               color="error"
                               size="icon-sm"
                               variant="destructive"
-                              onClick={() => deleteSector(sector)}
+                              onClick={() => deleteSector(sector.id)}
                             >
                               <Trash />
                             </Button>

@@ -41,9 +41,9 @@ export class SectorService {
 
   /**
    * Delete a sector.
-   * @param sector Sector to delete.
+   * @param sectorId The ID of the sector to delete.
    */
-  public deleteSector = async (sector: Sector): Promise<void> => {
-    await api.delete(`/sectors/delete`, { data: sector });
+  public deleteSector = async (sectorId: string): Promise<void> => {
+    await api.delete(`/sectors/delete/${sectorId}`);
   };
 }

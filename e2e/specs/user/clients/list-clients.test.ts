@@ -47,7 +47,7 @@ test("Should change to the favorite category", async ({ userPage }) => {
   await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
   await expect(userPage.getByTestId("client-card").first()).toBeVisible();
 
-  await userPage.getByTestId("category-favorite").click();
+  await userPage.getByTestId("tab-favorite").click();
   await expect(userPage.getByText("Clients not found")).toBeVisible();
 });
 

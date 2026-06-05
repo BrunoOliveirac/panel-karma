@@ -226,11 +226,12 @@ function Select({
 
       <SelectContent className={classContent}>
         <SelectGroup className={classGroup}>
-          {items.map((item, index) => (
+          {items.map((item) => (
             <SelectItem
-              key={index}
               className={classItem}
+              key={bindValue ? item[bindValue] : item}
               value={bindValue ? item[bindValue] : item}
+              data-slot={`select-item-${bindValue ? item[bindValue] : item}`}
             >
               {bindLabel ? item[bindLabel] : item}
             </SelectItem>

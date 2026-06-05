@@ -1,15 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderWithProviders } from "@/lib/mocks/render-with-providers.mock";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { toast } from "sonner";
 import ListClients from "../_list-clients/list-clients";
+import { _Translator } from "next-intl";
 
 const checkEmailMock = jest.fn();
 const upsertClientMock = jest.fn();
 const getAllClientsMock = jest.fn();
+const getAllActiveSectorsMock = jest.fn();
 
-jest.mock("use-intl", () => ({ useTranslations: () => (key: string) => key }));
-jest.mock("next-intl", () => ({ useTranslations: () => (key: string) => key }));
+jest.mock("use-intl", () => ({
+  useTranslations: () => (t: _Translator<Record<string, any>>) => t,
+}));
+
+jest.mock("next-intl", () => ({
+  useTranslations: () => (t: _Translator<Record<string, any>>) => t,
+}));
 
 jest.mock("sonner", () => ({
   toast: { success: jest.fn(), error: jest.fn() },
@@ -26,6 +34,14 @@ jest.mock("@/lib/services/client.service", () => {
       checkEmail: checkEmailMock,
       getAllClients: getAllClientsMock,
       upsertClient: (...args: string[]) => upsertClientMock(...args),
+    })),
+  };
+});
+
+jest.mock("@/lib/services/sector.service", () => {
+  return {
+    SectorService: jest.fn().mockImplementation(() => ({
+      getAllActiveSectors: getAllActiveSectorsMock,
     })),
   };
 });
@@ -48,12 +64,27 @@ const mockClients = (count = 15) => {
   });
 };
 
+const mockSectors = (count = 2) => {
+  return new Array(count).fill(null).map((_, i) => {
+    const padNumber = (i + 1).toString().padStart(2, "0");
+
+    return {
+      active: true,
+      id: padNumber,
+      userId: i.toString(),
+      name: `Sector ${padNumber}`,
+    };
+  });
+};
+
 const mockClient = {
   id: "02",
   name: "Client 02",
   email: "client02@email.com",
   phone: "12345678901",
   budget: 1000,
+  notes: "",
+  sectorId: "",
 };
 
 const handleCreateClientModal = async (
@@ -62,6 +93,7 @@ const handleCreateClientModal = async (
 ) => {
   checkEmailMock.mockResolvedValue(checkEmailValue);
   getAllClientsMock.mockResolvedValue(mockClients(1));
+  getAllActiveSectorsMock.mockResolvedValue(mockSectors(1));
   renderWithProviders(<ListClients />);
 
   await waitFor(async () => {
@@ -75,9 +107,11 @@ const handleCreateClientModal = async (
 };
 
 const handleUpsertClient = async (checkEmailValue = true) => {
-  upsertClientMock.mockResolvedValue(undefined);
+  upsertClientMock.mockResolvedValue("02");
   checkEmailMock.mockResolvedValue(checkEmailValue);
   getAllClientsMock.mockResolvedValue(mockClients(1));
+  getAllActiveSectorsMock.mockResolvedValue(mockSectors(1));
+
   renderWithProviders(<ListClients />);
 
   await waitFor(async () => {
@@ -110,16 +144,15 @@ const handleUpsertClient = async (checkEmailValue = true) => {
     expect(checkEmailMock).toHaveBeenCalledWith(mockClient.email);
     if (!checkEmailValue) return;
 
-    expect(upsertClientMock).toHaveBeenCalledWith({
-      name: mockClient.name,
-      email: mockClient.email,
-      phone: mockClient.phone,
-      budget: mockClient.budget,
-    });
+    const { name, email, phone, budget } = mockClient;
+
+    expect(upsertClientMock).toHaveBeenCalledWith(
+      expect.objectContaining({ name, email, phone, budget }),
+    );
   });
 };
 
-describe("ListClients", () => {
+describe("UpsertClient", () => {
   it("Should show error message if email is invalid", async () => {
     await handleCreateClientModal(false, "client01");
 
@@ -193,7 +226,7 @@ describe("ListClients", () => {
     expect(toast.success).toHaveBeenCalledWith("client_created");
   });
 
-  it("Should upsert a client failed because of invalid email", async () => {
+  it("Should upsert a client failed with invalid email", async () => {
     await handleUpsertClient(false);
     expect(toast.error).toHaveBeenCalledWith("email_in_use");
   });

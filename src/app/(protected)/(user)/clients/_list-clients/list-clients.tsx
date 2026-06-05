@@ -164,9 +164,9 @@ export default function ListClients() {
 
   /**
    * Delete a client.
-   * @param client The client to delete.
+   * @param clientId The ID of the client to delete.
    */
-  const deleteClient = async (client: Client) => {
+  const deleteClient = async (clientId: string) => {
     try {
       const response = await Swal.fire({
         theme: "auto",
@@ -182,12 +182,12 @@ export default function ListClients() {
 
       if (!response?.isConfirmed) return;
 
-      await clientService.deleteClient(client);
+      await clientService.deleteClient(clientId);
       toast.success(t("client_deleted"));
 
       if (paginatedClients.length === 1) setPage(page - 1);
 
-      setMainClients((clients) => clients.filter((c) => c.id !== client.id));
+      setMainClients((clients) => clients.filter((c) => c.id !== clientId));
     } catch (error) {
       console.error(error);
       toast.error(t("could_not_delete"));
@@ -268,7 +268,7 @@ function ClientList({
   handleUpdateClientModal,
 }: {
   clients: Client[];
-  deleteClient: (client: Client) => void;
+  deleteClient: (clientId: string) => void;
   toggleFavorite: (client: Client) => void;
   handleUpdateClientModal: (client: Client) => void;
 }) {
@@ -294,10 +294,10 @@ function ClientList({
    */
   const handleDeleteClient = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    client: Client,
+    clientId: string,
   ) => {
     e.stopPropagation();
-    deleteClient(client);
+    deleteClient(clientId);
   };
 
   return (
@@ -331,7 +331,7 @@ function ClientList({
 
                 <button
                   data-slot={`delete-client-${client.id}`}
-                  onClick={(e) => handleDeleteClient(e, client)}
+                  onClick={(e) => handleDeleteClient(e, client.id)}
                   className="border border-transparent rounded-full h-fit p-2 transition-all hover:border-(--danger) md:opacity-0 md:group-hover:opacity-100!"
                 >
                   <Trash size={20} className="text-(--danger)" />
