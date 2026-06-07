@@ -24,6 +24,7 @@ interface SelectProps {
   placeholder?: string;
   classTrigger?: string;
   classContent?: string;
+  triggerDataSlot: string;
   field: ControllerRenderProps<any>;
 }
 
@@ -217,10 +218,15 @@ function Select({
   placeholder,
   classContent,
   classTrigger,
+  triggerDataSlot,
 }: SelectProps) {
   return (
     <SelectWrapper value={field.value} onValueChange={field.onChange}>
-      <SelectTrigger className={classTrigger} field={field}>
+      <SelectTrigger
+        field={field}
+        className={classTrigger}
+        data-slot={triggerDataSlot}
+      >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
 

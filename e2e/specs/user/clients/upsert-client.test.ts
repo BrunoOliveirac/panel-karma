@@ -71,8 +71,25 @@ test("Should create a client successfully", async ({ userPage }) => {
     .getByTestId("upsert-client-email")
     .fill(`client${now}@email.com`);
 
-  await userPage.getByPlaceholder("Enter your phone").fill("14984484848");
+  await userPage.getByPlaceholder("Enter the phone").fill("14984484848");
   await userPage.getByTestId("upsert-client-budget").fill("100000");
+
+  // Open the selector of sectors
+  await userPage.getByTestId("upsert-client-sector-trigger").click();
+
+  // Get the first sector element
+  const firstSelectItemElement = userPage
+    .getByRole("listbox")
+    .getByRole("option")
+    .first();
+
+  // Get the selected sector name
+  const firstSelectItemContent =
+    (await firstSelectItemElement.textContent()) || "";
+
+  await firstSelectItemElement.click();
+  await userPage.waitForTimeout(1000);
+
   await userPage.getByTestId("upsert-client-save").click();
 
   // Check if the modal is closed
@@ -82,6 +99,9 @@ test("Should create a client successfully", async ({ userPage }) => {
   const filterElement = userPage.getByTestId("list-clients-search");
   await filterElement.fill(now);
   await expect(userPage.getByText(`Client ${now}`)).toBeVisible();
+
+  // Check if the sector is being displayed
+  await expect(userPage.getByText(firstSelectItemContent)).toBeVisible();
 });
 
 test("Should edit a client successfully", async ({ userPage }) => {

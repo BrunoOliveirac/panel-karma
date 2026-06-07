@@ -274,6 +274,7 @@ export default function UpsertClient({
                 items={sectors}
                 bindLabel="name"
                 placeholder={t("select_sector")}
+                triggerDataSlot="upsert-client-sector-trigger"
               />
             </Field>
           )}
