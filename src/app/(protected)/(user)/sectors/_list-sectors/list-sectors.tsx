@@ -194,6 +194,10 @@ export default function ListSectors() {
     }
   };
 
+  const sectorStatus = (isActive: boolean) => {
+    return isActive ? "active" : "inactive";
+  };
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden gap-6 pb-6">
       <div className="shrink-0 max-h-fit grid sm:flex flex-1 justify-between items-center flex-wrap gap-4">
@@ -260,7 +264,7 @@ export default function ListSectors() {
                 </TableRow>
               ) : (
                 paginatedSectors.map((sector) => (
-                  <TableRow key={sector.id}>
+                  <TableRow key={sector.id} data-slot="sector-row">
                     <TableCell>{sector.name}</TableCell>
 
                     <TableCell className="text-center">
@@ -271,8 +275,11 @@ export default function ListSectors() {
                     </TableCell>
 
                     <TableCell className="text-center">
-                      <Badge variant={sector.active ? "success" : "danger"}>
-                        {sharedT(sector.active ? "active" : "inactive")}
+                      <Badge
+                        variant={sector.active ? "success" : "danger"}
+                        data-slot={`${sectorStatus(sector.active)}-sector-status`}
+                      >
+                        {sharedT(sectorStatus(sector.active))}
                       </Badge>
                     </TableCell>
 
@@ -284,6 +291,7 @@ export default function ListSectors() {
                               size="icon-sm"
                               variant="outline"
                               onClick={() => toogleSectorStatus(sector)}
+                              data-slot={`toggle-sector-status-${sector.id}`}
                             >
                               {sector.active ? <Lock /> : <Unlock />}
                             </Button>
@@ -303,6 +311,7 @@ export default function ListSectors() {
                             <Button
                               size="icon-sm"
                               variant="outline"
+                              data-slot={`edit-sector-${sector.id}`}
                               onClick={() => openUpsertSectorModal(sector)}
                             >
                               <Pencil />
@@ -320,6 +329,7 @@ export default function ListSectors() {
                               color="error"
                               size="icon-sm"
                               variant="destructive"
+                              data-slot={`delete-sector-${sector.id}`}
                               onClick={() => deleteSector(sector.id)}
                             >
                               <Trash />

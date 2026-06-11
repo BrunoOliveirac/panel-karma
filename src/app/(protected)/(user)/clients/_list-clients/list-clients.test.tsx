@@ -82,7 +82,7 @@ describe("ListClients", () => {
     });
   });
 
-  it("Should load user clients", async () => {
+  it("Should load the clients", async () => {
     getAllClientsMock.mockResolvedValue(mockClients());
     renderWithProviders(<ListClients />);
     expect(screen.getByTestId("spinner")).toBeInTheDocument();
