@@ -2,7 +2,7 @@ import { expect, test } from "../../../fixtures/auth.fixture";
 
 test("Should close the client upsert modal", async ({ userPage }) => {
   await userPage.goto("/clients");
-  await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
   userPage.getByTestId("create-client").click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   await userPage.getByTestId("upsert-client-cancel").click();
@@ -11,7 +11,7 @@ test("Should close the client upsert modal", async ({ userPage }) => {
 
 test("Should open the client edit modal", async ({ userPage }) => {
   await userPage.goto("/clients");
-  await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
   userPage.getByTestId("client-card").first().click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   await expect(userPage.getByTestId("copy-link")).toBeVisible();
@@ -19,7 +19,7 @@ test("Should open the client edit modal", async ({ userPage }) => {
 
 test("Should open the edit client modal after reload", async ({ userPage }) => {
   await userPage.goto("/clients");
-  await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
 
   const firstBook = userPage.getByTestId("client-card").first();
   firstBook.click();
@@ -39,7 +39,7 @@ test("Should open the edit client modal after reload", async ({ userPage }) => {
 
 test("Should see error at validate e-mail", async ({ userPage }) => {
   await userPage.goto("/clients");
-  await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
   const email = await userPage.getByTestId("client-email").first().innerText();
 
   userPage.getByTestId("create-client").click();
@@ -57,7 +57,7 @@ test("Should see error at validate e-mail", async ({ userPage }) => {
 
 test("Should create a client successfully", async ({ userPage }) => {
   await userPage.goto("/clients");
-  await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
 
   // Open the create client modal
   userPage.getByTestId("create-client").click();
@@ -71,8 +71,25 @@ test("Should create a client successfully", async ({ userPage }) => {
     .getByTestId("upsert-client-email")
     .fill(`client${now}@email.com`);
 
-  await userPage.getByPlaceholder("Enter your phone").fill("14984484848");
+  await userPage.getByPlaceholder("Enter the phone").fill("14984484848");
   await userPage.getByTestId("upsert-client-budget").fill("100000");
+
+  // Open the selector of sectors
+  await userPage.getByTestId("upsert-client-sector-trigger").click();
+
+  // Get the first sector element
+  const firstSelectItemElement = userPage
+    .getByRole("listbox")
+    .getByRole("option")
+    .first();
+
+  // Get the selected sector name
+  const firstSelectItemContent =
+    (await firstSelectItemElement.textContent()) || "";
+
+  await firstSelectItemElement.click();
+  await userPage.waitForTimeout(1000);
+
   await userPage.getByTestId("upsert-client-save").click();
 
   // Check if the modal is closed
@@ -82,11 +99,14 @@ test("Should create a client successfully", async ({ userPage }) => {
   const filterElement = userPage.getByTestId("list-clients-search");
   await filterElement.fill(now);
   await expect(userPage.getByText(`Client ${now}`)).toBeVisible();
+
+  // Check if the sector is being displayed
+  await expect(userPage.getByText(firstSelectItemContent)).toBeVisible();
 });
 
 test("Should edit a client successfully", async ({ userPage }) => {
   await userPage.goto("/clients");
-  await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
 
   // Open the edit client modal
   userPage.getByTestId("client-card").first().click();

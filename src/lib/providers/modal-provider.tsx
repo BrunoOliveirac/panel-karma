@@ -147,7 +147,7 @@ export function ModalProvider({ children }: { children: ReactNode }) {
             }}
           >
             <DialogContent
-              className={`${sizeClass} ${modal.options?.className ?? ""}`}
+              className={`${sizeClass} ${modal.options?.className ?? ""} max-h-[90dvh] overflow-y-auto`}
               onEscapeKeyDown={(e) => {
                 if (modal.options?.closeOnEsc === false) {
                   e.preventDefault();

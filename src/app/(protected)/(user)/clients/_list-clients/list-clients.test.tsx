@@ -1,20 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderWithProviders } from "@/lib/mocks/render-with-providers.mock";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Swal from "sweetalert2";
 import ListClients from "./list-clients";
+import { _Translator } from "next-intl";
 
 const deleteClientMock = jest.fn();
 const getAllClientsMock = jest.fn();
 const toggleFavoriteMock = jest.fn();
+const getAllActiveSectorsMock = jest.fn();
 
 jest.mock("sweetalert2", () => ({
   __esModule: true,
   default: { fire: jest.fn() },
 }));
 
-jest.mock("use-intl", () => ({ useTranslations: () => (key: string) => key }));
-jest.mock("next-intl", () => ({ useTranslations: () => (key: string) => key }));
+jest.mock("use-intl", () => ({
+  useTranslations: () => (t: _Translator<Record<string, any>>) => t,
+}));
+
+jest.mock("next-intl", () => ({
+  useTranslations: () => (t: _Translator<Record<string, any>>) => t,
+}));
 
 jest.mock("sonner", () => ({
   toast: { success: jest.fn(), error: jest.fn() },
@@ -35,12 +43,21 @@ jest.mock("@/lib/services/client.service", () => {
   };
 });
 
+jest.mock("@/lib/services/sector.service", () => {
+  return {
+    SectorService: jest.fn().mockImplementation(() => ({
+      getAllActiveSectors: getAllActiveSectorsMock,
+    })),
+  };
+});
+
 const mockClients = (count = 15) => {
   return new Array(count).fill(null).map((_, i) => {
     const padNumber = (i + 1).toString().padStart(2, "0");
 
     return {
       active: true,
+      sectorId: "",
       id: padNumber,
       budget: 175009,
       phone: "1234567890",
@@ -56,6 +73,7 @@ const mockClients = (count = 15) => {
 describe("ListClients", () => {
   it("Should show an empty list", async () => {
     getAllClientsMock.mockResolvedValue([]);
+    getAllActiveSectorsMock.mockResolvedValue([]);
     renderWithProviders(<ListClients />);
     expect(screen.getByTestId("spinner")).toBeInTheDocument();
 
@@ -64,7 +82,7 @@ describe("ListClients", () => {
     });
   });
 
-  it("Should load user clients", async () => {
+  it("Should load the clients", async () => {
     getAllClientsMock.mockResolvedValue(mockClients());
     renderWithProviders(<ListClients />);
     expect(screen.getByTestId("spinner")).toBeInTheDocument();
@@ -157,11 +175,11 @@ describe("ListClients", () => {
     });
 
     // Toggle to favorites
-    await userEvent.click(screen.getByTestId("category-favorite"));
+    await userEvent.click(screen.getByTestId("tab-favorite"));
     expect(screen.getAllByTestId("client-card")).toHaveLength(3);
 
     // Toggle to all clients
-    await userEvent.click(screen.getByTestId("category-all"));
+    await userEvent.click(screen.getByTestId("tab-all"));
     expect(screen.getAllByTestId("client-card")).toHaveLength(5);
   });
 
@@ -182,20 +200,24 @@ describe("ListClients", () => {
   });
 
   it("Should delete a client after confirmation", async () => {
+    (Swal.fire as jest.Mock).mockResolvedValue({ isConfirmed: true });
     getAllClientsMock.mockResolvedValue(mockClients(1));
     renderWithProviders(<ListClients />);
 
-    await waitFor(async () => {
-      await userEvent.click(screen.getByTestId("delete-client-01"));
-      (Swal.fire as jest.Mock).mockResolvedValue({ isConfirmed: true });
-      expect(deleteClientMock).toHaveBeenCalledWith("01");
-      expect(screen.getByText("clients_not_found")).toBeInTheDocument();
-    });
+    await waitFor(
+      async () => await userEvent.click(screen.getByTestId("delete-client-01")),
+    );
+
+    expect(deleteClientMock).toHaveBeenCalledWith("01");
+
+    await waitFor(async () =>
+      expect(screen.getByText("clients_not_found")).toBeInTheDocument(),
+    );
   });
 
   it("Should cancel the deletion of a client", async () => {
-    getAllClientsMock.mockResolvedValue(mockClients(1));
     (Swal.fire as jest.Mock).mockResolvedValue({ isConfirmed: false });
+    getAllClientsMock.mockResolvedValue(mockClients(1));
     renderWithProviders(<ListClients />);
 
     await waitFor(async () => {
@@ -207,6 +229,7 @@ describe("ListClients", () => {
 
   it("Should open the client's create modal", async () => {
     getAllClientsMock.mockResolvedValue([]);
+    getAllActiveSectorsMock.mockResolvedValue([]);
     renderWithProviders(<ListClients />);
 
     await userEvent.click(screen.getByTestId("create-client"));
@@ -215,6 +238,7 @@ describe("ListClients", () => {
 
   it("Should open the client's edit modal", async () => {
     getAllClientsMock.mockResolvedValue(mockClients(1));
+    getAllActiveSectorsMock.mockResolvedValue([]);
     renderWithProviders(<ListClients />);
 
     await waitFor(async () => {

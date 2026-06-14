@@ -4,15 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { InputCurrency } from "@/components/ui/input-currency";
+import { Select } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { SpinnerButton } from "@/components/ui/spinner-button";
+import { Textarea } from "@/components/ui/textarea";
 import { Client } from "@/lib/models/client";
+import { Sector } from "@/lib/models/sector";
 import { ModalInjectedProps } from "@/lib/providers/modal-provider";
 import { ClientService } from "@/lib/services/client.service";
+import { SectorService } from "@/lib/services/sector.service";
 import { upsertClientValidator } from "@/lib/validators/upsert-client.validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm, UseFormReturn } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import { toast } from "sonner";
@@ -22,6 +26,8 @@ interface UpsertForm {
   email: string;
   phone: string;
   budget: number;
+  notes?: string;
+  sectorId?: string;
 }
 
 export default function UpsertClient({
@@ -29,10 +35,13 @@ export default function UpsertClient({
   closeModal,
   dismissModal,
 }: { client?: Client } & ModalInjectedProps<boolean>) {
-  const clientService = new ClientService();
+  const sharedT = useTranslations("shared");
   const t = useTranslations("upsert_client");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [sectors, setSectors] = useState<Sector[]>([]);
+  const clientService = useMemo(() => new ClientService(), []);
+  const sectorService = useMemo(() => new SectorService(), []);
 
   const {
     control,
@@ -40,20 +49,41 @@ export default function UpsertClient({
     handleSubmit,
   }: UseFormReturn<UpsertForm, unknown, UpsertForm> = useForm({
     resolver: zodResolver(upsertClientValidator(useTranslations())),
-    defaultValues: { name: "", email: "", phone: "", budget: 0 },
     mode: "onChange",
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      budget: 0,
+      notes: "",
+      sectorId: "",
+    },
   });
 
   useEffect(() => {
+    const loadSectors = async () => {
+      try {
+        const sectors = await sectorService.getAllActiveSectors();
+        setSectors(sectors);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (client) {
       setValue("name", client.name);
       setValue("email", client.email);
       setValue("phone", client.phone);
       setValue("budget", client.budget);
+
+      if (client.sector) setValue("sectorId", client.sector.id);
+      if (client.notes) setValue("notes", client.notes);
     }
 
-    setLoading(false);
-  }, [client, setValue]);
+    loadSectors();
+  }, [client, sectorService, setValue]);
 
   /**
    * Submit the form and create or update the client.
@@ -65,14 +95,24 @@ export default function UpsertClient({
       const emailIsValid = await validateEmail(data.email);
       if (!emailIsValid) return;
 
-      const newClient = { ...data, id: client?.id } as Client;
-      newClient.id = await clientService.upsertClient(newClient);
+      const { sectorId, ...formValue } = data;
+
+      const clientId = await clientService.upsertClient({
+        ...formValue,
+        sectorId,
+        id: client?.id,
+      });
 
       toast.success(t(`client_${client ? "updated" : "created"}`));
-      dismissModal(newClient);
+
+      dismissModal({
+        id: clientId,
+        ...formValue,
+        sector: sectorId ? sectors.find((s) => s.id === sectorId) : null,
+      } as Client);
     } catch (error) {
       console.error(error);
-      toast.error(t("could_not_create"));
+      toast.error(t(`could_not_${client ? "update" : "create"}`));
     } finally {
       setSubmitting(false);
     }
@@ -145,13 +185,13 @@ export default function UpsertClient({
           control={control}
           render={({ field, fieldState }) => (
             <Field>
-              <FieldLabel>{t("name")}</FieldLabel>
+              <FieldLabel>{sharedT("name")}</FieldLabel>
 
               <Input
                 {...field}
-                placeholder={t("enter_name")}
                 data-slot="upsert-client-name"
                 data-invalid={fieldState.invalid}
+                placeholder={sharedT("enter_name")}
               />
 
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -193,7 +233,9 @@ export default function UpsertClient({
               <PhoneInput
                 {...field}
                 placeholder={t("enter_phone")}
-                data-invalid={fieldState.invalid}
+                inputClass={
+                  fieldState.invalid ? "border-red-900! ring-red-900!" : ""
+                }
               />
 
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -211,6 +253,44 @@ export default function UpsertClient({
               <InputCurrency
                 {...field}
                 dataSlot="upsert-client-budget"
+                dataInvalid={fieldState.invalid}
+              />
+
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="sectorId"
+          control={control}
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>{t("sector")}</FieldLabel>
+
+              <Select
+                field={field}
+                bindValue="id"
+                items={sectors}
+                bindLabel="name"
+                placeholder={t("select_sector")}
+                triggerDataSlot="upsert-client-sector-trigger"
+              />
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="notes"
+          control={control}
+          render={({ field, fieldState }) => (
+            <Field>
+              <FieldLabel>{t("notes")}</FieldLabel>
+
+              <Textarea
+                {...field}
+                placeholder={t("enter_notes")}
+                data-slot="upsert-client-notes"
                 data-invalid={fieldState.invalid}
               />
 
@@ -229,7 +309,7 @@ export default function UpsertClient({
               data-slot="upsert-client-cancel"
               className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
             >
-              {t("cancel")}
+              {sharedT("cancel")}
             </Button>
           </Field>
 
@@ -241,7 +321,7 @@ export default function UpsertClient({
               dataSlot="upsert-client-save"
               className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
             >
-              {t("save")}
+              {sharedT("save")}
             </SpinnerButton>
           </Field>
         </div>

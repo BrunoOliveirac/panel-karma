@@ -203,7 +203,7 @@ html {
 }
 
 .react-tel-input .flag-dropdown {
-  @apply border-e-0! rounded-e-none!;
+  @apply border-e-0! rounded-e-none! border-transparent!;
 }
 
 .react-tel-input .flag-dropdown:hover {

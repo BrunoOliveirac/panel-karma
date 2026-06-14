@@ -1,4 +1,4 @@
-export const currencyLocaleMapper = {
+export const CurrencyLocaleMapper = {
   "pt-br": { locale: "pt-BR", currency: "BRL" },
   en: { locale: "en-US", currency: "USD" },
   es: { locale: "es-ES", currency: "EUR" },

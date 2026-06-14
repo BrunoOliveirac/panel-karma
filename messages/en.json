@@ -16,6 +16,24 @@
     "sectors": "Sectors",
     "logout": "Logout"
   },
+  "shared": {
+    "are_you_sure": "Are you sure?",
+    "you_wont_be": "You won't be able to revert this!",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "name": "Name",
+    "created_at": "Created at",
+    "status": "Status",
+    "actions": "Actions",
+    "active": "Active",
+    "inactive": "Inactive",
+    "enter_name": "Enter the name",
+    "delete": "Delete",
+    "edit": "Edit",
+    "activate": "Activate",
+    "deactivate": "Deactivate"
+  },
   "validation": {
     "required": "This field is required",
     "email": "This is not a valid email",
@@ -24,7 +42,8 @@
     "password_lower": "Must contain at least one lowercase letter",
     "password_number": "Must contain at least one number",
     "password_special": "Must contain at least one special character",
-    "password_match": "Passwords do not match"
+    "password_match": "Passwords do not match",
+    "max_length": "Must contain at most {max} characters"
   },
   "pagination": {
     "previous": "Previous",
@@ -48,7 +67,7 @@
     "name": "Name",
     "enter_name": "Enter your name",
     "email": "Email",
-    "enter_email": "Enter your email",
+    "enter_email": "Enter your e-mail",
     "password": "Password",
     "enter_password": "Enter your password",
     "confirm_password": "Confirm password",
@@ -80,31 +99,51 @@
     "could_not_unfavorite": "Could not unfavorite the client!",
     "could_not_favorite": "Could not favorite the client!",
     "could_not_delete": "Could not delete the client!",
-    "client_deleted": "Client deleted successfully!",
-    "are_you_sure": "Are you sure?",
-    "you_wont_be": "You won't be able to revert this!",
-    "cancel": "Cancel",
-    "confirm": "Confirm"
+    "client_deleted": "Client deleted successfully!"
   },
   "upsert_client": {
     "client_details": "Client Details",
-    "name": "Name",
-    "enter_name": "Enter your name",
-    "email": "Email",
-    "enter_email": "Enter your email",
+    "email": "E-mail",
+    "enter_email": "Enter the e-mail",
     "phone": "Phone",
-    "enter_phone": "Enter your phone",
+    "enter_phone": "Enter the phone",
     "budget": "Budget",
-    "enter_budget": "Enter your budget",
-    "cancel": "Cancel",
-    "save": "Save",
+    "enter_budget": "Enter the budget",
+    "notes": "Notes",
+    "enter_notes": "Enter the notes",
     "client_created": "Client created successfully!",
     "client_updated": "Client updated successfully!",
     "could_not_create": "Could not create the client!",
+    "could_not_update": "Could not update the client!",
     "format_is_not_valid": "Format is not valid!",
     "copy_link": "Copy link",
     "link_copied": "Link copied to clipboard!",
-    "email_in_use": "This e-mail is already in use!"
+    "email_in_use": "This e-mail is already in use!",
+    "select_sector": "Select sector",
+    "sector": "Sector"
+  },
+  "list_sectors": {
+    "sectors": "Sectors",
+    "sector_list": "Sector List",
+    "all_sectors": "All Sectors",
+    "manage_sectors": "Manage Sectors",
+    "create_sector": "Create sector",
+    "search": "Search sectors",
+    "sectors_not_found": "Sectors not found",
+    "sector_deleted": "Sector deleted successfully!",
+    "could_not_delete": "Could not delete the sector!",
+    "successfully_activated": "Sector successfully activated!",
+    "successfully_deactivated": "Sector successfully deactivated!",
+    "could_not_activate": "Could not activate the sector!",
+    "could_not_deactivate": "Could not deactivate the sector!"
+  },
+  "upsert_sector": {
+    "sector_details": "Sector Details",
+    "status": "Active sector",
+    "sector_created": "Sector created successfully!",
+    "sector_updated": "Sector updated successfully!",
+    "could_not_create": "Could not create the sector!",
+    "could_not_update": "Could not update the sector!"
   },
   "dashboard": {
     "dashboard": "Dashboard"
