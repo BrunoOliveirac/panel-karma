@@ -264,7 +264,11 @@ export default function ListSectors() {
                 </TableRow>
               ) : (
                 paginatedSectors.map((sector) => (
-                  <TableRow key={sector.id} data-slot="sector-row">
+                  <TableRow
+                    id={sector.id}
+                    key={sector.id}
+                    data-slot="sector-row"
+                  >
                     <TableCell>{sector.name}</TableCell>
 
                     <TableCell className="text-center">
@@ -329,8 +333,8 @@ export default function ListSectors() {
                               color="error"
                               size="icon-sm"
                               variant="destructive"
-                              data-slot={`delete-sector-${sector.id}`}
                               onClick={() => deleteSector(sector.id)}
+                              data-slot={`delete-sector-${sector.id}`}
                             >
                               <Trash />
                             </Button>

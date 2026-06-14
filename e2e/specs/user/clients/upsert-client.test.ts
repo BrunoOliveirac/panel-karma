@@ -2,7 +2,7 @@ import { expect, test } from "../../../fixtures/auth.fixture";
 
 test("Should close the client upsert modal", async ({ userPage }) => {
   await userPage.goto("/clients");
-  await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
   userPage.getByTestId("create-client").click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   await userPage.getByTestId("upsert-client-cancel").click();
@@ -11,7 +11,7 @@ test("Should close the client upsert modal", async ({ userPage }) => {
 
 test("Should open the client edit modal", async ({ userPage }) => {
   await userPage.goto("/clients");
-  await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
   userPage.getByTestId("client-card").first().click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   await expect(userPage.getByTestId("copy-link")).toBeVisible();
@@ -19,7 +19,7 @@ test("Should open the client edit modal", async ({ userPage }) => {
 
 test("Should open the edit client modal after reload", async ({ userPage }) => {
   await userPage.goto("/clients");
-  await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
 
   const firstBook = userPage.getByTestId("client-card").first();
   firstBook.click();
@@ -39,7 +39,7 @@ test("Should open the edit client modal after reload", async ({ userPage }) => {
 
 test("Should see error at validate e-mail", async ({ userPage }) => {
   await userPage.goto("/clients");
-  await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
   const email = await userPage.getByTestId("client-email").first().innerText();
 
   userPage.getByTestId("create-client").click();
@@ -57,7 +57,7 @@ test("Should see error at validate e-mail", async ({ userPage }) => {
 
 test("Should create a client successfully", async ({ userPage }) => {
   await userPage.goto("/clients");
-  await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
 
   // Open the create client modal
   userPage.getByTestId("create-client").click();
@@ -106,7 +106,7 @@ test("Should create a client successfully", async ({ userPage }) => {
 
 test("Should edit a client successfully", async ({ userPage }) => {
   await userPage.goto("/clients");
-  await expect(userPage.locator('[data-slot="spinner"]')).toBeHidden();
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
 
   // Open the edit client modal
   userPage.getByTestId("client-card").first().click();
