@@ -1,6 +1,6 @@
 {
   "topbar": {
-    "notifications_not_found": "Nenhuma notificação encontrada"
+    "notifications_not_found": "Notificações não encontradas"
   },
   "sidebar": {
     "dashboard": "Painel",
@@ -16,15 +16,34 @@
     "sectors": "Setores",
     "logout": "Terminar sessão"
   },
+  "shared": {
+    "are_you_sure": "Tem a certeza?",
+    "you_wont_be": "Não poderá reverter isto!",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "name": "Nome",
+    "created_at": "Criado em",
+    "status": "Estado",
+    "actions": "Ações",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "enter_name": "Introduza o nome",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "activate": "Ativar",
+    "deactivate": "Desativar"
+  },
   "validation": {
     "required": "Este campo é obrigatório",
-    "email": "Este não é um email válido",
+    "email": "Este não é um e-mail válido",
     "password_min": "A palavra-passe deve ter pelo menos 8 caracteres",
     "password_upper": "Deve conter pelo menos uma letra maiúscula",
     "password_lower": "Deve conter pelo menos uma letra minúscula",
     "password_number": "Deve conter pelo menos um número",
-    "password_special": "Deve conter pelo menos um carácter especial",
-    "password_match": "As palavras-passe não coincidem"
+    "password_special": "Deve conter pelo menos um caráter especial",
+    "password_match": "As palavras-passe não coincidem",
+    "max_length": "Deve conter no máximo {max} caracteres"
   },
   "pagination": {
     "previous": "Anterior",
@@ -32,13 +51,13 @@
   },
   "login": {
     "access_your_account": "Aceda à sua conta",
-    "email": "Email",
-    "enter_email": "Introduza o email",
+    "email": "E-mail",
+    "enter_email": "Introduza o e-mail",
     "password": "Palavra-passe",
     "enter_password": "Introduza a palavra-passe",
     "login": "Iniciar sessão",
-    "dont_have_account": "Não tem conta? Registe-se",
-    "error": "Não foi possível iniciar sessão!",
+    "dont_have_account": "Não tem uma conta? Registe-se",
+    "error": "Não foi possível iniciar sessão na sua conta!",
     "invalid_credentials": "Credenciais inválidas!"
   },
   "register": {
@@ -46,13 +65,13 @@
     "register": "Registar",
     "login": "Iniciar sessão",
     "name": "Nome",
-    "enter_name": "Introduza o nome",
-    "email": "Email",
-    "enter_email": "Introduza o email",
+    "enter_name": "Introduza o seu nome",
+    "email": "E-mail",
+    "enter_email": "Introduza o seu e-mail",
     "password": "Palavra-passe",
-    "enter_password": "Introduza a palavra-passe",
+    "enter_password": "Introduza a sua palavra-passe",
     "confirm_password": "Confirmar palavra-passe",
-    "error": "Não foi possível criar a conta!",
+    "error": "Não foi possível criar a sua conta!",
     "success": "Conta criada com sucesso!"
   },
   "home": {
@@ -67,7 +86,7 @@
     "add_client": "Adicionar cliente",
     "edit_client": "Editar cliente",
     "search": "Pesquisar clientes",
-    "clients_not_found": "Nenhum cliente encontrado",
+    "clients_not_found": "Clientes não encontrados",
     "manage_clients": "Gerir clientes",
     "all_clients": "Todos os clientes",
     "favorites": "Favoritos",
@@ -77,37 +96,57 @@
     "budget": "Orçamento",
     "client_unfavorited": "Cliente removido dos favoritos com sucesso!",
     "client_favorited": "Cliente adicionado aos favoritos com sucesso!",
-    "could_not_unfavorite": "Não foi possível remover do favorito!",
-    "could_not_favorite": "Não foi possível adicionar aos favoritos!",
+    "could_not_unfavorite": "Não foi possível remover o cliente dos favoritos!",
+    "could_not_favorite": "Não foi possível adicionar o cliente aos favoritos!",
     "could_not_delete": "Não foi possível eliminar o cliente!",
-    "client_deleted": "Cliente eliminado com sucesso!",
-    "are_you_sure": "Tem a certeza?",
-    "you_wont_be": "Não será possível reverter isso!",
-    "cancel": "Cancelar",
-    "confirm": "Confirmar"
+    "client_deleted": "Cliente eliminado com sucesso!"
   },
   "upsert_client": {
     "client_details": "Detalhes do cliente",
-    "name": "Nome",
-    "enter_name": "Introduza o nome",
-    "email": "Email",
-    "enter_email": "Introduza o email",
+    "email": "E-mail",
+    "enter_email": "Introduza o e-mail",
     "phone": "Telefone",
     "enter_phone": "Introduza o telefone",
     "budget": "Orçamento",
     "enter_budget": "Introduza o orçamento",
-    "cancel": "Cancelar",
-    "save": "Guardar",
+    "notes": "Notas",
+    "enter_notes": "Introduza as notas",
     "client_created": "Cliente criado com sucesso!",
     "client_updated": "Cliente atualizado com sucesso!",
     "could_not_create": "Não foi possível criar o cliente!",
-    "format_is_not_valid": "Formato inválido!",
-    "copy_link": "Copiar link",
-    "link_copied": "Link copiado para a área de transferência!",
-    "email_in_use": "Este email já está em uso!"
+    "could_not_update": "Não foi possível atualizar o cliente!",
+    "format_is_not_valid": "O formato não é válido!",
+    "copy_link": "Copiar ligação",
+    "link_copied": "Ligação copiada para a área de transferência!",
+    "email_in_use": "Este e-mail já está em utilização!",
+    "select_sector": "Selecione um setor",
+    "sector": "Setor"
+  },
+  "list_sectors": {
+    "sectors": "Setores",
+    "sector_list": "Lista de setores",
+    "all_sectors": "Todos os setores",
+    "manage_sectors": "Gerir setores",
+    "create_sector": "Criar setor",
+    "search": "Pesquisar setores",
+    "sectors_not_found": "Setores não encontrados",
+    "sector_deleted": "Setor eliminado com sucesso!",
+    "could_not_delete": "Não foi possível eliminar o setor!",
+    "successfully_activated": "Setor ativado com sucesso!",
+    "successfully_deactivated": "Setor desativado com sucesso!",
+    "could_not_activate": "Não foi possível ativar o setor!",
+    "could_not_deactivate": "Não foi possível desativar o setor!"
+  },
+  "upsert_sector": {
+    "sector_details": "Detalhes do setor",
+    "status": "Setor ativo",
+    "sector_created": "Setor criado com sucesso!",
+    "sector_updated": "Setor atualizado com sucesso!",
+    "could_not_create": "Não foi possível criar o setor!",
+    "could_not_update": "Não foi possível atualizar o setor!"
   },
   "dashboard": {
-    "dashboard": "Dashboard"
+    "dashboard": "Painel"
   },
   "chat": {
     "chat": "Chat"

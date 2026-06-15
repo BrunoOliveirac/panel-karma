@@ -2,6 +2,17 @@ import { api } from "../client/axios";
 import Cookies from "js-cookie";
 import { Client } from "../models/client";
 
+interface UpsertClientParams {
+  id?: string;
+  name: string;
+  email: string;
+  phone: string;
+  notes?: string;
+  budget: number;
+  userId?: string;
+  sectorId?: string;
+}
+
 export class ClientService {
   /**
    * Get all clients for the current user.
@@ -34,9 +45,8 @@ export class ClientService {
    * @param client The client to create or update.
    * @returns The id of the created or updated client.
    */
-  public upsertClient = async (client: Client): Promise<string> => {
+  public upsertClient = async (client: UpsertClientParams): Promise<string> => {
     const user = JSON.parse(Cookies.get("user")!);
-    client.favorite = client.favorite ?? false;
     client.userId = user.id;
     const response = await api.post<string>(`/clients/upsert`, client);
     return response.data;
@@ -56,9 +66,9 @@ export class ClientService {
 
   /**
    * Delete a client.
-   * @param clientId Client ID to delete.
+   * @param clientId The ID of the client to delete.
    */
   public deleteClient = async (clientId: string): Promise<void> => {
-    await api.delete(`/clients/${clientId}`);
+    await api.delete(`/clients/delete/${clientId}`);
   };
 }
