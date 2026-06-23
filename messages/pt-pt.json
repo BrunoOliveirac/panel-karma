@@ -145,6 +145,33 @@
     "could_not_create": "Não foi possível criar o setor!",
     "could_not_update": "Não foi possível atualizar o setor!"
   },
+  "list_projects": {
+    "projects": "Projetos",
+    "project_list": "Lista de projetos",
+    "all_projects": "Todos os projetos",
+    "manage_projects": "Gerir projetos",
+    "create_project": "Criar projeto",
+    "search": "Pesquisar projetos",
+    "client": "Cliente",
+    "all_clients": "Todos os clientes",
+    "projects_not_found": "Projetos não encontrados",
+    "project_deleted": "Projeto eliminado com sucesso!",
+    "could_not_delete": "Não foi possível eliminar o projeto!",
+    "successfully_activated": "Projeto ativado com sucesso!",
+    "successfully_deactivated": "Projeto desativado com sucesso!",
+    "could_not_activate": "Não foi possível ativar o projeto!",
+    "could_not_deactivate": "Não foi possível desativar o projeto!"
+  },
+  "upsert_project": {
+    "project_details": "Detalhes do projeto",
+    "status": "Projeto ativo",
+    "client": "Cliente",
+    "select_client": "Selecione um cliente",
+    "project_created": "Projeto criado com sucesso!",
+    "project_updated": "Projeto atualizado com sucesso!",
+    "could_not_create": "Não foi possível criar o projeto!",
+    "could_not_update": "Não foi possível atualizar o projeto!"
+  },
   "dashboard": {
     "dashboard": "Painel"
   },

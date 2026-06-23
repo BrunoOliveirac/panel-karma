@@ -1,6 +1,7 @@
 import {
   Contact,
   Factory,
+  FolderOpenDot,
   Home,
   LayoutDashboard,
   MessageCircle,
@@ -26,7 +27,7 @@ export class SidebarItemMock {
     // { name: "chat", path: "/chat", icon: MessageCircle },
     // { name: "arka", path: "/arka", icon: Bot }, // ARKA: AI-Ready Karma Assistant
     { name: "clients", path: "/clients", icon: Contact },
-    // { name: "projects", path: "/projects", icon: FolderOpenDot },
+    { name: "projects", path: "/projects", icon: FolderOpenDot },
     { name: "sectors", path: "/sectors", icon: Factory },
     // { name: "profile", path: "/profile", icon: UserCircle },
   ];
