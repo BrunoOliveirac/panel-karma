@@ -145,6 +145,33 @@
     "could_not_create": "Nu s-a putut crea sectorul!",
     "could_not_update": "Nu s-a putut actualiza sectorul!"
   },
+  "list_projects": {
+    "projects": "Proiecte",
+    "project_list": "Lista proiectelor",
+    "all_projects": "Toate proiectele",
+    "manage_projects": "Gestionează proiectele",
+    "create_project": "Creează proiect",
+    "search": "Caută proiecte",
+    "client": "Client",
+    "all_clients": "Toți clienții",
+    "projects_not_found": "Proiecte negăsite",
+    "project_deleted": "Proiect șters cu succes!",
+    "could_not_delete": "Nu s-a putut șterge proiectul!",
+    "successfully_activated": "Proiect activat cu succes!",
+    "successfully_deactivated": "Proiect dezactivat cu succes!",
+    "could_not_activate": "Nu s-a putut activa proiectul!",
+    "could_not_deactivate": "Nu s-a putut dezactiva proiectul!"
+  },
+  "upsert_project": {
+    "project_details": "Detalii proiect",
+    "status": "Proiect activ",
+    "client": "Client",
+    "select_client": "Selectați un client",
+    "project_created": "Proiect creat cu succes!",
+    "project_updated": "Proiect actualizat cu succes!",
+    "could_not_create": "Nu s-a putut crea proiectul!",
+    "could_not_update": "Nu s-a putut actualiza proiectul!"
+  },
   "dashboard": {
     "dashboard": "Tablou de bord"
   },

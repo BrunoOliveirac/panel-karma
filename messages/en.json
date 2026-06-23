@@ -145,6 +145,33 @@
     "could_not_create": "Could not create the sector!",
     "could_not_update": "Could not update the sector!"
   },
+  "list_projects": {
+    "projects": "Projects",
+    "project_list": "Project List",
+    "all_projects": "All Projects",
+    "manage_projects": "Manage Projects",
+    "create_project": "Create project",
+    "search": "Search projects",
+    "client": "Client",
+    "all_clients": "All clients",
+    "projects_not_found": "Projects not found",
+    "project_deleted": "Project deleted successfully!",
+    "could_not_delete": "Could not delete the project!",
+    "successfully_activated": "Project successfully activated!",
+    "successfully_deactivated": "Project successfully deactivated!",
+    "could_not_activate": "Could not activate the project!",
+    "could_not_deactivate": "Could not deactivate the project!"
+  },
+  "upsert_project": {
+    "project_details": "Project Details",
+    "status": "Active project",
+    "client": "Client",
+    "select_client": "Select client",
+    "project_created": "Project created successfully!",
+    "project_updated": "Project updated successfully!",
+    "could_not_create": "Could not create the project!",
+    "could_not_update": "Could not update the project!"
+  },
   "dashboard": {
     "dashboard": "Dashboard"
   },

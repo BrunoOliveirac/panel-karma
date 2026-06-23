@@ -74,6 +74,49 @@ test("User confirm the sector deletion", async ({ userPage }) => {
   ).not.toBeVisible();
 });
 
+test("Should deactivate sector status", async ({ userPage }) => {
+  await userPage.goto("/sectors");
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
+
+  const activeSectorRow = userPage
+    .getByTestId("sector-row")
+    .filter({ has: userPage.getByTestId("active-sector-status") })
+    .first();
+  await expect(activeSectorRow).toBeVisible();
+
+  const sectorId = await activeSectorRow.getAttribute("id");
+  if (!sectorId) throw new Error("Sector id not found");
+
+  const sectorRow = userPage.locator(
+    `[data-slot="sector-row"][id="${sectorId}"]`,
+  );
+
+  await sectorRow.getByTestId(`toggle-sector-status-${sectorId}`).click();
+  await expect(sectorRow.getByTestId("inactive-sector-status")).toBeVisible();
+});
+
+test("Should activate sector status", async ({ userPage }) => {
+  await userPage.goto("/sectors");
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
+
+  const inactiveSectorRow = userPage
+    .getByTestId("sector-row")
+    .filter({ has: userPage.getByTestId("inactive-sector-status") })
+    .first();
+
+  await expect(inactiveSectorRow).toBeVisible();
+  const sectorId = await inactiveSectorRow.getAttribute("id");
+
+  if (!sectorId) throw new Error("Sector id not found");
+
+  const sectorRow = userPage.locator(
+    `[data-slot="sector-row"][id="${sectorId}"]`,
+  );
+
+  await sectorRow.getByTestId(`toggle-sector-status-${sectorId}`).click();
+  await expect(sectorRow.getByTestId("active-sector-status")).toBeVisible();
+});
+
 test("Should open the sector create modal", async ({ userPage }) => {
   await userPage.goto("/sectors");
   await expect(userPage.getByTestId("spinner")).toBeHidden();

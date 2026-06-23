@@ -2,7 +2,7 @@
 import { renderWithProviders } from "@/lib/mocks/render-with-providers.mock";
 import { _Translator, useFormatter } from "next-intl";
 import ListSectors from "./list-sectors";
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Swal from "sweetalert2";
 
@@ -67,6 +67,16 @@ const mockSectors = (count = 15) => {
     };
   });
 };
+
+const mockSector = (active: boolean) => [
+  {
+    id: "01",
+    active,
+    userId: "0",
+    createdAt: new Date(),
+    name: "Sector 01",
+  },
+];
 
 describe("ListSectors", () => {
   it("Should show an empty list", async () => {
@@ -149,47 +159,59 @@ describe("ListSectors", () => {
     );
   });
 
-  it("Should deactivate a sector", async () => {
-    getAllSectorsMock.mockResolvedValue(mockSectors(1));
+  it("Should deactivate sector status", async () => {
+    getAllSectorsMock.mockResolvedValue(mockSector(true));
     renderWithProviders(<ListSectors />);
 
-    await waitFor(async () => {
-      const sectorCard = screen.getAllByTestId("sector-row")[0];
-      await userEvent.click(sectorCard);
+    await waitFor(() => {
+      expect(screen.getByTestId("sector-row")).toBeInTheDocument();
     });
 
-    await waitFor(async () => {
-      const toggleButton = screen.getByTestId("toggle-sector-status-01");
-      await userEvent.click(toggleButton);
-    });
+    const sectorRow = screen.getByTestId("sector-row");
+    expect(
+      within(sectorRow).getByTestId("active-sector-status"),
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId("toggle-sector-status-01"));
 
     expect(upsertSectorMock).toHaveBeenCalledWith(
-      expect.objectContaining({ id: "01" }),
+      expect.objectContaining({
+        id: "01",
+        active: false,
+      }),
     );
 
     expect(
-      screen.getAllByTestId("inactive-sector-status")[0],
+      within(sectorRow).getByTestId("inactive-sector-status"),
     ).toBeInTheDocument();
-    // expect(screen.getByText("successfully_deactivated")).toBeInTheDocument();
   });
 
-  it("Should activate a sector", async () => {
-    getAllSectorsMock.mockResolvedValue(mockSectors(2));
+  it("Should activate sector status", async () => {
+    getAllSectorsMock.mockResolvedValue(mockSector(false));
     renderWithProviders(<ListSectors />);
 
-    await waitFor(async () => {
-      const toggleButton = screen.getByTestId("toggle-sector-status-02");
-      await userEvent.click(toggleButton);
+    await waitFor(() => {
+      expect(screen.getByTestId("sector-row")).toBeInTheDocument();
     });
 
+    const sectorRow = screen.getByTestId("sector-row");
+
+    expect(
+      within(sectorRow).getByTestId("inactive-sector-status"),
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId("toggle-sector-status-01"));
+
     expect(upsertSectorMock).toHaveBeenCalledWith(
-      expect.objectContaining({ id: "02" }),
+      expect.objectContaining({
+        id: "01",
+        active: true,
+      }),
     );
 
     expect(
-      screen.getAllByTestId("active-sector-status")[1],
+      within(sectorRow).getByTestId("active-sector-status"),
     ).toBeInTheDocument();
-    // expect(screen.getByText("successfully_activated")).toBeInTheDocument();
   });
 
   it("Should open the sector's edit modal", async () => {
