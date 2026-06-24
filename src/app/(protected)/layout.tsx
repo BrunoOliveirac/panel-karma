@@ -34,7 +34,7 @@ export default function ProtectedLayout({
     <div className="flex h-dvh p-2">
       <Sidebar />
 
-      <div className="w-full">
+      <div className="w-[calc(100%-3.5rem)]">
         <Topbar />
 
         <div className="flex flex-col flex-1 overflow-hidden px-4 md:px-8 max-h-[calc(100dvh-4.5rem)] h-full">
