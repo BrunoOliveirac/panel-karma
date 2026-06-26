@@ -13,20 +13,16 @@ import { SpinnerButton } from "@/components/ui/spinner-button";
 import { Support } from "@/lib/models/support";
 import { ModalInjectedProps } from "@/lib/providers/modal-provider";
 import { SupportService } from "@/lib/services/support.service";
-import { upsertSupportValidator } from "@/lib/validators/upsert-support.validator";
+import {
+  UpsertSupportForm,
+  upsertSupportValidator,
+} from "@/lib/validators/upsert-support.validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeOffIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm, UseFormReturn, useWatch } from "react-hook-form";
 import { toast } from "sonner";
-
-interface UpsertForm {
-  name: string;
-  email: string;
-  password?: string;
-  confirmPassword?: string;
-}
 
 export default function UpsertSupport({
   support,
@@ -48,7 +44,7 @@ export default function UpsertSupport({
     control,
     setValue,
     handleSubmit,
-  }: UseFormReturn<UpsertForm, unknown, UpsertForm> = useForm({
+  }: UseFormReturn<UpsertSupportForm, unknown, UpsertSupportForm> = useForm({
     resolver: zodResolver(upsertSupportValidator(useTranslations(), isEdit)),
     defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
     mode: "onChange",
@@ -101,7 +97,7 @@ export default function UpsertSupport({
     }
   };
 
-  const onSubmit = async (data: UpsertForm) => {
+  const onSubmit = async (data: UpsertSupportForm) => {
     try {
       setSubmitting(true);
       const emailIsValid = await validateEmail(data.email);

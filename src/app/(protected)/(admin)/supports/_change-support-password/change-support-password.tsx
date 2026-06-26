@@ -73,7 +73,7 @@ export default function ChangeSupportPassword({
 
   return (
     <section data-slot="change-support-password-modal">
-      <p className="text-xl font-medium mb-2">{t("change_password")}</p>
+      <p className="text-xl font-medium mb-1">{t("change_password")}</p>
       <p className="text-sm text-muted-foreground mb-8">{support.name}</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -130,9 +130,7 @@ export default function ChangeSupportPassword({
                 </InputGroupAddon>
               </InputGroup>
 
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} />
-              )}
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
@@ -144,15 +142,11 @@ export default function ChangeSupportPassword({
             {validationT("password_min")}
           </li>
 
-          <li
-            className={validations.upper ? "text-green-600" : "text-red-700"}
-          >
+          <li className={validations.upper ? "text-green-600" : "text-red-700"}>
             {validationT("password_upper")}
           </li>
 
-          <li
-            className={validations.lower ? "text-green-600" : "text-red-700"}
-          >
+          <li className={validations.lower ? "text-green-600" : "text-red-700"}>
             {validationT("password_lower")}
           </li>
 
@@ -163,9 +157,7 @@ export default function ChangeSupportPassword({
           </li>
 
           <li
-            className={
-              validations.special ? "text-green-600" : "text-red-700"
-            }
+            className={validations.special ? "text-green-600" : "text-red-700"}
           >
             {validationT("password_special")}
           </li>
