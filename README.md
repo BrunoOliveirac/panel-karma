@@ -8,7 +8,7 @@ Painel administrativo web desenvolvido como projeto de estudo. Este repositório
 
 ### O que é este projeto?
 
-O **Karma Panel** é uma aplicação web que simula um painel de gestão — o tipo de sistema que empresas usam para cadastrar e consultar informações internas (clientes, setores, usuários, etc.).
+O **Karma Panel** é uma aplicação web que simula um painel de gestão — o tipo de sistema que empresas usam para cadastrar e consultar informações internas.
 
 Este repositório foi criado para **praticar e demonstrar** habilidades de desenvolvimento frontend: organização de código, formulários, listagens com filtros e paginação, autenticação, internacionalização e testes automatizados.
 
@@ -16,10 +16,26 @@ Este repositório foi criado para **praticar e demonstrar** habilidades de desen
 
 ### O que já funciona?
 
-| Fluxo        | O que dá para fazer                                  |
-| ------------ | ---------------------------------------------------- |
-| **Clientes** | Listar, buscar, paginar, cadastrar e editar clientes |
-| **Setores**  | Listar, buscar, paginar, cadastrar e editar setores  |
+Os fluxos implementados variam conforme o tipo de usuário:
+
+#### Admin
+
+| Fluxo        | O que dá para fazer                                                                           |
+| ------------ | --------------------------------------------------------------------------------------------- |
+| **Suportes** | Listar, buscar, paginar, cadastrar, editar, ativar/desativar, trocar senha e excluir suportes |
+
+#### Usuário
+
+| Fluxo        | O que dá para fazer                                                                                  |
+| ------------ | ---------------------------------------------------------------------------------------------------- |
+| **Clientes** | Listar, buscar, paginar, cadastrar e editar clientes                                                 |
+| **Setores**  | Listar, buscar, paginar, cadastrar e editar e ativar/desativar setores                               |
+| **Projetos** | Listar, buscar, filtrar por cliente, paginar, cadastrar, editar, ativar/desativar e excluir projetos |
+
+#### Suporte
+
+| Fluxo | O que dá para fazer |
+| ----- | ------------------- |
 
 Além disso, a aplicação possui telas de **login** e **cadastro**, suporte a **vários idiomas** (português, inglês, espanhol, etc.) e **tema claro/escuro**.
 
@@ -42,7 +58,7 @@ Antes de rodar o projeto, você precisa ter instalado:
 2. **[npm](https://www.npmjs.com/)** (já vem com o Node.js)
 3. Uma **API backend** rodando e acessível — por padrão em `http://localhost:8080`
 
-> A API **não faz parte deste repositório**. Sem ela, as telas abrem, mas login e operações de clientes/setores não funcionarão.
+> A API **não faz parte deste repositório**. Sem ela, as telas abrem, mas login e as operações não funcionarão.
 
 ### Como rodar localmente
 
@@ -121,7 +137,7 @@ panel-karma/
 ### Observações para recrutadores
 
 - O foco deste repositório é **frontend**: interface, experiência do usuário, validação de formulários e testes.
-- O escopo é **intencionalmente limitado** — dois fluxos completos em um projeto de estudo já permitem avaliar organização de código, padrões adotados e qualidade dos testes.
+- O escopo é **intencionalmente limitado** — fluxos completos em um projeto de estudo já permitem avaliar organização de código, padrões adotados e qualidade dos testes.
 - Os testes automatizados (unitários e e2e) demonstram preocupação com **confiabilidade** e **manutenção** do código.
 
 ---
@@ -130,7 +146,7 @@ panel-karma/
 
 ### What is this project?
 
-**Karma Panel** is a web application that simulates a management dashboard — the kind of system companies use to register and browse internal data (clients, sectors, users, etc.).
+**Karma Panel** is a web application that simulates a management dashboard — the kind of system companies use to register and browse internal data.
 
 This repository was built to **practice and showcase** frontend development skills: code organization, forms, searchable paginated lists, authentication, internationalization, and automated testing.
 
@@ -138,10 +154,26 @@ This repository was built to **practice and showcase** frontend development skil
 
 ### What works today?
 
-| Flow        | What you can do                                  |
-| ----------- | ------------------------------------------------ |
-| **Clients** | List, search, paginate, create, and edit clients |
-| **Sectors** | List, search, paginate, create, and edit sectors |
+Implemented flows vary by user type:
+
+#### Admin
+
+| Flow              | What you can do                                                                                                      |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Support staff** | List, search, paginate, create, edit, validate email, activate/deactivate, change password, and delete support users |
+
+#### User
+
+| Flow         | What you can do                                                                                  |
+| ------------ | ------------------------------------------------------------------------------------------------ |
+| **Clients**  | List, search, paginate, create, and edit clients                                                 |
+| **Sectors**  | List, search, paginate, create, edit, and activate/deactivate sectors                            |
+| **Projects** | List, search, filter by client, paginate, create, edit, activate/deactivate, and delete projects |
+
+#### Support
+
+| Flow | What you can do |
+| ---- | --------------- |
 
 The app also includes **login** and **registration** screens, **multiple languages** (Portuguese, English, Spanish, etc.), and **light/dark theme** support.
 
@@ -164,7 +196,7 @@ Before running the project, you need:
 2. **[npm](https://www.npmjs.com/)** (bundled with Node.js)
 3. A **backend API** up and running — by default at `http://localhost:8080`
 
-> The API is **not included in this repository**. Without it, pages load but login and client/sector operations will not work.
+> The API is **not included in this repository**. Without it, pages load but login and operations will not work.
 
 ### How to run locally
 
@@ -243,7 +275,7 @@ panel-karma/
 ### Notes for recruiters
 
 - This repository focuses on **frontend**: UI, user experience, form validation, and testing.
-- The scope is **intentionally limited** — two complete flows in a study project are enough to assess code organization, patterns, and test quality.
+- The scope is **intentionally limited** — complete flows in a study project are enough to assess code organization, patterns, and test quality.
 - Automated tests (unit and e2e) show attention to **reliability** and **maintainability**.
 
 ---

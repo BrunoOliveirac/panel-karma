@@ -145,10 +145,69 @@
     "could_not_create": "Não foi possível criar o setor!",
     "could_not_update": "Não foi possível atualizar o setor!"
   },
+  "list_projects": {
+    "projects": "Projetos",
+    "project_list": "Lista de projetos",
+    "all_projects": "Todos os projetos",
+    "manage_projects": "Gerir projetos",
+    "create_project": "Criar projeto",
+    "search": "Pesquisar projetos",
+    "client": "Cliente",
+    "all_clients": "Todos os clientes",
+    "projects_not_found": "Projetos não encontrados",
+    "project_deleted": "Projeto eliminado com sucesso!",
+    "could_not_delete": "Não foi possível eliminar o projeto!",
+    "successfully_activated": "Projeto ativado com sucesso!",
+    "successfully_deactivated": "Projeto desativado com sucesso!",
+    "could_not_activate": "Não foi possível ativar o projeto!",
+    "could_not_deactivate": "Não foi possível desativar o projeto!"
+  },
+  "upsert_project": {
+    "project_details": "Detalhes do projeto",
+    "status": "Projeto ativo",
+    "client": "Cliente",
+    "select_client": "Selecione um cliente",
+    "project_created": "Projeto criado com sucesso!",
+    "project_updated": "Projeto atualizado com sucesso!",
+    "could_not_create": "Não foi possível criar o projeto!",
+    "could_not_update": "Não foi possível atualizar o projeto!"
+  },
   "dashboard": {
     "dashboard": "Painel"
   },
   "chat": {
     "chat": "Chat"
+  },
+  "list_supports": {
+    "supports": "Suportes",
+    "support_list": "Lista de Suportes",
+    "manage_supports": "Gerir Suportes",
+    "create_support": "Criar suporte",
+    "search": "Pesquisar suportes",
+    "email": "E-mail",
+    "supports_not_found": "Suportes não encontrados",
+    "support_deleted": "Suporte eliminado com sucesso!",
+    "could_not_delete": "Não foi possível eliminar o suporte!",
+    "successfully_activated": "Suporte ativado com sucesso!",
+    "successfully_deactivated": "Suporte desativado com sucesso!",
+    "could_not_activate": "Não foi possível ativar o suporte!",
+    "could_not_deactivate": "Não foi possível desativar o suporte!",
+    "change_password": "Alterar palavra-passe"
+  },
+  "upsert_support": {
+    "support_details": "Detalhes do Suporte",
+    "email": "E-mail",
+    "enter_email": "Introduza o e-mail",
+    "support_created": "Suporte criado com sucesso!",
+    "support_updated": "Suporte atualizado com sucesso!",
+    "could_not_create": "Não foi possível criar o suporte!",
+    "could_not_update": "Não foi possível atualizar o suporte!",
+    "format_is_not_valid": "Formato inválido!",
+    "email_in_use": "Este e-mail já está em uso!"
+  },
+  "change_support_password": {
+    "change_password": "Alterar palavra-passe",
+    "password_updated": "Palavra-passe atualizada com sucesso!",
+    "could_not_update": "Não foi possível atualizar a palavra-passe!"
   }
 }

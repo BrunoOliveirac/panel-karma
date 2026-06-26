@@ -145,10 +145,69 @@
     "could_not_create": "Could not create the sector!",
     "could_not_update": "Could not update the sector!"
   },
+  "list_projects": {
+    "projects": "Projects",
+    "project_list": "Project List",
+    "all_projects": "All Projects",
+    "manage_projects": "Manage Projects",
+    "create_project": "Create project",
+    "search": "Search projects",
+    "client": "Client",
+    "all_clients": "All clients",
+    "projects_not_found": "Projects not found",
+    "project_deleted": "Project deleted successfully!",
+    "could_not_delete": "Could not delete the project!",
+    "successfully_activated": "Project successfully activated!",
+    "successfully_deactivated": "Project successfully deactivated!",
+    "could_not_activate": "Could not activate the project!",
+    "could_not_deactivate": "Could not deactivate the project!"
+  },
+  "upsert_project": {
+    "project_details": "Project Details",
+    "status": "Active project",
+    "client": "Client",
+    "select_client": "Select client",
+    "project_created": "Project created successfully!",
+    "project_updated": "Project updated successfully!",
+    "could_not_create": "Could not create the project!",
+    "could_not_update": "Could not update the project!"
+  },
   "dashboard": {
     "dashboard": "Dashboard"
   },
   "chat": {
     "chat": "Chat"
+  },
+  "list_supports": {
+    "supports": "Supports",
+    "support_list": "Support List",
+    "manage_supports": "Manage Supports",
+    "create_support": "Create support",
+    "search": "Search supports",
+    "email": "E-mail",
+    "supports_not_found": "Supports not found",
+    "support_deleted": "Support deleted successfully!",
+    "could_not_delete": "Could not delete the support!",
+    "successfully_activated": "Support successfully activated!",
+    "successfully_deactivated": "Support successfully deactivated!",
+    "could_not_activate": "Could not activate the support!",
+    "could_not_deactivate": "Could not deactivate the support!",
+    "change_password": "Change password"
+  },
+  "upsert_support": {
+    "support_details": "Support Details",
+    "email": "E-mail",
+    "enter_email": "Enter the e-mail",
+    "support_created": "Support created successfully!",
+    "support_updated": "Support updated successfully!",
+    "could_not_create": "Could not create the support!",
+    "could_not_update": "Could not update the support!",
+    "format_is_not_valid": "Format is not valid!",
+    "email_in_use": "This e-mail is already in use!"
+  },
+  "change_support_password": {
+    "change_password": "Change password",
+    "password_updated": "Password updated successfully!",
+    "could_not_update": "Could not update the password!"
   }
 }
