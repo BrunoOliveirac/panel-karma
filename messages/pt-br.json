@@ -177,5 +177,37 @@
   },
   "chat": {
     "chat": "Chat"
+  },
+  "list_supports": {
+    "supports": "Suportes",
+    "support_list": "Lista de Suportes",
+    "manage_supports": "Gerenciar Suportes",
+    "create_support": "Criar suporte",
+    "search": "Buscar suportes",
+    "email": "E-mail",
+    "supports_not_found": "Suportes não encontrados",
+    "support_deleted": "Suporte excluído com sucesso!",
+    "could_not_delete": "Não foi possível excluir o suporte!",
+    "successfully_activated": "Suporte ativado com sucesso!",
+    "successfully_deactivated": "Suporte desativado com sucesso!",
+    "could_not_activate": "Não foi possível ativar o suporte!",
+    "could_not_deactivate": "Não foi possível desativar o suporte!",
+    "change_password": "Alterar senha"
+  },
+  "upsert_support": {
+    "support_details": "Detalhes do Suporte",
+    "email": "E-mail",
+    "enter_email": "Digite o e-mail",
+    "support_created": "Suporte criado com sucesso!",
+    "support_updated": "Suporte atualizado com sucesso!",
+    "could_not_create": "Não foi possível criar o suporte!",
+    "could_not_update": "Não foi possível atualizar o suporte!",
+    "format_is_not_valid": "Formato inválido!",
+    "email_in_use": "Este e-mail já está em uso!"
+  },
+  "change_support_password": {
+    "change_password": "Alterar senha",
+    "password_updated": "Senha atualizada com sucesso!",
+    "could_not_update": "Não foi possível atualizar a senha!"
   }
 }

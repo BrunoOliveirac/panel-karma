@@ -5,6 +5,7 @@ import {
   Home,
   LayoutDashboard,
   MessageCircle,
+  UserRoundCog,
 } from "lucide-react";
 import { UserTypeEnum } from "../enums/user-type.enum";
 import { SidebarItem } from "../interfaces/sidebar-item";
@@ -12,7 +13,7 @@ import { SidebarItem } from "../interfaces/sidebar-item";
 export class SidebarItemMock {
   public ADMIN_SIDEBAR_ITEMS: SidebarItem[] = [
     { name: "dashboard", path: "/dashboard", icon: LayoutDashboard },
-    // { name: "supports", path: "/supports", icon: UserRoundCog },
+    { name: "supports", path: "/supports", icon: UserRoundCog },
     // { name: "settings", path: "/settings", icon: Settings },
   ];
 
