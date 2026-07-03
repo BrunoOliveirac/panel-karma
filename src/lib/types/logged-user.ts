@@ -1,5 +1,6 @@
 import { Admin } from "../models/admin";
+import { Member } from "../models/member";
 import { Support } from "../models/support";
 import { User } from "../models/user";
 
-export type LoggedUser = User | Support | Admin;
+export type LoggedUser = User | Support | Admin | Member;

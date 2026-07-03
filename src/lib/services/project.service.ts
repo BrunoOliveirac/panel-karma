@@ -15,6 +15,20 @@ export class ProjectService {
   };
 
   /**
+   * Get all active projects for the current user.
+   * @returns An array of projects.
+   */
+  public getAllActiveProjects = async (): Promise<Project[]> => {
+    const user = JSON.parse(Cookies.get("user")!);
+
+    const projects = (
+      await api.get<Project[]>(`/projects/list-actives/${user.id}`)
+    ).data;
+
+    return projects;
+  };
+
+  /**
    * Create or update a project.
    * @param project The project to create or update.
    * @returns The id of the created or updated project.

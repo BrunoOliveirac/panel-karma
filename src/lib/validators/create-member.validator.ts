@@ -10,7 +10,7 @@ const passwordSchema = (t: (key: string) => string) =>
     .regex(/[0-9]/)
     .regex(/[^A-Za-z0-9]/);
 
-const upsertSupportBaseSchema = (t: (key: string) => string) =>
+const createMemberBaseSchema = (t: (key: string) => string) =>
   z.object({
     name: z.string().min(1, t("validation.required")),
     email: z
@@ -19,19 +19,15 @@ const upsertSupportBaseSchema = (t: (key: string) => string) =>
       .email(t("validation.email")),
     password: z.string().optional(),
     confirmPassword: z.string().optional(),
+    projectIds: z.array(z.string()).optional(),
   });
 
-export type UpsertSupportForm = z.infer<
-  ReturnType<typeof upsertSupportBaseSchema>
+export type CreateMemberForm = z.infer<
+  ReturnType<typeof createMemberBaseSchema>
 >;
 
-export const upsertSupportValidator = (
-  t: (key: string) => string,
-  isEdit: boolean,
-) => {
-  return upsertSupportBaseSchema(t).superRefine((data, ctx) => {
-    if (isEdit) return;
-
+export const createMemberValidator = (t: (key: string) => string) => {
+  return createMemberBaseSchema(t).superRefine((data, ctx) => {
     const passwordResult = passwordSchema(t).safeParse(data.password ?? "");
     if (!passwordResult.success) {
       passwordResult.error.issues.forEach((issue) => {

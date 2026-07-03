@@ -8,7 +8,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { Select } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import {
   Table,
@@ -18,26 +17,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Project } from "@/lib/models/project";
-import { Client } from "@/lib/models/client";
+import { Sector } from "@/lib/models/sector";
 import { useModal } from "@/lib/providers/modal-provider";
-import { ClientService } from "@/lib/services/client.service";
-import { ProjectService } from "@/lib/services/project.service";
-import { useAppStore } from "@/lib/store/use-title-store";
+import { SectorService } from "@/lib/services/sector.service";
+import { useTitle } from "@/lib/store/use-title-store";
 import { Lock, Pencil, Search, Trash, Unlock } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
-import UpsertProject from "../_upsert-project/upsert-project";
+import UpsertSector from "../_upsert-sector/upsert-sector";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-export default function ListProjects() {
+export default function ListSectors() {
   const pageSize = 10;
   const router = useRouter();
   const format = useFormatter();
@@ -46,113 +43,86 @@ export default function ListProjects() {
   const [page, setPage] = useState(1);
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
-  const [clients, setClients] = useState<Client[]>([]);
-  const [selectedClientId, setSelectedClientId] = useState<string>("");
-  const t = useTranslations("list_projects");
+  const t = useTranslations("list_sectors");
   const sharedT = useTranslations("shared");
   const [loading, setLoading] = useState(false);
-  const setTitle = useAppStore((state) => state.setTitle);
-  const [mainProjects, setMainProjects] = useState<Project[]>([]);
-  const projectService = useMemo(() => new ProjectService(), []);
-  const clientService = useMemo(() => new ClientService(), []);
+  const setTitle = useTitle((state) => state.setTitle);
+  const [mainSectors, setMainSectors] = useState<Sector[]>([]);
+  const sectorService = useMemo(() => new SectorService(), []);
 
-  const clientFilterField = useMemo(
-    () => ({
-      name: "clientFilter",
-      value: selectedClientId,
-      onChange: (value: string | null) => setSelectedClientId(value ?? ""),
-      onBlur: () => undefined,
-      ref: () => undefined,
-    }),
-    [selectedClientId],
-  );
-
-  const filteredProjects = useMemo(() => {
-    let filteredProjects = mainProjects;
+  const filteredSectors = useMemo(() => {
+    let filteredSectors = mainSectors;
     const term = search.trim().toLowerCase();
 
-    if (selectedClientId) {
-      filteredProjects = filteredProjects.filter(
-        (project) => project.client?.id === selectedClientId,
-      );
-    }
-
     if (search) {
-      filteredProjects = filteredProjects.filter((project) =>
-        project.name.toLowerCase().includes(term),
+      filteredSectors = filteredSectors.filter((sector) =>
+        sector.name.toLowerCase().includes(term),
       );
     }
 
-    return filteredProjects;
-  }, [mainProjects, search, selectedClientId]);
+    return filteredSectors;
+  }, [mainSectors, search]);
 
-  const paginatedProjects = useMemo(() => {
+  const paginatedSectors = useMemo(() => {
     const start = (page - 1) * pageSize;
-    return filteredProjects.slice(start, start + pageSize);
-  }, [filteredProjects, page, pageSize]);
+    return filteredSectors.slice(start, start + pageSize);
+  }, [filteredSectors, page, pageSize]);
 
   /**
-   * Open the upsert project modal.
-   * @param project The project to edit.
+   * Open the upsert sector modal.
+   * @param sector The sector to edit.
+   * @param index The index of the sector in the list.
    */
-  const openUpsertProjectModal = useCallback(
-    async (project?: Project): Promise<void> => {
-      if (project && !isFirstLoad.current) {
+  const openUpsertSectorModal = useCallback(
+    async (sector?: Sector): Promise<void> => {
+      if (sector && !isFirstLoad.current) {
         const params = new URLSearchParams(searchParams.toString());
-        params.set("project", project.id);
+        params.set("sector", sector.id);
         router.push(`?${params.toString()}`);
       }
 
-      const newProject = (await openModal(UpsertProject, {
-        project,
-      })) as unknown as Project;
+      const newSector = (await openModal(UpsertSector, {
+        sector,
+      })) as unknown as Sector;
 
       const newParams = new URLSearchParams(searchParams.toString());
-      newParams.delete("project");
+      newParams.delete("sector");
       router.push(`?${newParams.toString()}`);
 
-      if (!newProject) return;
+      if (!newSector) return;
 
-      if (project) {
-        const index = mainProjects.findIndex((p) => p.id === project.id);
+      if (sector) {
+        const index = mainSectors.findIndex((c) => c.id === sector.id);
         if (index < 0) return;
 
-        setMainProjects((projects) => {
-          const newProjects = [...projects];
-          newProjects[index] = newProject;
-          return newProjects;
+        setMainSectors((sectors) => {
+          const newSectors = [...sectors];
+          newSectors[index] = newSector;
+          return newSectors;
         });
       } else {
-        setMainProjects(
-          [newProject, ...mainProjects].sort((prev, next) =>
+        setMainSectors(
+          [newSector, ...mainSectors].sort((prev, next) =>
             prev.name.localeCompare(next.name),
           ),
         );
       }
     },
-    [mainProjects, openModal, router, searchParams],
+    [mainSectors, openModal, router, searchParams],
   );
-
-  useEffect(() => {
-    setPage(1);
-  }, [search, selectedClientId]);
 
   useEffect(() => {
     async function loadData() {
       try {
         setLoading(true);
-        setTitle(t("project_list"));
-        const [projects, loadedClients] = await Promise.all([
-          projectService.getAllProjects(),
-          clientService.getAllClients(),
-        ]);
-        setMainProjects(projects);
-        setClients(loadedClients);
-        const project = searchParams.get("project");
+        setTitle(t("sector_list"));
+        const sectors = await sectorService.getAllSectors();
+        setMainSectors(sectors);
+        const sector = searchParams.get("sector");
 
-        if (project) {
-          const projectIndex = projects.findIndex((p) => p.id === project);
-          openUpsertProjectModal(projects[projectIndex]);
+        if (sector) {
+          const sectorIndex = sectors.findIndex((c) => c.id === sector);
+          openUpsertSectorModal(sectors[sectorIndex]);
         }
 
         isFirstLoad.current = false;
@@ -165,46 +135,38 @@ export default function ListProjects() {
 
     if (!isFirstLoad.current) return;
     loadData();
-  }, [
-    projectService,
-    clientService,
-    openUpsertProjectModal,
-    searchParams,
-    setTitle,
-    t,
-  ]);
+  }, [sectorService, openUpsertSectorModal, searchParams, setTitle, t]);
 
   /**
-   * Toggle the status of a project.
-   * @param project The project to toggle.
+   * Toggle the status of a sector.
+   * @param sector The sector to toggle.
    */
-  const toogleProjectStatus = async (project: Project) => {
+  const toogleSectorStatus = async (sector: Sector) => {
     try {
-      await projectService.toggleProjectActive(project.id);
+      const newSector = { ...sector, active: !sector.active };
+      await sectorService.upsertSector(newSector);
 
-      setMainProjects((projects) => {
-        const newProjects = [...projects];
-        const index = newProjects.findIndex((p) => p.id === project.id);
-        newProjects[index].active = !project.active;
-        return newProjects;
+      setMainSectors((sectors) => {
+        const newSectors = [...sectors];
+        const index = newSectors.findIndex((s) => s.id === sector.id);
+        newSectors[index].active = !sector.active;
+        return newSectors;
       });
 
       toast.success(
-        t(`successfully_${project.active ? "activated" : "deactivated"}`),
+        t(`successfully_${newSector.active ? "activated" : "deactivated"}`),
       );
     } catch (error) {
       console.error(error);
-      toast.error(
-        t(`could_not_${!project.active ? "activate" : "deactivate"}`),
-      );
+      toast.error(t(`could_not_${!sector.active ? "activate" : "deactivate"}`));
     }
   };
 
   /**
-   * Delete a project.
-   * @param projectId The ID of the project to delete.
+   * Delete a sector.
+   * @param sectorId The ID of the sector to delete.
    */
-  const deleteProject = async (projectId: string) => {
+  const deleteSector = async (sectorId: string) => {
     try {
       const response = await Swal.fire({
         theme: "auto",
@@ -220,32 +182,32 @@ export default function ListProjects() {
 
       if (!response?.isConfirmed) return;
 
-      await projectService.deleteProject(projectId);
-      toast.success(t("project_deleted"));
+      await sectorService.deleteSector(sectorId);
+      toast.success(t("sector_deleted"));
 
-      if (paginatedProjects.length === 1) setPage(page - 1);
+      if (paginatedSectors.length === 1) setPage(page - 1);
 
-      setMainProjects((projects) => projects.filter((p) => p.id !== projectId));
+      setMainSectors((sectors) => sectors.filter((s) => s.id !== sectorId));
     } catch (error) {
       console.error(error);
       toast.error(t("could_not_delete"));
     }
   };
 
-  const projectStatus = (isActive: boolean) => {
+  const sectorStatus = (isActive: boolean) => {
     return isActive ? "active" : "inactive";
   };
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden gap-6 pb-6">
       <div className="shrink-0 max-h-fit grid sm:flex flex-1 justify-between items-center flex-wrap gap-4">
-        <p className="text-lg font-medium">{t("manage_projects")}</p>
+        <p className="text-lg font-medium">{t("manage_sectors")}</p>
 
-        <div className="flex flex-1 justify-end items-center gap-4 flex-wrap">
+        <div className="flex flex-1 justify-end items-center gap-4">
           <InputGroup className="md:min-w-44 max-w-fit">
             <InputGroupInput
               placeholder={t("search")}
-              dataSlot="list-projects-search"
+              dataSlot="list-sectors-search"
               onChange={(e) => setSearch(e.target.value)}
             />
 
@@ -254,22 +216,12 @@ export default function ListProjects() {
             </InputGroupAddon>
           </InputGroup>
 
-          <Select
-            bindValue="id"
-            items={clients}
-            bindLabel="name"
-            field={clientFilterField}
-            placeholder={t("all_clients")}
-            classTrigger="md:min-w-44 max-w-fit"
-            triggerDataSlot="list-projects-client-filter"
-          />
-
           <button
-            data-slot="create-project"
-            onClick={() => openUpsertProjectModal()}
+            data-slot="create-sector"
+            onClick={() => openUpsertSectorModal()}
             className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-8 px-3 rounded-full transition-all place-content-center hover:brightness-90"
           >
-            {t("create_project")}
+            {t("create_sector")}
           </button>
         </div>
       </div>
@@ -280,8 +232,6 @@ export default function ListProjects() {
             <TableHeader>
               <TableRow>
                 <TableHead>{sharedT("name")}</TableHead>
-
-                <TableHead>{t("client")}</TableHead>
 
                 <TableHead className="text-center">
                   {sharedT("created_at")}
@@ -300,30 +250,29 @@ export default function ListProjects() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5}>
+                  <TableCell colSpan={4}>
                     <div className="flex justify-center">
                       <Spinner />
                     </div>
                   </TableCell>
                 </TableRow>
-              ) : !paginatedProjects.length ? (
+              ) : !paginatedSectors.length ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center">
-                    {t("projects_not_found")}
+                  <TableCell colSpan={4} className="text-center">
+                    {t("sectors_not_found")}
                   </TableCell>
                 </TableRow>
               ) : (
-                paginatedProjects.map((project) => (
+                paginatedSectors.map((sector) => (
                   <TableRow
-                    id={project.id}
-                    key={project.id}
-                    data-slot="project-row"
+                    id={sector.id}
+                    key={sector.id}
+                    data-slot="sector-row"
                   >
-                    <TableCell>{project.name}</TableCell>
-                    <TableCell>{project.client?.name}</TableCell>
+                    <TableCell>{sector.name}</TableCell>
 
                     <TableCell className="text-center">
-                      {format.dateTime(new Date(project.createdAt), {
+                      {format.dateTime(new Date(sector.createdAt), {
                         dateStyle: "short",
                         timeStyle: "short",
                       })}
@@ -331,10 +280,10 @@ export default function ListProjects() {
 
                     <TableCell className="text-center">
                       <Badge
-                        variant={project.active ? "success" : "danger"}
-                        data-slot={`${projectStatus(project.active)}-project-status`}
+                        variant={sector.active ? "success" : "danger"}
+                        data-slot={`${sectorStatus(sector.active)}-sector-status`}
                       >
-                        {sharedT(projectStatus(project.active))}
+                        {sharedT(sectorStatus(sector.active))}
                       </Badge>
                     </TableCell>
 
@@ -345,17 +294,17 @@ export default function ListProjects() {
                             <Button
                               size="icon-sm"
                               variant="outline"
-                              onClick={() => toogleProjectStatus(project)}
-                              data-slot={`toggle-project-status-${project.id}`}
+                              onClick={() => toogleSectorStatus(sector)}
+                              data-slot={`toggle-sector-status-${sector.id}`}
                             >
-                              {project.active ? <Lock /> : <Unlock />}
+                              {sector.active ? <Lock /> : <Unlock />}
                             </Button>
                           </TooltipTrigger>
 
                           <TooltipContent>
                             <p>
                               {sharedT(
-                                project.active ? "deactivate" : "activate",
+                                sector.active ? "deactivate" : "activate",
                               )}
                             </p>
                           </TooltipContent>
@@ -366,8 +315,8 @@ export default function ListProjects() {
                             <Button
                               size="icon-sm"
                               variant="outline"
-                              data-slot={`edit-project-${project.id}`}
-                              onClick={() => openUpsertProjectModal(project)}
+                              data-slot={`edit-sector-${sector.id}`}
+                              onClick={() => openUpsertSectorModal(sector)}
                             >
                               <Pencil />
                             </Button>
@@ -384,8 +333,8 @@ export default function ListProjects() {
                               color="error"
                               size="icon-sm"
                               variant="destructive"
-                              onClick={() => deleteProject(project.id)}
-                              data-slot={`delete-project-${project.id}`}
+                              onClick={() => deleteSector(sector.id)}
+                              data-slot={`delete-sector-${sector.id}`}
                             >
                               <Trash />
                             </Button>
@@ -404,12 +353,12 @@ export default function ListProjects() {
           </Table>
         </div>
 
-        {filteredProjects.length ? (
+        {filteredSectors.length ? (
           <div className="shrink-0">
             <PaginationControls
               page={page}
               onPageChange={setPage}
-              totalPages={Math.ceil(filteredProjects.length / pageSize)}
+              totalPages={Math.ceil(filteredSectors.length / pageSize)}
             />
           </div>
         ) : null}

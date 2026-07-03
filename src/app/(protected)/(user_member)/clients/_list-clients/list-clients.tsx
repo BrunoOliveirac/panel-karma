@@ -14,7 +14,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Client } from "@/lib/models/client";
 import { useModal } from "@/lib/providers/modal-provider";
 import { ClientService } from "@/lib/services/client.service";
-import { useAppStore } from "@/lib/store/use-title-store";
+import { useTitle } from "@/lib/store/use-title-store";
 import { FormatCurrency } from "@/lib/utils/set-currency";
 import { PackageOpenIcon, Search, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -37,7 +37,7 @@ export default function ListClients() {
   const t = useTranslations("list_clients");
   const [loading, setLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState("all");
-  const setTitle = useAppStore((state) => state.setTitle);
+  const setTitle = useTitle((state) => state.setTitle);
   const [mainClients, setMainClients] = useState<Client[]>([]);
   const clientService = useMemo(() => new ClientService(), []);
 

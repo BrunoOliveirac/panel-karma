@@ -129,7 +129,7 @@ export default function UpsertSector({
               disabled={submitting}
               onClick={() => closeModal()}
               data-slot="upsert-sector-cancel"
-              className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
+              className="max-w-28 rounded bg-transparent text-black dark:text-white cursor-pointer hover:text-white dark:hover:text-black hover:bg-black dark:hover:bg-white"
             >
               {sharedT("cancel")}
             </Button>

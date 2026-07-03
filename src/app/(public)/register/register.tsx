@@ -28,7 +28,7 @@ interface RegisterForm {
   confirmPassword: string;
 }
 
-export default function Login() {
+export default function Register() {
   const router = useRouter();
   const authService = new AuthService();
   const registerT = useTranslations("register");

@@ -14,6 +14,7 @@
     "clients": "Clientes",
     "projects": "Proyectos",
     "sectors": "Sectores",
+    "members": "Miembros",
     "logout": "Cerrar sesión"
   },
   "shared": {
@@ -31,6 +32,8 @@
     "enter_name": "Ingrese el nombre",
     "delete": "Eliminar",
     "edit": "Editar",
+    "unlink": "Desvincular",
+    "manage_projects": "Gestionar proyectos",
     "activate": "Activar",
     "deactivate": "Desactivar"
   },
@@ -205,9 +208,51 @@
     "format_is_not_valid": "¡Formato no válido!",
     "email_in_use": "¡Este correo electrónico ya está en uso!"
   },
-  "change_support_password": {
+  "change_password": {
     "change_password": "Cambiar contraseña",
     "password_updated": "¡Contraseña actualizada con éxito!",
     "could_not_update": "¡No se pudo actualizar la contraseña!"
+  },
+  "list_members": {
+    "members": "Miembros",
+    "member_list": "Lista de Miembros",
+    "manage_members": "Gestionar Miembros",
+    "create_member": "Crear miembro",
+    "search": "Buscar miembros",
+    "email": "Correo electrónico",
+    "members_not_found": "Miembros no encontrados",
+    "manage_projects": "Gestionar proyectos",
+    "unlink": "Desvincular",
+    "unlink_warning": "Este miembro será desvinculado de su cuenta.",
+    "member_unlinked": "¡Miembro desvinculado con éxito!",
+    "could_not_unlink": "¡No se pudo desvincular el miembro!",
+    "successfully_activated": "¡Miembro activado con éxito!",
+    "successfully_deactivated": "¡Miembro desactivado con éxito!",
+    "could_not_activate": "¡No se pudo activar el miembro!",
+    "could_not_deactivate": "¡No se pudo desactivar el miembro!",
+    "change_password": "Cambiar contraseña"
+  },
+  "create_member": {
+    "member_details": "Detalles del Miembro",
+    "email": "Correo electrónico",
+    "enter_email": "Introduce el correo electrónico",
+    "projects": "Proyectos",
+    "select_projects": "Selecciona los proyectos",
+    "projects_not_found": "No se encontraron proyectos",
+    "member_created": "¡Miembro creado con éxito!",
+    "could_not_create": "¡No se pudo crear el miembro!",
+    "could_not_load": "¡No se pudieron cargar los proyectos!",
+    "format_is_not_valid": "¡Formato no válido!",
+    "email_in_use": "¡Este correo electrónico ya está en uso!"
+  },
+  "update_projects": {
+    "manage_projects": "Gestionar proyectos",
+    "projects_not_found": "No se encontraron proyectos",
+    "projects_updated": "¡Proyectos actualizados con éxito!",
+    "could_not_update": "¡No se pudieron actualizar los proyectos!",
+    "could_not_load": "¡No se pudieron cargar los proyectos!"
+  },
+  "profile": {
+    "profile": "Perfil"
   }
 }

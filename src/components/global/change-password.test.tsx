@@ -2,7 +2,7 @@
 import { renderWithProviders } from "@/lib/mocks/render-with-providers.mock";
 import { UserTypeEnum } from "@/lib/enums/user-type.enum";
 import { _Translator, useFormatter } from "next-intl";
-import ListSupports from "../_list-supports/list-supports";
+import ListSupports from "@/app/(protected)/(admin)/supports/_list-supports/list-supports";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { toast } from "sonner";
@@ -73,12 +73,12 @@ const openChangePasswordModal = async () => {
   });
 };
 
-describe("ChangeSupportPassword", () => {
+describe("ChangePassword", () => {
   beforeEach(() => jest.clearAllMocks());
 
   it("Should not submit with an empty password", async () => {
     await openChangePasswordModal();
-    await userEvent.click(screen.getByTestId("change-support-password-save"));
+    await userEvent.click(screen.getByTestId("change-password-save"));
 
     await waitFor(() => {
       expect(updatePasswordMock).not.toHaveBeenCalled();
@@ -93,16 +93,16 @@ describe("ChangeSupportPassword", () => {
     await openChangePasswordModal();
 
     await userEvent.type(
-      screen.getByTestId("change-support-password"),
+      screen.getByTestId("change-password"),
       validPassword,
     );
 
     await userEvent.type(
-      screen.getByTestId("change-support-confirm-password"),
+      screen.getByTestId("change-password-confirm"),
       validPassword,
     );
 
-    await userEvent.click(screen.getByTestId("change-support-password-save"));
+    await userEvent.click(screen.getByTestId("change-password-save"));
 
     await waitFor(() => {
       expect(updatePasswordMock).toHaveBeenCalledWith("01", validPassword);
@@ -119,16 +119,16 @@ describe("ChangeSupportPassword", () => {
     await openChangePasswordModal();
 
     await userEvent.type(
-      screen.getByTestId("change-support-password"),
+      screen.getByTestId("change-password"),
       validPassword,
     );
 
     await userEvent.type(
-      screen.getByTestId("change-support-confirm-password"),
+      screen.getByTestId("change-password-confirm"),
       validPassword,
     );
 
-    await userEvent.click(screen.getByTestId("change-support-password-save"));
+    await userEvent.click(screen.getByTestId("change-password-save"));
 
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith("could_not_update"),
@@ -139,11 +139,11 @@ describe("ChangeSupportPassword", () => {
 
   it("Should cancel the change password modal", async () => {
     await openChangePasswordModal();
-    await userEvent.click(screen.getByTestId("change-support-password-cancel"));
+    await userEvent.click(screen.getByTestId("change-password-cancel"));
 
     await waitFor(() => {
       expect(
-        screen.queryByTestId("change-support-password-modal"),
+        screen.queryByTestId("change-password-modal"),
       ).not.toBeInTheDocument();
     });
   });

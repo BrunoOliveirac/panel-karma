@@ -5,21 +5,36 @@ import {
   Home,
   LayoutDashboard,
   MessageCircle,
+  UserCircle,
   UserRoundCog,
+  Users,
 } from "lucide-react";
 import { UserTypeEnum } from "../enums/user-type.enum";
 import { SidebarItem } from "../interfaces/sidebar-item";
+
+const USER_MEMBER_SIDEBAR_ITEMS: SidebarItem[] = [
+  { name: "clients", path: "/clients", icon: Contact },
+  { name: "projects", path: "/projects", icon: FolderOpenDot },
+  { name: "sectors", path: "/sectors", icon: Factory },
+];
+
+const PROFILE_SIDEBAR_ITEM: SidebarItem = {
+  name: "profile",
+  path: "/profile",
+  icon: UserCircle,
+};
 
 export class SidebarItemMock {
   public ADMIN_SIDEBAR_ITEMS: SidebarItem[] = [
     { name: "dashboard", path: "/dashboard", icon: LayoutDashboard },
     { name: "supports", path: "/supports", icon: UserRoundCog },
+    PROFILE_SIDEBAR_ITEM,
     // { name: "settings", path: "/settings", icon: Settings },
   ];
 
   public SUPPORT_SIDEBAR_ITEMS: SidebarItem[] = [
     { name: "chat", path: "/chat", icon: MessageCircle },
-    // { name: "profile", path: "/profile", icon: UserCircle },
+    PROFILE_SIDEBAR_ITEM,
   ];
 
   public USER_SIDEBAR_ITEMS: SidebarItem[] = [
@@ -27,10 +42,14 @@ export class SidebarItemMock {
     // { name: "crm", path: "/crm", icon: LayoutList },
     // { name: "chat", path: "/chat", icon: MessageCircle },
     // { name: "arka", path: "/arka", icon: Bot }, // ARKA: AI-Ready Karma Assistant
-    { name: "clients", path: "/clients", icon: Contact },
-    { name: "projects", path: "/projects", icon: FolderOpenDot },
-    { name: "sectors", path: "/sectors", icon: Factory },
-    // { name: "profile", path: "/profile", icon: UserCircle },
+    ...USER_MEMBER_SIDEBAR_ITEMS,
+    { name: "members", path: "/members", icon: Users },
+    PROFILE_SIDEBAR_ITEM,
+  ];
+
+  public MEMBER_SIDEBAR_ITEMS: SidebarItem[] = [
+    ...USER_MEMBER_SIDEBAR_ITEMS,
+    PROFILE_SIDEBAR_ITEM,
   ];
 
   public get(userType: UserTypeEnum): SidebarItem[] {

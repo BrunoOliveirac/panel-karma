@@ -14,6 +14,7 @@
     "clients": "Clients",
     "projects": "Projects",
     "sectors": "Sectors",
+    "members": "Members",
     "logout": "Logout"
   },
   "shared": {
@@ -31,6 +32,8 @@
     "enter_name": "Enter the name",
     "delete": "Delete",
     "edit": "Edit",
+    "unlink": "Unlink",
+    "manage_projects": "Manage projects",
     "activate": "Activate",
     "deactivate": "Deactivate"
   },
@@ -205,9 +208,51 @@
     "format_is_not_valid": "Format is not valid!",
     "email_in_use": "This e-mail is already in use!"
   },
-  "change_support_password": {
+  "change_password": {
     "change_password": "Change password",
     "password_updated": "Password updated successfully!",
     "could_not_update": "Could not update the password!"
+  },
+  "list_members": {
+    "members": "Members",
+    "member_list": "Member List",
+    "manage_members": "Manage Members",
+    "create_member": "Create member",
+    "search": "Search members",
+    "email": "E-mail",
+    "members_not_found": "Members not found",
+    "manage_projects": "Manage projects",
+    "unlink": "Unlink",
+    "unlink_warning": "This member will be unlinked from your account.",
+    "member_unlinked": "Member unlinked successfully!",
+    "could_not_unlink": "Could not unlink the member!",
+    "successfully_activated": "Member successfully activated!",
+    "successfully_deactivated": "Member successfully deactivated!",
+    "could_not_activate": "Could not activate the member!",
+    "could_not_deactivate": "Could not deactivate the member!",
+    "change_password": "Change password"
+  },
+  "create_member": {
+    "member_details": "Member Details",
+    "email": "E-mail",
+    "enter_email": "Enter the e-mail",
+    "projects": "Projects",
+    "select_projects": "Select projects",
+    "projects_not_found": "No projects found",
+    "member_created": "Member created successfully!",
+    "could_not_create": "Could not create the member!",
+    "could_not_load": "Could not load the projects!",
+    "format_is_not_valid": "Format is not valid!",
+    "email_in_use": "This e-mail is already in use!"
+  },
+  "update_projects": {
+    "manage_projects": "Manage projects",
+    "projects_not_found": "No projects found",
+    "projects_updated": "Projects updated successfully!",
+    "could_not_update": "Could not update the projects!",
+    "could_not_load": "Could not load the projects!"
+  },
+  "profile": {
+    "profile": "Profile"
   }
 }

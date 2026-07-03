@@ -25,14 +25,16 @@ import {
 import { Support } from "@/lib/models/support";
 import { useModal } from "@/lib/providers/modal-provider";
 import { SupportService } from "@/lib/services/support.service";
-import { useAppStore } from "@/lib/store/use-title-store";
+import { useTitle } from "@/lib/store/use-title-store";
 import { KeyRound, Lock, Pencil, Search, Trash, Unlock } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
-import ChangeSupportPassword from "../_change-support-password/change-support-password";
+import ChangePassword, {
+  ChangePasswordProps,
+} from "@/components/global/change-password";
 import UpsertSupport from "../_upsert-support/upsert-support";
 
 export default function ListSupports() {
@@ -47,7 +49,7 @@ export default function ListSupports() {
   const t = useTranslations("list_supports");
   const sharedT = useTranslations("shared");
   const [loading, setLoading] = useState(false);
-  const setTitle = useAppStore((state) => state.setTitle);
+  const setTitle = useTitle((state) => state.setTitle);
   const [mainSupports, setMainSupports] = useState<Support[]>([]);
   const supportService = useMemo(() => new SupportService(), []);
 
@@ -110,7 +112,11 @@ export default function ListSupports() {
   );
 
   const openChangePasswordModal = async (support: Support) => {
-    await openModal(ChangeSupportPassword, { support });
+    await openModal<ChangePasswordProps, boolean>(ChangePassword, {
+      userId: support.id,
+      type: "support",
+      name: support.name,
+    });
   };
 
   useEffect(() => {

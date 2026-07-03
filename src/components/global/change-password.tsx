@@ -8,10 +8,10 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { SpinnerButton } from "@/components/ui/spinner-button";
-import { Support } from "@/lib/models/support";
 import { ModalInjectedProps } from "@/lib/providers/modal-provider";
+import { MemberService } from "@/lib/services/member.service";
 import { SupportService } from "@/lib/services/support.service";
-import { changeSupportPasswordValidator } from "@/lib/validators/upsert-support.validator";
+import { changePasswordValidator } from "@/lib/validators/change-password.validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeOffIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -19,30 +19,41 @@ import { useMemo, useState } from "react";
 import { Controller, useForm, UseFormReturn, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
+export type ChangePasswordUserType = "member" | "support";
+
 interface ChangePasswordForm {
   password: string;
   confirmPassword: string;
 }
 
-export default function ChangeSupportPassword({
-  support,
+export type ChangePasswordProps = {
+  userId: string;
+  type: ChangePasswordUserType;
+  name: string;
+};
+
+export default function ChangePassword({
+  userId,
+  type,
+  name,
   closeModal,
   dismissModal,
-}: { support: Support } & ModalInjectedProps<boolean>) {
-  const t = useTranslations("change_support_password");
+}: ChangePasswordProps & ModalInjectedProps<boolean>) {
+  const t = useTranslations("change_password");
   const sharedT = useTranslations("shared");
   const validationT = useTranslations("validation");
   const registerT = useTranslations("register");
   const [submitting, setSubmitting] = useState(false);
   const [seePassword, setSeePassword] = useState(false);
   const [seeConfirmPassword, setSeeConfirmPassword] = useState(false);
+  const memberService = useMemo(() => new MemberService(), []);
   const supportService = useMemo(() => new SupportService(), []);
 
   const {
     control,
     handleSubmit,
   }: UseFormReturn<ChangePasswordForm, unknown, ChangePasswordForm> = useForm({
-    resolver: zodResolver(changeSupportPasswordValidator(useTranslations())),
+    resolver: zodResolver(changePasswordValidator(useTranslations())),
     defaultValues: { password: "", confirmPassword: "" },
     mode: "onChange",
   });
@@ -60,7 +71,13 @@ export default function ChangeSupportPassword({
   const onSubmit = async (data: ChangePasswordForm) => {
     try {
       setSubmitting(true);
-      await supportService.updatePassword(support.id, data.password);
+
+      if (type === "member") {
+        await memberService.updatePassword(userId, data.password);
+      } else {
+        await supportService.updatePassword(userId, data.password);
+      }
+
       toast.success(t("password_updated"));
       dismissModal(true);
     } catch (error) {
@@ -72,9 +89,9 @@ export default function ChangeSupportPassword({
   };
 
   return (
-    <section data-slot="change-support-password-modal">
+    <section data-slot="change-password-modal">
       <p className="text-xl font-medium mb-1">{t("change_password")}</p>
-      <p className="text-sm text-muted-foreground mb-8">{support.name}</p>
+      <p className="text-sm text-muted-foreground mb-8">{name}</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Controller
@@ -87,7 +104,7 @@ export default function ChangeSupportPassword({
               <InputGroup data-invalid={fieldState.invalid}>
                 <InputGroupInput
                   {...field}
-                  dataSlot="change-support-password"
+                  dataSlot="change-password"
                   placeholder={registerT("enter_password")}
                   type={seePassword ? "text" : "password"}
                 />
@@ -117,7 +134,7 @@ export default function ChangeSupportPassword({
               <InputGroup data-invalid={fieldState.invalid}>
                 <InputGroupInput
                   {...field}
-                  dataSlot="change-support-confirm-password"
+                  dataSlot="change-password-confirm"
                   placeholder={registerT("enter_password")}
                   type={seeConfirmPassword ? "text" : "password"}
                 />
@@ -170,8 +187,8 @@ export default function ChangeSupportPassword({
               type="button"
               disabled={submitting}
               onClick={() => closeModal()}
-              data-slot="change-support-password-cancel"
-              className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
+              data-slot="change-password-cancel"
+              className="max-w-28 rounded bg-transparent text-black dark:text-white cursor-pointer hover:text-white dark:hover:text-black hover:bg-black dark:hover:bg-white"
             >
               {sharedT("cancel")}
             </Button>
@@ -182,7 +199,7 @@ export default function ChangeSupportPassword({
               size="lg"
               type="submit"
               loading={submitting}
-              dataSlot="change-support-password-save"
+              dataSlot="change-password-save"
               className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
             >
               {sharedT("save")}

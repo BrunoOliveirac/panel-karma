@@ -79,7 +79,9 @@ export default function UpsertProject({
       setSubmitting(true);
       const projectData = { ...project, ...data, id: project?.id } as Project;
       const projectId = await projectService.upsertProject(projectData);
-      const selectedClient = clients.find((client) => client.id === data.clientId);
+      const selectedClient = clients.find(
+        (client) => client.id === data.clientId,
+      );
 
       const upsertedProject: Project = {
         ...(project ?? {}),
@@ -177,7 +179,7 @@ export default function UpsertProject({
               disabled={submitting}
               onClick={() => closeModal()}
               data-slot="upsert-project-cancel"
-              className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
+              className="max-w-28 rounded bg-transparent text-black dark:text-white cursor-pointer hover:text-white dark:hover:text-black hover:bg-black dark:hover:bg-white"
             >
               {sharedT("cancel")}
             </Button>
