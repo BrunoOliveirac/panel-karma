@@ -243,7 +243,11 @@
     "could_not_create": "Could not create the member!",
     "could_not_load": "Could not load the projects!",
     "format_is_not_valid": "Format is not valid!",
-    "email_in_use": "This e-mail is already in use!"
+    "email_in_use": "This e-mail is already in use!",
+    "already_linked": "This member is already linked!",
+    "want_link": "Do you want to link this member to your account?",
+    "member_linked": "Member linked successfully!",
+    "could_not_link": "Could not link the member!"
   },
   "update_projects": {
     "manage_projects": "Manage projects",

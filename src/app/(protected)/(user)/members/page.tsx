@@ -8,6 +8,6 @@ export async function generateMetadata() {
   return { title: `${t("members")} | Karma` };
 }
 
-export default async function Page() {
+export default function Page() {
   return <ListMembers />;
 }

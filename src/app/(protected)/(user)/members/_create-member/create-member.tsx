@@ -22,6 +22,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
+import Swal from "sweetalert2";
 
 export default function CreateMember({
   closeModal,
@@ -67,6 +68,11 @@ export default function CreateMember({
     loadProjects();
   }, [projectService, t]);
 
+  /**
+   * Validate the email.
+   * @param email The email to validate.
+   * @returns True if the email is valid, false otherwise.
+   */
   const validateEmail = async (email: string): Promise<boolean> => {
     try {
       if (!email) return false;
@@ -78,11 +84,24 @@ export default function CreateMember({
       }
 
       const formattedEmail = email.trim().toLowerCase();
-      const isValid = await memberService.checkEmail(formattedEmail);
+      const emailStatus = await memberService.checkEmail(formattedEmail);
 
-      if (!isValid) toast.error(t("email_in_use"));
+      switch (emailStatus) {
+        case "available":
+          return true;
 
-      return isValid;
+        case "to-link":
+          await handleLinkMember(formattedEmail);
+          return false;
+
+        case "in-use":
+          toast.error(t("email_in_use"));
+          return false;
+
+        case "already-linked":
+          toast.error(t("already_linked"));
+          return false;
+      }
     } catch (error) {
       console.error(error);
       toast.error(t("format_is_not_valid"));
@@ -90,40 +109,64 @@ export default function CreateMember({
     }
   };
 
+  /**
+   * Submit the form.
+   * @param data The form data.
+   */
   const onSubmit = async (data: CreateMemberForm) => {
     try {
       setSubmitting(true);
       const emailIsValid = await validateEmail(data.email);
       if (!emailIsValid) return;
 
-      const payload: Partial<Member> & { password?: string } = {
-        active: true,
+      const payload = {
         name: data.name,
         password: data.password,
+        projectIds: data.projectIds ?? [],
         email: data.email.trim().toLowerCase(),
       };
 
       const memberId = await memberService.createMember(payload);
-
-      if (data.projectIds?.length) {
-        await memberService.updateMemberProjects(memberId, data.projectIds);
-      }
-
       toast.success(t("member_created"));
 
       dismissModal({
         id: memberId,
         active: true,
         name: data.name,
-        email: data.email.trim().toLowerCase(),
-        type: UserTypeEnum.MEMBER,
         createdAt: new Date(),
+        type: UserTypeEnum.MEMBER,
+        email: data.email.trim().toLowerCase(),
       } as Member);
     } catch (error) {
       console.error(error);
       toast.error(t("could_not_create"));
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleLinkMember = async (email: string): Promise<void> => {
+    try {
+      const response = await Swal.fire({
+        theme: "auto",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonColor: "#d33",
+        text: t("want_link"),
+        confirmButtonColor: "#3085d6",
+        title: sharedT("are_you_sure"),
+        cancelButtonText: sharedT("cancel"),
+        confirmButtonText: sharedT("confirm"),
+      });
+
+      if (!response?.isConfirmed) return;
+
+      await memberService.linkMember(email);
+      toast.success(t("member_linked"));
+      closeModal();
+    } catch (error) {
+      console.error(error);
+      toast.error(t("could_not_link"));
     }
   };
 
