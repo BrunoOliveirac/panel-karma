@@ -245,8 +245,9 @@
     "format_is_not_valid": "Formatul nu este valid!",
     "email_in_use": "Acest e-mail este deja utilizat!"
   },
-  "update_projects": {
+  "management_projects": {
     "manage_projects": "Gestionează proiectele",
+    "filter_projects": "Caută după proiect sau client",
     "projects_not_found": "Nu s-au găsit proiecte",
     "projects_updated": "Proiecte actualizate cu succes!",
     "could_not_update": "Nu s-au putut actualiza proiectele!",

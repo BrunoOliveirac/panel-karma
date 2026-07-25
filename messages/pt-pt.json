@@ -245,8 +245,9 @@
     "format_is_not_valid": "Formato inválido!",
     "email_in_use": "Este e-mail já está em uso!"
   },
-  "update_projects": {
+  "management_projects": {
     "manage_projects": "Gerenciar projetos",
+    "filter_projects": "Pesquisar por projeto ou cliente",
     "projects_not_found": "Nenhum projeto encontrado",
     "projects_updated": "Projetos atualizados com sucesso!",
     "could_not_update": "Não foi possível atualizar os projetos!",

@@ -42,7 +42,7 @@ import {
 import { toast } from "sonner";
 import Swal from "sweetalert2";
 import CreateMember from "../_create-member/create-member";
-import UpdateProjects from "../_update-projects/update-projects";
+import ManagementProjects from "../_management-projects/management-projects";
 import { useTitle } from "@/lib/store/use-title-store";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -107,16 +107,26 @@ export default function ListMembers() {
   }, [query]);
 
   /**
-   * Open the modal to create a new member
-   * @returns void
+   * Reload the member list from the server.
+   */
+  const refreshMembers = useCallback(() => {
+    startTransition(() => setMembersPromise(fetchMembers()));
+  }, [fetchMembers, startTransition]);
+
+  /**
+   * Open the create member modal and refresh the list when a member is created or linked.
    */
   const openCreateMemberModal = useCallback(async (): Promise<void> => {
-    const newMember = (await openModal(CreateMember, {})) as unknown as Member;
-    if (!newMember) return;
+    const shouldRefresh = await openModal(CreateMember, {});
+    if (!shouldRefresh) return;
 
-    startTransition(() => setMembersPromise(fetchMembers()));
-  }, [fetchMembers, openModal, startTransition]);
+    refreshMembers();
+  }, [openModal, refreshMembers]);
 
+  /**
+   * Update search and pagination query params in the URL.
+   * @param filterPaginationParams The page and/or query to apply.
+   */
   const updateUrl = (filterPaginationParams: {
     page?: number;
     query?: string;
@@ -247,6 +257,7 @@ interface MemberRowsProps {
   setMembersPromise: (promise: Promise<Pagination<Member>>) => void;
 }
 
+/** Renders the table rows for the current page of members. */
 const MemberRows = ({
   t,
   sharedT,
@@ -261,14 +272,19 @@ const MemberRows = ({
   const { items: members } = use(membersPromise);
 
   /**
-   * Open the modal to manage the projects of a member
+   * Open the modal to manage the projects assigned to a member.
+   * @param member The member whose projects will be managed.
    */
   const openManageProjectsModal = useCallback(
     async (member: Member): Promise<boolean> =>
-      openModal(UpdateProjects, { member }),
+      openModal(ManagementProjects, { member }),
     [openModal],
   );
 
+  /**
+   * Ask for confirmation and unlink a member from the current user.
+   * @param memberId The ID of the member to unlink.
+   */
   const unlinkMember = async (memberId: string) => {
     try {
       const response = await Swal.fire({
@@ -365,6 +381,7 @@ interface MemberPaginationProps {
   membersPromise: Promise<Pagination<Member>>;
 }
 
+/** Renders pagination controls for the member list. */
 const MemberPagination = ({
   page,
   onPageChange,

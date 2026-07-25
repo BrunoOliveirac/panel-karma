@@ -249,8 +249,9 @@
     "member_linked": "Member linked successfully!",
     "could_not_link": "Could not link the member!"
   },
-  "update_projects": {
+  "management_projects": {
     "manage_projects": "Manage projects",
+    "filter_projects": "Search by project or client",
     "projects_not_found": "No projects found",
     "projects_updated": "Projects updated successfully!",
     "could_not_update": "Could not update the projects!",

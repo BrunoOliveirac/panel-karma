@@ -3,20 +3,24 @@ import { api } from "../client/axios";
 import { Member } from "../models/member";
 import { Pagination } from "../interfaces/pagination";
 
+/** Payload for updating an existing member's profile. */
 interface UpdateMemberParams {
   id: string;
   name: string;
   email: string;
 }
 
+/** Payload for creating a new member, including the owning user and initial projects. */
 interface CreateMemberParams extends Omit<UpdateMemberParams, "id"> {
   userId: string;
   password: string;
   projectIds: string[];
 }
 
+/** Result of checking whether an email can be used when creating or linking a member. */
 type EmailStatus = "available" | "to-link" | "in-use" | "already-linked";
 
+/** Service layer for member CRUD, linking, and project assignment operations. */
 export class MemberService {
   /**
    * Get all member users.
@@ -28,8 +32,10 @@ export class MemberService {
   };
 
   /**
-   * Get all members linked to the current user.
-   * @returns An array of members.
+   * Get members linked to the current user with optional search and pagination.
+   * @param query Search term applied to member name or email.
+   * @param page Page number (1-based).
+   * @returns A paginated list of linked members.
    */
   public getAllLinkedMembers = async (
     query: string,
@@ -47,8 +53,8 @@ export class MemberService {
   };
 
   /**
-   * Create a member user.
-   * @param createMember The member to create.
+   * Create a member user and link it to the current user.
+   * @param createMemberParams Member data excluding the owning user id.
    * @returns The id of the created member.
    */
   public createMember = async (
@@ -82,10 +88,9 @@ export class MemberService {
   };
 
   /**
-   * Check if an e-mail is available.
-   * @param email The e-mail to check.
-   * @param memberId Optional member ID to exclude when editing.
-   * @returns The status of the e-mail.
+   * Check whether an email can be used to create or link a member.
+   * @param email The email to validate.
+   * @returns Whether the email is available, can be linked, is already in use, or already linked.
    */
   public checkEmail = async (email: string): Promise<EmailStatus> => {
     const user = JSON.parse(Cookies.get("user")!);
@@ -117,37 +122,45 @@ export class MemberService {
    * Get the project IDs linked to a member for the current user.
    * @param memberId The ID of the member user.
    */
-  public getMemberProjectIds = async (memberId: string): Promise<string[]> => {
+  public getLinkedProjectIds = async (memberId: string): Promise<string[]> => {
     const response = await api.get<string[]>(`/members/projects/${memberId}`);
     return response.data;
   };
 
   /**
-   * Update the projects linked to a member for the current user.
+   * Sync project assignments for a member based on the current and initial selection.
    * @param memberId The ID of the member user.
-   * @param projectIds The IDs of the selected projects.
+   * @param projectIds The IDs of the currently selected projects.
+   * @param initialProjectIds The IDs of the projects selected when the modal opened.
    */
-  public updateMemberProjects = async (
+  public managementProjectMembers = async (
     memberId: string,
     projectIds: string[],
+    initialProjectIds: string[],
   ): Promise<void> => {
-    await api.post("/members/update-projects", { memberId, projectIds });
+    await api.post(`/members/management-projects/${memberId}`, {
+      projectIds,
+      initialProjectIds,
+    });
   };
 
   /**
-   * Link a member from the current user.
-   * @param memberId The ID of the member user to link.
+   * Link an existing member account to the current user.
+   * @param email The email of the member user to link.
    */
-  public linkMember = async (memberId: string): Promise<void> => {
-    await api.post(`/members/link`, { memberId });
-  };
-
-  /**
-   * Unlink a member from the current user.
-   * @param email The email of the member user to unlink.
-   */
-  public unlinkMember = async (email: string): Promise<void> => {
+  public linkMember = async (email: string): Promise<void> => {
     const user = JSON.parse(Cookies.get("user")!);
-    await api.delete(`/members/unlink`, { data: { email, userId: user.id } });
+    await api.post(`/members/link`, { email, userId: user.id });
+  };
+
+  /**
+   * Unlink a member from the current user without deleting the member account.
+   * @param memberId The ID of the member user to unlink.
+   */
+  public unlinkMember = async (memberId: string): Promise<void> => {
+    const user = JSON.parse(Cookies.get("user")!);
+    await api.delete(`/members/unlink`, {
+      data: { memberId, userId: user.id },
+    });
   };
 }

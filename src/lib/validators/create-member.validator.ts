@@ -1,5 +1,9 @@
 import * as z from "zod";
 
+/**
+ * Build the password validation schema for member creation.
+ * @param t Translation function for validation messages.
+ */
 const passwordSchema = (t: (key: string) => string) =>
   z
     .string()
@@ -10,6 +14,10 @@ const passwordSchema = (t: (key: string) => string) =>
     .regex(/[0-9]/)
     .regex(/[^A-Za-z0-9]/);
 
+/**
+ * Build the Zod schema for the create member form.
+ * @param t Translation function for validation messages.
+ */
 const createMemberValidator = (t: (key: string) => string) =>
   z
     .object({

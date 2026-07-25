@@ -1,14 +1,13 @@
 "use client";
 
 import PasswordFields from "@/components/global/password-fields";
+import { InlineConfirmDialog } from "@/components/global/inline-confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { SpinnerButton } from "@/components/ui/spinner-button";
-import { UserTypeEnum } from "@/lib/enums/user-type.enum";
-import { Member } from "@/lib/models/member";
 import { Project } from "@/lib/models/project";
 import { ModalInjectedProps } from "@/lib/providers/modal-provider";
 import { MemberService } from "@/lib/services/member.service";
@@ -22,7 +21,6 @@ import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
-import Swal from "sweetalert2";
 
 export default function CreateMember({
   closeModal,
@@ -31,10 +29,12 @@ export default function CreateMember({
   const sharedT = useTranslations("shared");
   const t = useTranslations("create_member");
   const [loading, setLoading] = useState(true);
+  const [linking, setLinking] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
   const memberService = useMemo(() => new MemberService(), []);
   const projectService = useMemo(() => new ProjectService(), []);
+  const [linkConfirmEmail, setLinkConfirmEmail] = useState<string | null>(null);
 
   const {
     control,
@@ -52,6 +52,7 @@ export default function CreateMember({
   });
 
   useEffect(() => {
+    /** Load active projects available for assignment to the new member. */
     async function loadProjects() {
       try {
         setLoading(true);
@@ -69,9 +70,9 @@ export default function CreateMember({
   }, [projectService, t]);
 
   /**
-   * Validate the email.
+   * Check email availability and prompt to link when the account already exists.
    * @param email The email to validate.
-   * @returns True if the email is valid, false otherwise.
+   * @returns True when the email can be used to create a member, false otherwise.
    */
   const validateEmail = async (email: string): Promise<boolean> => {
     try {
@@ -91,7 +92,7 @@ export default function CreateMember({
           return true;
 
         case "to-link":
-          await handleLinkMember(formattedEmail);
+          setLinkConfirmEmail(formattedEmail);
           return false;
 
         case "in-use":
@@ -110,7 +111,7 @@ export default function CreateMember({
   };
 
   /**
-   * Submit the form.
+   * Create a new member after validating the email.
    * @param data The form data.
    */
   const onSubmit = async (data: CreateMemberForm) => {
@@ -126,17 +127,10 @@ export default function CreateMember({
         email: data.email.trim().toLowerCase(),
       };
 
-      const memberId = await memberService.createMember(payload);
+      await memberService.createMember(payload);
       toast.success(t("member_created"));
 
-      dismissModal({
-        id: memberId,
-        active: true,
-        name: data.name,
-        createdAt: new Date(),
-        type: UserTypeEnum.MEMBER,
-        email: data.email.trim().toLowerCase(),
-      } as Member);
+      dismissModal(true);
     } catch (error) {
       console.error(error);
       toast.error(t("could_not_create"));
@@ -145,28 +139,21 @@ export default function CreateMember({
     }
   };
 
-  const handleLinkMember = async (email: string): Promise<void> => {
+  /** Link an existing member account to the current user after confirmation. */
+  const confirmLinkMember = async (): Promise<void> => {
+    if (!linkConfirmEmail) return;
+
     try {
-      const response = await Swal.fire({
-        theme: "auto",
-        icon: "warning",
-        showCancelButton: true,
-        cancelButtonColor: "#d33",
-        text: t("want_link"),
-        confirmButtonColor: "#3085d6",
-        title: sharedT("are_you_sure"),
-        cancelButtonText: sharedT("cancel"),
-        confirmButtonText: sharedT("confirm"),
-      });
-
-      if (!response?.isConfirmed) return;
-
-      await memberService.linkMember(email);
+      setLinking(true);
+      await memberService.linkMember(linkConfirmEmail);
       toast.success(t("member_linked"));
-      closeModal();
+      dismissModal(true);
     } catch (error) {
       console.error(error);
       toast.error(t("could_not_link"));
+    } finally {
+      setLinking(false);
+      setLinkConfirmEmail(null);
     }
   };
 
@@ -179,7 +166,23 @@ export default function CreateMember({
   }
 
   return (
-    <section data-slot="create-member-modal">
+    <section data-slot="create-member-modal" className="relative">
+      <InlineConfirmDialog
+        confirming={linking}
+        description={t("want_link")}
+        onConfirm={confirmLinkMember}
+        title={sharedT("are_you_sure")}
+        cancelLabel={sharedT("cancel")}
+        open={linkConfirmEmail !== null}
+        confirmLabel={sharedT("confirm")}
+        dataSlot="create-member-link-confirm"
+        cancelDataSlot="create-member-link-cancel"
+        confirmDataSlot="create-member-link-confirm-btn"
+        onOpenChange={(open) => {
+          if (!open) setLinkConfirmEmail(null);
+        }}
+      />
+
       <p className="text-xl font-medium mb-8">{t("member_details")}</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
