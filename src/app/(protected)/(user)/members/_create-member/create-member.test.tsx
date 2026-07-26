@@ -1,45 +1,28 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderWithProviders } from "@/lib/mocks/render-with-providers.mock";
-import { _Translator, useFormatter } from "next-intl";
-import ListMembers from "../_list-members/list-members";
-import { screen, waitFor } from "@testing-library/react";
+import CreateMember from "./create-member";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { toast } from "sonner";
 
 const createMemberMock = jest.fn();
-const updateMemberProjectsMock = jest.fn();
+const linkMemberMock = jest.fn();
 const checkEmailMock = jest.fn();
-const getAllMembersMock = jest.fn();
 const getAllActiveProjectsMock = jest.fn();
+const closeModalMock = jest.fn();
+const dismissModalMock = jest.fn();
 
-jest.mock("sweetalert2", () => ({
-  __esModule: true,
-  default: { fire: jest.fn() },
-}));
+jest.mock("use-intl", () => {
+  const translate = (key: string) => key;
+  return { useTranslations: () => translate };
+});
 
-jest.mock("use-intl", () => ({
-  useTranslations: () => (t: _Translator<Record<string, any>>) => t,
-}));
-
-jest.mock("next-intl", () => ({
-  useTranslations: () => (t: _Translator<Record<string, any>>) => t,
-  useFormatter: jest.fn(),
-}));
-
-jest.mock("@/components/ui/tooltip", () => ({
-  TooltipProvider: ({ children }: { children: React.ReactNode }) => children,
-  Tooltip: ({ children }: { children: React.ReactNode }) => children,
-  TooltipTrigger: ({ children }: { children: React.ReactNode }) => children,
-  TooltipContent: ({ children }: { children: React.ReactNode }) => children,
-}));
+jest.mock("next-intl", () => {
+  const translate = (key: string) => key;
+  return { useTranslations: () => translate };
+});
 
 jest.mock("sonner", () => ({
   toast: { success: jest.fn(), error: jest.fn() },
-}));
-
-jest.mock("next/navigation", () => ({
-  useRouter: () => ({ push: jest.fn() }),
-  useSearchParams: () => ({ get: jest.fn() }),
 }));
 
 jest.mock("@/components/ui/combobox", () => ({
@@ -54,9 +37,7 @@ jest.mock("@/components/ui/combobox", () => ({
       data-slot={inputDataSlot}
       value={field.value?.join(",") ?? ""}
       onChange={(event) =>
-        field.onChange(
-          event.target.value ? event.target.value.split(",") : [],
-        )
+        field.onChange(event.target.value ? event.target.value.split(",") : [])
       }
     />
   ),
@@ -66,10 +47,8 @@ jest.mock("@/lib/services/member.service", () => {
   return {
     MemberService: jest.fn().mockImplementation(() => ({
       createMember: (...args: unknown[]) => createMemberMock(...args),
-      updateMemberProjects: (...args: unknown[]) =>
-        updateMemberProjectsMock(...args),
+      linkMember: (...args: unknown[]) => linkMemberMock(...args),
       checkEmail: (...args: unknown[]) => checkEmailMock(...args),
-      getAllMembers: getAllMembersMock,
     })),
   };
 });
@@ -83,91 +62,56 @@ jest.mock("@/lib/services/project.service", () => {
   };
 });
 
-jest.mocked(useFormatter).mockReturnValue({
-  dateTime: jest.fn().mockReturnValue("01/01/2024 10:30"),
-} as any);
-
 const validPassword = "Password1!";
 
 const mockMember = {
   name: "New Member",
   email: "newmember@email.com",
-  active: true,
 };
 
-const waitForCreateMemberForm = async () => {
-  await waitFor(() => {
-    expect(screen.getByTestId("create-member-name")).toBeInTheDocument();
-  });
+const renderCreateMember = async () => {
+  renderWithProviders(
+    <CreateMember
+      closeModal={closeModalMock}
+      dismissModal={dismissModalMock}
+    />,
+  );
+
+  await screen.findByTestId("create-member-name");
 };
 
-const openCreateMemberModal = async () => {
-  getAllMembersMock.mockResolvedValue([]);
-  getAllActiveProjectsMock.mockResolvedValue([]);
-  checkEmailMock.mockResolvedValue(true);
-  renderWithProviders(<ListMembers />);
-
-  await waitFor(async () => {
-    await userEvent.click(screen.getByTestId("create-member"));
-  });
-
-  await waitForCreateMemberForm();
-};
-
-const handleCreateMember = async () => {
-  createMemberMock.mockResolvedValue("03");
-  checkEmailMock.mockResolvedValue(true);
-  getAllMembersMock.mockResolvedValue([]);
-  getAllActiveProjectsMock.mockResolvedValue([]);
-
-  renderWithProviders(<ListMembers />);
-
-  await waitFor(async () => {
-    await userEvent.click(screen.getByTestId("create-member"));
-  });
-
-  await waitForCreateMemberForm();
-
-  const nameInput = screen.getByTestId("create-member-name");
-  await userEvent.clear(nameInput);
-  await userEvent.type(nameInput, mockMember.name);
-
-  const emailInput = screen.getByTestId("create-member-email");
-  await userEvent.clear(emailInput);
-  await userEvent.type(emailInput, mockMember.email);
-
+const fillCreateMemberForm = async () => {
+  await userEvent.type(
+    screen.getByTestId("create-member-name"),
+    mockMember.name,
+  );
+  await userEvent.type(
+    screen.getByTestId("create-member-email"),
+    mockMember.email,
+  );
   await userEvent.type(
     screen.getByTestId("create-member-password"),
     validPassword,
   );
-
   await userEvent.type(
     screen.getByTestId("create-member-confirm-password"),
     validPassword,
   );
-
-  await userEvent.click(screen.getByTestId("create-member-save"));
-
-  await waitFor(() => {
-    expect(createMemberMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: mockMember.name,
-        email: mockMember.email,
-        active: mockMember.active,
-      }),
-    );
-  });
 };
 
 describe("CreateMember", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    checkEmailMock.mockResolvedValue(true);
+    createMemberMock.mockReset();
+    linkMemberMock.mockReset();
+    checkEmailMock.mockReset();
+    getAllActiveProjectsMock.mockReset();
+    checkEmailMock.mockResolvedValue("available");
     getAllActiveProjectsMock.mockResolvedValue([]);
   });
 
   it("Should not submit with an empty name", async () => {
-    await openCreateMemberModal();
+    await renderCreateMember();
     await userEvent.click(screen.getByTestId("create-member-save"));
 
     await waitFor(() => {
@@ -179,7 +123,7 @@ describe("CreateMember", () => {
   });
 
   it("Should not submit with an empty e-mail", async () => {
-    await openCreateMemberModal();
+    await renderCreateMember();
 
     await userEvent.type(
       screen.getByTestId("create-member-name"),
@@ -197,8 +141,21 @@ describe("CreateMember", () => {
   });
 
   it("Should create a member successfully", async () => {
-    await handleCreateMember();
-    expect(toast.success).toHaveBeenCalledWith("member_created");
+    createMemberMock.mockResolvedValue("03");
+    await renderCreateMember();
+    await fillCreateMemberForm();
+    await userEvent.click(screen.getByTestId("create-member-save"));
+
+    await waitFor(() => {
+      expect(createMemberMock).toHaveBeenCalledWith({
+        name: mockMember.name,
+        email: mockMember.email,
+        password: validPassword,
+        projectIds: [],
+      });
+      expect(toast.success).toHaveBeenCalledWith("member_created");
+      expect(dismissModalMock).toHaveBeenCalledWith(true);
+    });
   });
 
   it("Should show error when create fails", async () => {
@@ -207,36 +164,8 @@ describe("CreateMember", () => {
       .mockImplementation(() => undefined);
 
     createMemberMock.mockRejectedValue(new Error("Failed"));
-    getAllMembersMock.mockResolvedValue([]);
-    getAllActiveProjectsMock.mockResolvedValue([]);
-    renderWithProviders(<ListMembers />);
-
-    await waitFor(async () => {
-      await userEvent.click(screen.getByTestId("create-member"));
-    });
-
-    await waitForCreateMemberForm();
-
-    await userEvent.type(
-      screen.getByTestId("create-member-name"),
-      mockMember.name,
-    );
-
-    await userEvent.type(
-      screen.getByTestId("create-member-email"),
-      mockMember.email,
-    );
-
-    await userEvent.type(
-      screen.getByTestId("create-member-password"),
-      validPassword,
-    );
-
-    await userEvent.type(
-      screen.getByTestId("create-member-confirm-password"),
-      validPassword,
-    );
-
+    await renderCreateMember();
+    await fillCreateMemberForm();
     await userEvent.click(screen.getByTestId("create-member-save"));
 
     await waitFor(() => {
@@ -246,14 +175,80 @@ describe("CreateMember", () => {
     consoleSpy.mockRestore();
   });
 
-  it("Should cancel the create modal", async () => {
-    await openCreateMemberModal();
-    await userEvent.click(screen.getByTestId("create-member-cancel"));
+  it("Should show error when e-mail is already in use", async () => {
+    await renderCreateMember();
+    checkEmailMock.mockResolvedValue("in-use");
+
+    const emailInput = screen.getByTestId("create-member-email");
+    await userEvent.type(emailInput, mockMember.email);
+    fireEvent.blur(emailInput);
 
     await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith("email_in_use");
+    });
+  });
+
+  it("Should show error when member is already linked", async () => {
+    await renderCreateMember();
+    checkEmailMock.mockResolvedValue("already-linked");
+
+    const emailInput = screen.getByTestId("create-member-email");
+    await userEvent.type(emailInput, mockMember.email);
+    fireEvent.blur(emailInput);
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith("already_linked");
+    });
+  });
+
+  it("Should link an existing member after confirmation", async () => {
+    await renderCreateMember();
+    checkEmailMock.mockResolvedValue("to-link");
+    linkMemberMock.mockResolvedValue(undefined);
+
+    const emailInput = screen.getByTestId("create-member-email");
+    await userEvent.type(emailInput, mockMember.email);
+    fireEvent.blur(emailInput);
+
+    expect(
+      await screen.findByTestId("create-member-link-confirm"),
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId("create-member-link-confirm-btn"));
+
+    await waitFor(() => {
+      expect(linkMemberMock).toHaveBeenCalledWith(mockMember.email);
+      expect(toast.success).toHaveBeenCalledWith("member_linked");
+      expect(dismissModalMock).toHaveBeenCalledWith(true);
+    });
+  });
+
+  it("Should cancel linking an existing member", async () => {
+    await renderCreateMember();
+    checkEmailMock.mockResolvedValue("to-link");
+
+    const emailInput = screen.getByTestId("create-member-email");
+    await userEvent.type(emailInput, mockMember.email);
+    fireEvent.blur(emailInput);
+
+    expect(
+      await screen.findByTestId("create-member-link-confirm"),
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId("create-member-link-cancel"));
+
+    await waitFor(() => {
+      expect(linkMemberMock).not.toHaveBeenCalled();
       expect(
-        screen.queryByTestId("create-member-modal"),
+        screen.queryByTestId("create-member-link-confirm"),
       ).not.toBeInTheDocument();
     });
+  });
+
+  it("Should cancel the create modal", async () => {
+    await renderCreateMember();
+    await userEvent.click(screen.getByTestId("create-member-cancel"));
+
+    expect(closeModalMock).toHaveBeenCalled();
   });
 });

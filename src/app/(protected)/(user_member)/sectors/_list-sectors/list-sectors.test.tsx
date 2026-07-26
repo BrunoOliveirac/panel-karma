@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderWithProviders } from "@/lib/mocks/render-with-providers.mock";
-import { _Translator, useFormatter } from "next-intl";
+import { useFormatter } from "next-intl";
 import ListSectors from "./list-sectors";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -15,14 +15,18 @@ jest.mock("sweetalert2", () => ({
   default: { fire: jest.fn() },
 }));
 
-jest.mock("use-intl", () => ({
-  useTranslations: () => (t: _Translator<Record<string, any>>) => t,
-}));
+jest.mock("use-intl", () => {
+  const translate = (key: string) => key;
+  return { useTranslations: () => translate };
+});
 
-jest.mock("next-intl", () => ({
-  useTranslations: () => (t: _Translator<Record<string, any>>) => t,
-  useFormatter: jest.fn(),
-}));
+jest.mock("next-intl", () => {
+  const translate = (key: string) => key;
+  return {
+    useTranslations: () => translate,
+    useFormatter: jest.fn(),
+  };
+});
 
 jest.mock("@/components/ui/tooltip", () => ({
   TooltipProvider: ({ children }: { children: React.ReactNode }) => children,

@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/tooltip";
 
 export default function ListSectors() {
-  const pageSize = 1;
+  const pageSize = 10;
   const router = useRouter();
   const format = useFormatter();
   const { openModal } = useModal();
@@ -117,14 +117,7 @@ export default function ListSectors() {
         setLoading(true);
         setTitle(t("sector_list"));
         const sectors = await sectorService.getAllSectors();
-        setMainSectors([
-          ...sectors,
-          ...sectors,
-          ...sectors,
-          ...sectors,
-          ...sectors,
-          ...sectors,
-        ]);
+        setMainSectors(sectors);
         const sector = searchParams.get("sector");
 
         if (sector) {
