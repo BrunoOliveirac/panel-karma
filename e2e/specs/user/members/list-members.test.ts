@@ -22,6 +22,7 @@ test("Should change the page", async ({ userPage }) => {
   if (await secondPageElement.isVisible()) {
     await secondPageElement.click();
     await expect(secondPageElement).toHaveAttribute("data-active", "true");
+    await expect(userPage.getByTestId("member-row").first()).toBeVisible();
   }
 });
 
@@ -85,6 +86,7 @@ test("Should open the member create modal", async ({ userPage }) => {
   await userPage.goto("/members");
   await expect(userPage.getByTestId("spinner")).toBeHidden();
   await userPage.getByTestId("create-member").click();
+  await expect(userPage.getByTestId("create-member-modal")).toBeVisible();
   await expect(userPage.getByText("Member Details")).toBeVisible();
   await expect(userPage.getByText("Confirm password")).toBeVisible();
 });
@@ -99,5 +101,6 @@ test("Should open the manage projects modal", async ({ userPage }) => {
   const firstMemberId = await firstMemberElement.getAttribute("id");
   await userPage.getByTestId(`manage-projects-member-${firstMemberId}`).click();
 
+  await expect(userPage.getByTestId("management-projects-modal")).toBeVisible();
   await expect(userPage.getByText("Manage projects")).toBeVisible();
 });

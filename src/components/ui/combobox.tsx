@@ -148,14 +148,24 @@ function ComboboxContent({
   );
 }
 
-function ComboboxList({ className, ...props }: ComboboxPrimitive.List.Props) {
+function ComboboxList({
+  className,
+  onWheel,
+  ...props
+}: ComboboxPrimitive.List.Props) {
   return (
     <ComboboxPrimitive.List
       data-slot="combobox-list"
       className={cn(
-        "no-scrollbar max-h-[min(calc(--spacing(72)---spacing(9)),calc(var(--available-height)---spacing(9)))] scroll-py-1 overflow-y-auto overscroll-contain p-1 data-empty:p-0",
+        "max-h-[min(15rem,var(--available-height,100dvh))] scroll-py-1 overflow-y-auto overscroll-contain p-1 data-empty:p-0",
         className,
       )}
+      onWheel={(event) => {
+        // Keep wheel scrolling on the list when the combobox is portaled
+        // outside a scroll-locked dialog/modal.
+        onWheel?.(event);
+        event.stopPropagation();
+      }}
       {...props}
     />
   );
