@@ -1,5 +1,5 @@
-import Cookies from "js-cookie";
 import { api } from "../client/axios";
+import { getLoggedUser } from "../helpers/get-logged-user";
 import { Member } from "../models/member";
 import { Pagination } from "../interfaces/pagination";
 
@@ -41,7 +41,7 @@ export class MemberService {
     query: string,
     page: number,
   ): Promise<Pagination<Member>> => {
-    const user = JSON.parse(Cookies.get("user")!);
+    const user = getLoggedUser();
 
     const members = (
       await api.get<Pagination<Member>>(`/members/list/${user.id}`, {
@@ -60,7 +60,7 @@ export class MemberService {
   public createMember = async (
     createMemberParams: Omit<CreateMemberParams, "userId">,
   ): Promise<string> => {
-    const user = JSON.parse(Cookies.get("user")!);
+    const user = getLoggedUser();
 
     const createMember: CreateMemberParams = {
       ...createMemberParams,
@@ -93,7 +93,7 @@ export class MemberService {
    * @returns Whether the email is available, can be linked, is already in use, or already linked.
    */
   public checkEmail = async (email: string): Promise<EmailStatus> => {
-    const user = JSON.parse(Cookies.get("user")!);
+    const user = getLoggedUser();
 
     const response = await api.post<{ status: EmailStatus }>(
       "/members/check-email",
@@ -149,7 +149,7 @@ export class MemberService {
    * @param email The email of the member user to link.
    */
   public linkMember = async (email: string): Promise<void> => {
-    const user = JSON.parse(Cookies.get("user")!);
+    const user = getLoggedUser();
     await api.post(`/members/link`, { email, userId: user.id });
   };
 
@@ -158,7 +158,7 @@ export class MemberService {
    * @param memberId The ID of the member user to unlink.
    */
   public unlinkMember = async (memberId: string): Promise<void> => {
-    const user = JSON.parse(Cookies.get("user")!);
+    const user = getLoggedUser();
     await api.delete(`/members/unlink`, {
       data: { memberId, userId: user.id },
     });

@@ -40,9 +40,7 @@ export default function Topbar() {
           </button>
         )}
 
-        {data && (
-          <UserAvatar name={data.user.name} avatar={data?.user.avatar} />
-        )}
+        {data && <UserAvatar name={data.user.name} />}
       </div>
     </div>
   );

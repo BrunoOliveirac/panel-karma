@@ -1,17 +1,20 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { useLoggedUserStore } from "../store/use-logged-user-store";
 
 export function useLogout() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const logout = () => {
-    Cookies.remove("token");
-    Cookies.remove("user");
-    Cookies.remove("expiresAt");
+  const logout = async () => {
+    await fetch("/api/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+
+    useLoggedUserStore.setState({ user: null });
     queryClient.clear();
     router.replace("/login");
   };

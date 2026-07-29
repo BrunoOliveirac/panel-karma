@@ -5,36 +5,43 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
+import { endOfDay } from "date-fns";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
-import { LoggedUser } from "../types/logged-user";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { UserRouteMap } from "../enums/user-type.enum";
+import { SidebarItemMock } from "../mocks/sidebar-item.mock";
+import { ProfileService } from "../services/profile.service";
+import { useLoggedUserStore } from "../store/use-logged-user-store";
 import { LocaleType } from "../types/locale-type";
+import { LoggedUser } from "../types/logged-user";
 
 interface FetchAuth {
   user: LoggedUser;
-  expiresAt: Date;
   locale: LocaleType;
 }
 
-function fetchAuth(): FetchAuth {
-  const user = Cookies.get("user");
-  const expiresAt = Cookies.get("expiresAt");
-  const locale = Cookies.get("locale") as LocaleType | undefined;
+async function fetchAuth(): Promise<FetchAuth> {
+  const user = await new ProfileService().getProfile();
+  useLoggedUserStore.getState().setUser(user);
 
-  if (!expiresAt || !user) throw new Error("Unauthenticated");
+  const locale = (Cookies.get("locale") as LocaleType | undefined) || "en";
 
-  return {
-    user: JSON.parse(user),
-    locale: locale || "en",
-    expiresAt: JSON.parse(expiresAt),
-  };
+  return { user, locale };
+}
+
+async function clearSession() {
+  await fetch("/api/logout", {
+    method: "POST",
+    credentials: "include",
+  });
+  useLoggedUserStore.getState().setUser(null);
 }
 
 export function useAuth() {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const hasRedirected = useRef(false);
+  const pathname = usePathname();
 
   const query: UseQueryResult<FetchAuth, Error> = useQuery({
     retry: false,
@@ -44,18 +51,40 @@ export function useAuth() {
     refetchOnWindowFocus: true,
   });
 
-  // Automatic timer based on the expiration date
+  // Redirect based on user type after profile is loaded
   useEffect(() => {
-    const expiresAt = query?.data?.expiresAt;
-    if (!expiresAt) return;
+    const user = query.data?.user;
+    if (!user) return;
 
-    const now = Date.now();
-    const timeLeft = new Date(expiresAt).getTime() - now;
-    function logout() {
-      hasRedirected.current = true;
-      Cookies.remove("token");
-      Cookies.remove("user");
-      Cookies.remove("expiresAt");
+    const home = UserRouteMap.get(user.type) ?? "/home";
+    const allowedPaths = new SidebarItemMock().getPaths(user.type);
+
+    if (pathname === "/" || !allowedPaths.includes(pathname)) {
+      if (pathname !== home) {
+        router.replace(home);
+      }
+    }
+  }, [query.data?.user, pathname, router]);
+
+  // If /profile fails, clear session and go to login
+  useEffect(() => {
+    if (!query.isError) return;
+
+    (async () => {
+      await clearSession();
+      queryClient.clear();
+      router.replace("/login");
+    })();
+  }, [query.isError, queryClient, router]);
+
+  // Logout when JWT day expires (token is issued until end of day)
+  useEffect(() => {
+    if (!query.data?.user) return;
+
+    const timeLeft = endOfDay(new Date()).getTime() - Date.now();
+
+    async function logout() {
+      await clearSession();
       queryClient.clear();
       router.replace("/login");
     }
@@ -65,24 +94,9 @@ export function useAuth() {
       return;
     }
 
-    const timeout = setTimeout(() => {
-      logout();
-    }, timeLeft);
-
+    const timeout = setTimeout(logout, timeLeft);
     return () => clearTimeout(timeout);
-  }, [query?.data?.expiresAt, router, queryClient]);
-
-  // When the backend invalidates before the token expires
-  // useEffect(() => {
-  //   if (query.isError && !hasRedirected.current) {
-  //     hasRedirected.current = true;
-  //     Cookies.remove("token");
-  //     Cookies.remove("user");
-  //     Cookies.remove("expiresAt");
-  //     queryClient.clear();
-  //     router.replace("/login");
-  //   }
-  // }, [query.isError, router, queryClient]);
+  }, [query.data?.user, router, queryClient]);
 
   return query ?? {};
 }
