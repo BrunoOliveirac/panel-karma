@@ -8,7 +8,7 @@ import {
 import { endOfDay } from "date-fns";
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { UserRouteMap } from "../enums/user-type.enum";
 import { SidebarItemMock } from "../mocks/sidebar-item.mock";
 import { ProfileService } from "../services/profile.service";
@@ -42,17 +42,21 @@ export function useAuth() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   const query: UseQueryResult<FetchAuth, Error> = useQuery({
     retry: false,
     queryKey: ["auth"],
     queryFn: fetchAuth,
     staleTime: Infinity,
-    refetchOnWindowFocus: true,
+    enabled: !sessionExpired,
+    refetchOnWindowFocus: !sessionExpired,
   });
 
   // Redirect based on user type after profile is loaded
   useEffect(() => {
+    if (sessionExpired) return;
+
     const user = query.data?.user;
     if (!user) return;
 
@@ -64,39 +68,47 @@ export function useAuth() {
         router.replace(home);
       }
     }
-  }, [query.data?.user, pathname, router]);
+  }, [query.data?.user, pathname, router, sessionExpired]);
 
   // If /profile fails, clear session and go to login
   useEffect(() => {
-    if (!query.isError) return;
+    if (!query.isError || sessionExpired) return;
 
     (async () => {
       await clearSession();
       queryClient.clear();
       router.replace("/login");
     })();
-  }, [query.isError, queryClient, router]);
+  }, [query.isError, queryClient, router, sessionExpired]);
 
-  // Logout when JWT day expires (token is issued until end of day)
+  // Expire session at midnight (token is issued until end of day)
   useEffect(() => {
-    if (!query.data?.user) return;
+    if (!query.data?.user || sessionExpired) return;
 
     const timeLeft = endOfDay(new Date()).getTime() - Date.now();
 
-    async function logout() {
+    async function expireSession() {
+      setSessionExpired(true);
       await clearSession();
-      queryClient.clear();
-      router.replace("/login");
     }
 
     if (timeLeft <= 0) {
-      logout();
+      expireSession();
       return;
     }
 
-    const timeout = setTimeout(logout, timeLeft);
+    const timeout = setTimeout(expireSession, timeLeft);
     return () => clearTimeout(timeout);
-  }, [query.data?.user, router, queryClient]);
+  }, [query.data?.user, sessionExpired]);
 
-  return query ?? {};
+  const acknowledgeSessionExpired = useCallback(() => {
+    queryClient.clear();
+    router.replace("/login");
+  }, [queryClient, router]);
+
+  return {
+    ...query,
+    sessionExpired,
+    acknowledgeSessionExpired,
+  };
 }

@@ -11,7 +11,14 @@ export const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+    const requestUrl = String(error.config?.url ?? "");
+    const isAuthAttempt =
+      requestUrl.includes("/auth/login") ||
+      requestUrl.includes("/auth/register");
+
+    // Login/register 401s are handled by the form; do not force a session reset.
+    if (status === 401 && !isAuthAttempt) {
       queryClient.clear();
 
       await fetch("/api/logout", {

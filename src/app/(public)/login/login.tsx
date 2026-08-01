@@ -52,7 +52,12 @@ export default function Login() {
       console.error(error);
 
       if (error instanceof AxiosError) {
-        toast.error(t(error.status === 403 ? "invalid_credentials" : "error"));
+        const status = error.response?.status ?? error.status;
+        console.log(status);
+
+        if (status === 429) toast.error(t("too_many_attempts"));
+        else if (status === 401) toast.error(t("invalid_credentials"));
+        else toast.error(t("error"));
       }
     } finally {
       setSubmitting(false);

@@ -37,6 +37,11 @@
     "activate": "Ativar",
     "deactivate": "Desativar"
   },
+  "session_expired": {
+    "title": "Sessão terminada",
+    "description": "A sua sessão terminou à meia-noite. Inicie sessão novamente para continuar.",
+    "close": "Fechar"
+  },
   "validation": {
     "required": "Este campo é obrigatório",
     "email": "Este não é um e-mail válido",
@@ -61,7 +66,8 @@
     "login": "Iniciar sessão",
     "dont_have_account": "Não tem uma conta? Registe-se",
     "error": "Não foi possível iniciar sessão na sua conta!",
-    "invalid_credentials": "Credenciais inválidas!"
+    "invalid_credentials": "Credenciais inválidas!",
+    "too_many_attempts": "Demasiadas tentativas falhadas. A sua conta foi bloqueada por 15 minutos."
   },
   "register": {
     "create_your_account": "Crie a sua conta",

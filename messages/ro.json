@@ -37,6 +37,11 @@
     "activate": "Activează",
     "deactivate": "Dezactivează"
   },
+  "session_expired": {
+    "title": "Sesiune încheiată",
+    "description": "Sesiunea ta s-a încheiat la miezul nopții. Autentifică-te din nou pentru a continua.",
+    "close": "Închide"
+  },
   "validation": {
     "required": "Acest câmp este obligatoriu",
     "email": "Acesta nu este un e-mail valid",
@@ -61,7 +66,8 @@
     "login": "Autentificare",
     "dont_have_account": "Nu ai un cont? Înregistrează-te",
     "error": "Nu am putut să ne conectăm la contul tău!",
-    "invalid_credentials": "Date de autentificare invalide!"
+    "invalid_credentials": "Date de autentificare invalide!",
+    "too_many_attempts": "Prea multe încercări eșuate. Contul tău este blocat timp de 15 minute."
   },
   "register": {
     "create_your_account": "Creează-ți contul",
