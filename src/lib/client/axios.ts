@@ -1,11 +1,22 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
+import { stripHtmlDeep } from "@/lib/utils/sanitize-html";
+
 const queryClient = new QueryClient();
 
 export const api = axios.create({
   baseURL: "/api/backend",
   headers: { "Content-Type": "application/json" },
+});
+
+api.interceptors.request.use((config) => {
+  if (config.data && !(config.data instanceof FormData)) {
+    config.data = stripHtmlDeep(config.data);
+  }
+
+  if (config.params) config.params = stripHtmlDeep(config.params);
+  return config;
 });
 
 api.interceptors.response.use(
