@@ -47,8 +47,21 @@ test("Should change to the favorite category", async ({ userPage }) => {
   await expect(userPage.getByTestId("spinner")).toBeHidden();
   await expect(userPage.getByTestId("client-card").first()).toBeVisible();
 
+  const firstClientElement = userPage.getByTestId("client-card").first();
+  const firstClientId = await firstClientElement.getAttribute("id");
+
+  const favoriteElement = userPage.getByTestId(
+    `favorite-client-${firstClientId}`,
+  );
+
+  // Seed data may already contain favorites from previous runs — ensure one exists.
+  if ((await favoriteElement.getAttribute("id")) !== "favorited-client") {
+    await favoriteElement.click();
+    await expect(favoriteElement).toHaveAttribute("id", "favorited-client");
+  }
+
   await userPage.getByTestId("tab-favorite").click();
-  await expect(userPage.getByText("Clients not found")).toBeVisible();
+  await expect(userPage.getByTestId("client-card").first()).toBeVisible();
 });
 
 test("Should favorite and unfavorite a client", async ({ userPage }) => {
@@ -63,7 +76,12 @@ test("Should favorite and unfavorite a client", async ({ userPage }) => {
     `favorite-client-${firstClientId}`,
   );
 
-  // Favorite the client
+  // Normalize to unfavorited so the toggle direction is deterministic.
+  if ((await favoriteElement.getAttribute("id")) === "favorited-client") {
+    await favoriteElement.click();
+    await expect(favoriteElement).toHaveAttribute("id", "unfavorited-client");
+  }
+
   await favoriteElement.click();
   await expect(favoriteElement).toHaveAttribute("id", "favorited-client");
 
@@ -73,7 +91,6 @@ test("Should favorite and unfavorite a client", async ({ userPage }) => {
     timeout: 3000,
   });
 
-  // Unfavorite the client
   await favoriteElement.click();
   await expect(favoriteElement).toHaveAttribute("id", "unfavorited-client");
 
@@ -119,7 +136,7 @@ test("User confirm the client deletion", async ({ userPage }) => {
 test("Should open the client create modal", async ({ userPage }) => {
   await userPage.goto("/clients");
   await expect(userPage.getByTestId("spinner")).toBeHidden();
-  userPage.getByTestId("create-client").click();
+  await userPage.getByTestId("create-client").click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   await expect(userPage.getByTestId("copy-link")).not.toBeVisible();
 });
@@ -127,7 +144,7 @@ test("Should open the client create modal", async ({ userPage }) => {
 test("Should open the client edit modal", async ({ userPage }) => {
   await userPage.goto("/clients");
   await expect(userPage.getByTestId("spinner")).toBeHidden();
-  userPage.getByTestId("client-card").first().click();
+  await userPage.getByTestId("client-card").first().click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   await expect(userPage.getByTestId("copy-link")).toBeVisible();
 });

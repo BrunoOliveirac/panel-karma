@@ -55,19 +55,17 @@ test("Should filter by project name", async ({ userPage }) => {
 test("Should filter by project client", async ({ userPage }) => {
   await userPage.goto("/projects");
   await expect(userPage.getByTestId("spinner")).toBeHidden();
+  await expect(userPage.getByTestId("project-row").first()).toBeVisible();
 
-  const firstProjectRow = userPage.getByTestId("project-row").first();
-  await expect(firstProjectRow).toBeVisible();
-
-  const clientName =
-    (await firstProjectRow.locator("td").nth(1).textContent())?.trim() ?? "";
-
+  // Pick a client from the filter options (source of truth), not the table cell —
+  // project.client.name may not match a selectable option (deleted/renamed clients).
   await userPage.getByTestId("list-projects-client-filter").click();
 
-  await userPage
-    .getByRole("listbox")
-    .getByRole("option", { name: clientName })
-    .click();
+  const firstOption = userPage.getByRole("option").first();
+  await expect(firstOption).toBeVisible();
+  const clientName = (await firstOption.textContent())?.trim() ?? "";
+  expect(clientName.length).toBeGreaterThan(0);
+  await firstOption.click();
 
   const projectRows = userPage.getByTestId("project-row");
   await expect(projectRows.first()).toBeVisible();

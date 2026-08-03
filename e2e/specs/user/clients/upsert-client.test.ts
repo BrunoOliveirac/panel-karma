@@ -3,7 +3,7 @@ import { expect, test } from "../../../fixtures/auth.fixture";
 test("Should close the client upsert modal", async ({ userPage }) => {
   await userPage.goto("/clients");
   await expect(userPage.getByTestId("spinner")).toBeHidden();
-  userPage.getByTestId("create-client").click();
+  await userPage.getByTestId("create-client").click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   await userPage.getByTestId("upsert-client-cancel").click();
   await expect(userPage.getByText("Client Details")).not.toBeVisible();
@@ -12,7 +12,7 @@ test("Should close the client upsert modal", async ({ userPage }) => {
 test("Should open the client edit modal", async ({ userPage }) => {
   await userPage.goto("/clients");
   await expect(userPage.getByTestId("spinner")).toBeHidden();
-  userPage.getByTestId("client-card").first().click();
+  await userPage.getByTestId("client-card").first().click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   await expect(userPage.getByTestId("copy-link")).toBeVisible();
 });
@@ -21,17 +21,16 @@ test("Should open the edit client modal after reload", async ({ userPage }) => {
   await userPage.goto("/clients");
   await expect(userPage.getByTestId("spinner")).toBeHidden();
 
-  const firstBook = userPage.getByTestId("client-card").first();
-  firstBook.click();
-
+  await userPage.getByTestId("client-card").first().click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
 
-  // Reload the page and check if the modal is still open
+  // Wait for the deep-link query before reload — router.push is async.
+  await expect(userPage).toHaveURL(/client=/i);
+
   await userPage.reload();
   await expect(userPage).toHaveURL(/client=/i);
   await expect(userPage.getByTestId("copy-link")).toBeVisible();
 
-  // Close the modal and check if the modal is closed
   await userPage.getByTestId("upsert-client-cancel").click();
   await expect(userPage.getByText("Client Details")).not.toBeVisible();
   await expect(userPage).not.toHaveURL(/client=/i);
@@ -42,7 +41,7 @@ test("Should see error at validate e-mail", async ({ userPage }) => {
   await expect(userPage.getByTestId("spinner")).toBeHidden();
   const email = await userPage.getByTestId("client-email").first().innerText();
 
-  userPage.getByTestId("create-client").click();
+  await userPage.getByTestId("create-client").click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
 
   // Fill the e-mail and press tab to validate e-mail
@@ -60,7 +59,7 @@ test("Should create a client successfully", async ({ userPage }) => {
   await expect(userPage.getByTestId("spinner")).toBeHidden();
 
   // Open the create client modal
-  userPage.getByTestId("create-client").click();
+  await userPage.getByTestId("create-client").click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   const now = new Date().getTime().toString().slice(-5);
 
@@ -109,7 +108,7 @@ test("Should edit a client successfully", async ({ userPage }) => {
   await expect(userPage.getByTestId("spinner")).toBeHidden();
 
   // Open the edit client modal
-  userPage.getByTestId("client-card").first().click();
+  await userPage.getByTestId("client-card").first().click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   await expect(userPage.getByTestId("copy-link")).toBeVisible();
 

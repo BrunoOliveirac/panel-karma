@@ -100,14 +100,35 @@ test("Should activate support status", async ({ adminPage }) => {
   await adminPage.goto("/supports");
   await expect(adminPage.getByTestId("spinner")).toBeHidden();
 
-  const inactiveSupportRow = adminPage
+  let inactiveSupportRow = adminPage
     .getByTestId("support-row")
     .filter({ has: adminPage.getByTestId("inactive-support-status") })
     .first();
 
-  await expect(inactiveSupportRow).toBeVisible();
-  const supportId = await inactiveSupportRow.getAttribute("id");
+  // Seed data may have only active supports — deactivate one first if needed.
+  if (!(await inactiveSupportRow.isVisible())) {
+    const activeSupportRow = adminPage
+      .getByTestId("support-row")
+      .filter({ has: adminPage.getByTestId("active-support-status") })
+      .first();
 
+    await expect(activeSupportRow).toBeVisible();
+    const activeSupportId = await activeSupportRow.getAttribute("id");
+    if (!activeSupportId) throw new Error("Support id not found");
+
+    await adminPage
+      .getByTestId(`toggle-support-status-${activeSupportId}`)
+      .click();
+
+    inactiveSupportRow = adminPage.locator(
+      `[data-slot="support-row"][id="${activeSupportId}"]`,
+    );
+    await expect(
+      inactiveSupportRow.getByTestId("inactive-support-status"),
+    ).toBeVisible();
+  }
+
+  const supportId = await inactiveSupportRow.getAttribute("id");
   if (!supportId) throw new Error("Support id not found");
 
   const supportRow = adminPage.locator(

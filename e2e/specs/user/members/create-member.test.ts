@@ -180,7 +180,8 @@ test("User cancels linking an existing member", async ({ userPage }) => {
   await userPage.getByTestId(`unlink-member-${memberId}`).click();
   await expect(userPage.getByText("Are you sure?")).toBeVisible();
   await userPage.getByRole("button", { name: "Confirm" }).click();
-  await expect(userPage.getByText("Members not found")).toBeVisible();
+  await expect(userPage.getByText("Member unlinked successfully!")).toBeVisible();
+  await expect(userPage.getByText(memberName)).not.toBeVisible();
 
   // Re-enter the same e-mail to open the link confirmation, then cancel it.
   await openCreateMemberModal(userPage);
@@ -230,7 +231,8 @@ test("User confirms linking an existing member", async ({ userPage }) => {
   await userPage.getByTestId(`unlink-member-${memberId}`).click();
   await expect(userPage.getByText("Are you sure?")).toBeVisible();
   await userPage.getByRole("button", { name: "Confirm" }).click();
-  await expect(userPage.getByText("Members not found")).toBeVisible();
+  await expect(userPage.getByText("Member unlinked successfully!")).toBeVisible();
+  await expect(userPage.getByText(memberName)).not.toBeVisible();
 
   // Re-enter the same e-mail, confirm linking, and check the member is listed again.
   await openCreateMemberModal(userPage);
