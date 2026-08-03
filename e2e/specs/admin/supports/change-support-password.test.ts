@@ -15,9 +15,9 @@ test("Should close the change password modal", async ({ adminPage }) => {
     .click();
 
   await expect(adminPage.getByText("Change password")).toBeVisible();
-  await adminPage.getByTestId("change-support-password-cancel").click();
+  await adminPage.getByTestId("change-password-cancel").click();
   await expect(
-    adminPage.getByTestId("change-support-password-modal"),
+    adminPage.getByTestId("change-password-modal"),
   ).not.toBeVisible();
 });
 
@@ -32,7 +32,7 @@ test("Should not submit with an empty password", async ({ adminPage }) => {
     .getByTestId(`change-support-password-${firstSupportId}`)
     .click();
 
-  await adminPage.getByTestId("change-support-password-save").click();
+  await adminPage.getByTestId("change-password-save").click();
   await expect(adminPage.getByText("This field is required")).toHaveCount(2);
 });
 
@@ -47,15 +47,15 @@ test("Should update the password successfully", async ({ adminPage }) => {
     .getByTestId(`change-support-password-${firstSupportId}`)
     .click();
 
-  await adminPage.getByTestId("change-support-password").fill(validPassword);
+  await adminPage.getByTestId("change-password").fill(validPassword);
 
   await adminPage
-    .getByTestId("change-support-confirm-password")
+    .getByTestId("change-password-confirm")
     .fill(validPassword);
 
-  await adminPage.getByTestId("change-support-password-save").click();
+  await adminPage.getByTestId("change-password-save").click();
 
   await expect(
-    adminPage.getByTestId("change-support-password-modal"),
+    adminPage.getByTestId("change-password-modal"),
   ).not.toBeVisible();
 });

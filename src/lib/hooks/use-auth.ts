@@ -5,84 +5,110 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
+import { endOfDay } from "date-fns";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
-import { LoggedUser } from "../types/logged-user";
+import { usePathname, useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { UserRouteMap } from "../enums/user-type.enum";
+import { SidebarItemMock } from "../mocks/sidebar-item.mock";
+import { ProfileService } from "../services/profile.service";
+import { useLoggedUserStore } from "../store/use-logged-user-store";
 import { LocaleType } from "../types/locale-type";
+import { LoggedUser } from "../types/logged-user";
 
 interface FetchAuth {
   user: LoggedUser;
-  expiresAt: Date;
   locale: LocaleType;
 }
 
-function fetchAuth(): FetchAuth {
-  const user = Cookies.get("user");
-  const expiresAt = Cookies.get("expiresAt");
-  const locale = Cookies.get("locale") as LocaleType | undefined;
+async function fetchAuth(): Promise<FetchAuth> {
+  const user = await new ProfileService().getProfile();
+  useLoggedUserStore.getState().setUser(user);
 
-  if (!expiresAt || !user) throw new Error("Unauthenticated");
+  const locale = (Cookies.get("locale") as LocaleType | undefined) || "en";
 
-  return {
-    user: JSON.parse(user),
-    locale: locale || "en",
-    expiresAt: JSON.parse(expiresAt),
-  };
+  return { user, locale };
+}
+
+async function clearSession() {
+  await fetch("/api/logout", {
+    method: "POST",
+    credentials: "include",
+  });
+  useLoggedUserStore.getState().setUser(null);
 }
 
 export function useAuth() {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const hasRedirected = useRef(false);
+  const pathname = usePathname();
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   const query: UseQueryResult<FetchAuth, Error> = useQuery({
     retry: false,
     queryKey: ["auth"],
     queryFn: fetchAuth,
     staleTime: Infinity,
-    refetchOnWindowFocus: true,
+    enabled: !sessionExpired,
+    refetchOnWindowFocus: !sessionExpired,
   });
 
-  // Automatic timer based on the expiration date
+  // Redirect based on user type after profile is loaded
   useEffect(() => {
-    const expiresAt = query?.data?.expiresAt;
-    if (!expiresAt) return;
+    if (sessionExpired) return;
 
-    const now = Date.now();
-    const timeLeft = new Date(expiresAt).getTime() - now;
-    function logout() {
-      hasRedirected.current = true;
-      Cookies.remove("token");
-      Cookies.remove("user");
-      Cookies.remove("expiresAt");
+    const user = query.data?.user;
+    if (!user) return;
+
+    const home = UserRouteMap.get(user.type) ?? "/home";
+    const allowedPaths = new SidebarItemMock().getPaths(user.type);
+
+    if (pathname === "/" || !allowedPaths.includes(pathname)) {
+      if (pathname !== home) {
+        router.replace(home);
+      }
+    }
+  }, [query.data?.user, pathname, router, sessionExpired]);
+
+  // If /profile fails, clear session and go to login
+  useEffect(() => {
+    if (!query.isError || sessionExpired) return;
+
+    (async () => {
+      await clearSession();
       queryClient.clear();
       router.replace("/login");
+    })();
+  }, [query.isError, queryClient, router, sessionExpired]);
+
+  // Expire session at midnight (token is issued until end of day)
+  useEffect(() => {
+    if (!query.data?.user || sessionExpired) return;
+
+    const timeLeft = endOfDay(new Date()).getTime() - Date.now();
+
+    async function expireSession() {
+      setSessionExpired(true);
+      await clearSession();
     }
 
     if (timeLeft <= 0) {
-      logout();
+      expireSession();
       return;
     }
 
-    const timeout = setTimeout(() => {
-      logout();
-    }, timeLeft);
-
+    const timeout = setTimeout(expireSession, timeLeft);
     return () => clearTimeout(timeout);
-  }, [query?.data?.expiresAt, router, queryClient]);
+  }, [query.data?.user, sessionExpired]);
 
-  // When the backend invalidates before the token expires
-  // useEffect(() => {
-  //   if (query.isError && !hasRedirected.current) {
-  //     hasRedirected.current = true;
-  //     Cookies.remove("token");
-  //     Cookies.remove("user");
-  //     Cookies.remove("expiresAt");
-  //     queryClient.clear();
-  //     router.replace("/login");
-  //   }
-  // }, [query.isError, router, queryClient]);
+  const acknowledgeSessionExpired = useCallback(() => {
+    queryClient.clear();
+    router.replace("/login");
+  }, [queryClient, router]);
 
-  return query ?? {};
+  return {
+    ...query,
+    sessionExpired,
+    acknowledgeSessionExpired,
+  };
 }

@@ -1,6 +1,6 @@
 import { UserRouteMap } from "@/lib/enums/user-type.enum";
 import { useAuth } from "@/lib/hooks/use-auth";
-import { useAppStore } from "@/lib/store/use-title-store";
+import { useTitle } from "@/lib/store/use-title-store";
 import { ChevronLeft, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
@@ -12,7 +12,7 @@ export default function Topbar() {
   const { data } = useAuth();
   const pathname = usePathname();
   const { setTheme, resolvedTheme } = useTheme();
-  const title = useAppStore((state) => state.title);
+  const title = useTitle((state) => state.title);
   const displayBackButton = UserRouteMap.get(data!.user.type) !== pathname;
 
   return (
@@ -40,9 +40,7 @@ export default function Topbar() {
           </button>
         )}
 
-        {data && (
-          <UserAvatar name={data.user.name} avatar={data?.user.avatar} />
-        )}
+        {data && <UserAvatar name={data.user.name} />}
       </div>
     </div>
   );

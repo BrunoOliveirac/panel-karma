@@ -1,35 +1,41 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
+import { stripHtmlDeep } from "@/lib/utils/sanitize-html";
+
 const queryClient = new QueryClient();
 
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080",
+  baseURL: "/api/backend",
   headers: { "Content-Type": "application/json" },
 });
 
-// Interceptor to add the token to the request
-api.interceptors.request.use(async (config) => {
-  const token = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("token="))
-    ?.split("=")[1];
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+api.interceptors.request.use((config) => {
+  if (config.data && !(config.data instanceof FormData)) {
+    config.data = stripHtmlDeep(config.data);
   }
 
+  if (config.params) config.params = stripHtmlDeep(config.params);
   return config;
 });
 
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+    const requestUrl = String(error.config?.url ?? "");
+    const isAuthAttempt =
+      requestUrl.includes("/auth/login") ||
+      requestUrl.includes("/auth/register");
+
+    // Login/register 401s are handled by the form; do not force a session reset.
+    if (status === 401 && !isAuthAttempt) {
       queryClient.clear();
 
-      document.cookie =
-        "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include",
+      });
 
       window.location.href = "/login";
     }

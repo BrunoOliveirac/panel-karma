@@ -14,6 +14,7 @@
     "clients": "Clientes",
     "projects": "Projetos",
     "sectors": "Setores",
+    "members": "Membros",
     "logout": "Terminar sessão"
   },
   "shared": {
@@ -31,8 +32,15 @@
     "enter_name": "Introduza o nome",
     "delete": "Eliminar",
     "edit": "Editar",
+    "unlink": "Desvincular",
+    "manage_projects": "Gerenciar projetos",
     "activate": "Ativar",
     "deactivate": "Desativar"
+  },
+  "session_expired": {
+    "title": "Sessão terminada",
+    "description": "A sua sessão terminou à meia-noite. Inicie sessão novamente para continuar.",
+    "close": "Fechar"
   },
   "validation": {
     "required": "Este campo é obrigatório",
@@ -58,7 +66,8 @@
     "login": "Iniciar sessão",
     "dont_have_account": "Não tem uma conta? Registe-se",
     "error": "Não foi possível iniciar sessão na sua conta!",
-    "invalid_credentials": "Credenciais inválidas!"
+    "invalid_credentials": "Credenciais inválidas!",
+    "too_many_attempts": "Demasiadas tentativas falhadas. A sua conta foi bloqueada por 15 minutos."
   },
   "register": {
     "create_your_account": "Crie a sua conta",
@@ -205,9 +214,52 @@
     "format_is_not_valid": "Formato inválido!",
     "email_in_use": "Este e-mail já está em uso!"
   },
-  "change_support_password": {
+  "change_password": {
     "change_password": "Alterar palavra-passe",
     "password_updated": "Palavra-passe atualizada com sucesso!",
     "could_not_update": "Não foi possível atualizar a palavra-passe!"
+  },
+  "list_members": {
+    "members": "Membros",
+    "member_list": "Lista de Membros",
+    "manage_members": "Gerir Membros",
+    "create_member": "Criar membro",
+    "search": "Pesquisar membros",
+    "email": "E-mail",
+    "members_not_found": "Membros não encontrados",
+    "manage_projects": "Gerenciar projetos",
+    "unlink": "Desvincular",
+    "unlink_warning": "Este membro será desvinculado da sua conta.",
+    "member_unlinked": "Membro desvinculado com sucesso!",
+    "could_not_unlink": "Não foi possível desvincular o membro!",
+    "successfully_activated": "Membro ativado com sucesso!",
+    "successfully_deactivated": "Membro desativado com sucesso!",
+    "could_not_activate": "Não foi possível ativar o membro!",
+    "could_not_deactivate": "Não foi possível desativar o membro!",
+    "change_password": "Alterar palavra-passe"
+  },
+  "create_member": {
+    "member_details": "Detalhes do Membro",
+    "email": "E-mail",
+    "enter_email": "Introduza o e-mail",
+    "projects": "Projetos",
+    "select_projects": "Selecione os projetos",
+    "projects_not_found": "Nenhum projeto encontrado",
+    "member_created": "Membro criado com sucesso!",
+    "could_not_create": "Não foi possível criar o membro!",
+    "could_not_load": "Não foi possível carregar os projetos!",
+    "format_is_not_valid": "Formato inválido!",
+    "email_in_use": "Este e-mail já está em uso!"
+  },
+  "management_projects": {
+    "manage_projects": "Gerenciar projetos",
+    "filter_projects": "Pesquisar por projeto ou cliente",
+    "projects_not_found": "Nenhum projeto encontrado",
+    "projects_updated": "Projetos atualizados com sucesso!",
+    "could_not_update": "Não foi possível atualizar os projetos!",
+    "could_not_load": "Não foi possível carregar os projetos!"
+  },
+  "profile": {
+    "profile": "Perfil"
   }
 }

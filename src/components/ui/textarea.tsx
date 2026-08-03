@@ -1,8 +1,20 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils/cn";
+import { stripHtml } from "@/lib/utils/sanitize-html";
 
-function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
+function Textarea({
+  className,
+  onChange,
+  ...props
+}: React.ComponentProps<"textarea">) {
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const sanitized = stripHtml(event.target.value);
+    if (sanitized !== event.target.value) event.target.value = sanitized;
+
+    onChange?.(event);
+  };
+
   return (
     <textarea
       data-slot="textarea"
@@ -12,6 +24,7 @@ function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
         className,
       )}
       {...props}
+      onChange={handleChange}
     />
   );
 }

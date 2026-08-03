@@ -221,3 +221,13 @@ html {
 .react-tel-input .country-list .country {
   background-color: transparent !important;
 }
+
+.light .swal2-modal {
+  color: #545454;
+  background: white;
+}
+
+.dark .swal2-modal {
+  color: white;
+  background: #19191a;
+}

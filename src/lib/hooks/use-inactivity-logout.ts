@@ -1,9 +1,9 @@
 "use client";
 
 import { QueryClient } from "@tanstack/react-query";
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { useLoggedUserStore } from "../store/use-logged-user-store";
 
 export function useInactivityLogout(hours = 3) {
   const router = useRouter();
@@ -13,10 +13,13 @@ export function useInactivityLogout(hours = 3) {
   useEffect(() => {
     const queryClient = new QueryClient();
 
-    const logout = () => {
-      Cookies.remove("token");
-      Cookies.remove("user");
-      Cookies.remove("expiresAt");
+    const logout = async () => {
+      await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      useLoggedUserStore.setState({ user: null });
       queryClient.clear();
       router.replace("/login");
     };

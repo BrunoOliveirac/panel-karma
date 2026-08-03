@@ -1,11 +1,14 @@
 "use client";
 
+import SessionExpiredDialog from "@/components/global/session-expired-dialog";
 import Sidebar from "@/components/layout/sidebar";
 import Topbar from "@/components/layout/topbar";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { useInactivityLogout } from "@/lib/hooks/use-inactivity-logout";
+import { SidebarItemMock } from "@/lib/mocks/sidebar-item.mock";
 import { ModalProvider } from "@/lib/providers/modal-provider";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function ProtectedLayout({
   children,
@@ -13,9 +16,27 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   useInactivityLogout();
-  const { isLoading } = useAuth();
+  const pathname = usePathname();
+  const {
+    isLoading,
+    isError,
+    data,
+    sessionExpired,
+    acknowledgeSessionExpired,
+  } = useAuth();
 
-  if (isLoading) {
+  if (sessionExpired) {
+    return <SessionExpiredDialog open onClose={acknowledgeSessionExpired} />;
+  }
+
+  const user = data?.user;
+  const allowedPaths = user ? new SidebarItemMock().getPaths(user.type) : [];
+
+  const needsRedirect =
+    !!user && (pathname === "/" || !allowedPaths.includes(pathname));
+
+  // Wait for /profile before rendering protected UI or allowing navigation
+  if (isLoading || isError || !user || needsRedirect) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Image

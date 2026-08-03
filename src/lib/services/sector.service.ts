@@ -1,4 +1,4 @@
-import Cookies from "js-cookie";
+import { getLoggedUser } from "../helpers/get-logged-user";
 import { Sector } from "../models/sector";
 import { api } from "../client/axios";
 
@@ -8,7 +8,7 @@ export class SectorService {
    * @returns An array of sectors.
    */
   public getAllSectors = async (): Promise<Sector[]> => {
-    const user = JSON.parse(Cookies.get("user")!);
+    const user = getLoggedUser();
     const sectors = (await api.get<Sector[]>(`/sectors/list/${user.id}`)).data;
     return sectors;
   };
@@ -18,7 +18,7 @@ export class SectorService {
    * @returns An array of active sectors.
    */
   public getAllActiveSectors = async (): Promise<Sector[]> => {
-    const user = JSON.parse(Cookies.get("user")!);
+    const user = getLoggedUser();
 
     const sectors = (
       await api.get<Sector[]>(`/sectors/list-actives/${user.id}`)
@@ -33,7 +33,7 @@ export class SectorService {
    * @returns The id of the created or updated sector.
    */
   public upsertSector = async (sector: Sector): Promise<string> => {
-    const user = JSON.parse(Cookies.get("user")!);
+    const user = getLoggedUser();
     sector.userId = user.id;
     const response = await api.post<string>(`/sectors/upsert`, sector);
     return response.data;

@@ -1,5 +1,8 @@
-import { Admin } from "../models/admin";
-import { Support } from "../models/support";
-import { User } from "../models/user";
+import { UserTypeEnum } from "../enums/user-type.enum";
 
-export type LoggedUser = User | Support | Admin;
+export interface LoggedUser {
+  id: string;
+  name: string;
+  email: string;
+  type: UserTypeEnum;
+}

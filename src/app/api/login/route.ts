@@ -1,15 +1,17 @@
-import { parseISO } from "date-fns";
+import { endOfDay } from "date-fns";
 import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
-  const { token, user, expirationDate } = await request.json();
-
+  const token = await request.text();
   const cookieStore = await cookies();
-  const expires = parseISO(expirationDate);
 
-  cookieStore.set("token", token, { expires });
-  cookieStore.set("user", JSON.stringify(user), { expires });
-  cookieStore.set("expiresAt", JSON.stringify(expirationDate), { expires });
+  cookieStore.set("token", token, {
+    path: "/",
+    httpOnly: true,
+    sameSite: "lax",
+    expires: endOfDay(new Date()),
+    secure: process.env.NODE_ENV === "production",
+  });
 
   return Response.json({ ok: true });
 }

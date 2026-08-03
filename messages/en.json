@@ -14,6 +14,7 @@
     "clients": "Clients",
     "projects": "Projects",
     "sectors": "Sectors",
+    "members": "Members",
     "logout": "Logout"
   },
   "shared": {
@@ -31,8 +32,15 @@
     "enter_name": "Enter the name",
     "delete": "Delete",
     "edit": "Edit",
+    "unlink": "Unlink",
+    "manage_projects": "Manage projects",
     "activate": "Activate",
     "deactivate": "Deactivate"
+  },
+  "session_expired": {
+    "title": "Session ended",
+    "description": "Your session ended at midnight. Please log in again to continue.",
+    "close": "Close"
   },
   "validation": {
     "required": "This field is required",
@@ -58,7 +66,8 @@
     "login": "Login",
     "dont_have_account": "Don't have an account? Sign up",
     "error": "We were unable to log in to your account!",
-    "invalid_credentials": "Invalid credentials!"
+    "invalid_credentials": "Invalid credentials!",
+    "too_many_attempts": "Too many failed attempts. Your account is locked for 15 minutes."
   },
   "register": {
     "create_your_account": "Create your account",
@@ -205,9 +214,56 @@
     "format_is_not_valid": "Format is not valid!",
     "email_in_use": "This e-mail is already in use!"
   },
-  "change_support_password": {
+  "change_password": {
     "change_password": "Change password",
     "password_updated": "Password updated successfully!",
     "could_not_update": "Could not update the password!"
+  },
+  "list_members": {
+    "members": "Members",
+    "member_list": "Member List",
+    "manage_members": "Manage Members",
+    "create_member": "Create member",
+    "search": "Search members",
+    "email": "E-mail",
+    "members_not_found": "Members not found",
+    "manage_projects": "Manage projects",
+    "unlink": "Unlink",
+    "unlink_warning": "This member will be unlinked from your account.",
+    "member_unlinked": "Member unlinked successfully!",
+    "could_not_unlink": "Could not unlink the member!",
+    "successfully_activated": "Member successfully activated!",
+    "successfully_deactivated": "Member successfully deactivated!",
+    "could_not_activate": "Could not activate the member!",
+    "could_not_deactivate": "Could not deactivate the member!",
+    "change_password": "Change password"
+  },
+  "create_member": {
+    "member_details": "Member Details",
+    "email": "E-mail",
+    "enter_email": "Enter the e-mail",
+    "projects": "Projects",
+    "select_projects": "Select projects",
+    "projects_not_found": "No projects found",
+    "member_created": "Member created successfully!",
+    "could_not_create": "Could not create the member!",
+    "could_not_load": "Could not load the projects!",
+    "format_is_not_valid": "Format is not valid!",
+    "email_in_use": "This e-mail is already in use!",
+    "already_linked": "This member is already linked!",
+    "want_link": "Do you want to link this member to your account?",
+    "member_linked": "Member linked successfully!",
+    "could_not_link": "Could not link the member!"
+  },
+  "management_projects": {
+    "manage_projects": "Manage projects",
+    "filter_projects": "Search by project or client",
+    "projects_not_found": "No projects found",
+    "projects_updated": "Projects updated successfully!",
+    "could_not_update": "Could not update the projects!",
+    "could_not_load": "Could not load the projects!"
+  },
+  "profile": {
+    "profile": "Profile"
   }
 }
