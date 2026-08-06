@@ -23,6 +23,9 @@
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "save": "Salvar",
+    "crop_image": "Ajustar imagem",
+    "crop_image_description": "Arraste para reposicionar e use o controle para dar zoom.",
+    "zoom": "Zoom",
     "name": "Nome",
     "created_at": "Criado em",
     "status": "Status",
@@ -260,6 +263,26 @@
     "could_not_load": "Não foi possível carregar os projetos!"
   },
   "profile": {
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "manage_profile": "Gerenciar perfil",
+    "manage_profile_description": "Atualize seu avatar, dados pessoais e senha.",
+    "avatar": "Avatar",
+    "avatar_hint": "Use uma imagem PNG, JPG ou WEBP. Ela será redimensionada automaticamente.",
+    "change_avatar": "Alterar avatar",
+    "upload_avatar": "Enviar foto",
+    "remove_avatar": "Remover",
+    "crop_avatar": "Ajustar foto",
+    "crop_avatar_description": "Arraste para reposicionar e use o controle para dar zoom.",
+    "invalid_image": "Selecione uma imagem válida.",
+    "personal_details": "Dados pessoais",
+    "personal_details_hint": "Mantenha seu nome e e-mail atualizados.",
+    "password_section": "Alterar senha",
+    "password_section_hint": "Preencha apenas se quiser definir uma nova senha.",
+    "profile_updated": "Perfil atualizado com sucesso!",
+    "avatar_updated": "Avatar atualizado com sucesso!",
+    "avatar_removed": "Avatar removido com sucesso!",
+    "could_not_update": "Não foi possível atualizar o perfil!",
+    "could_not_update_avatar": "Não foi possível atualizar o avatar!",
+    "could_not_remove_avatar": "Não foi possível remover o avatar!"
   }
 }

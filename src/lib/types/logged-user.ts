@@ -5,4 +5,5 @@ export interface LoggedUser {
   name: string;
   email: string;
   type: UserTypeEnum;
+  avatar?: string | null;
 }

@@ -23,6 +23,9 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "save": "Save",
+    "crop_image": "Adjust image",
+    "crop_image_description": "Drag to reposition and use the slider to zoom.",
+    "zoom": "Zoom",
     "name": "Name",
     "created_at": "Created at",
     "status": "Status",
@@ -264,6 +267,26 @@
     "could_not_load": "Could not load the projects!"
   },
   "profile": {
-    "profile": "Profile"
+    "profile": "Profile",
+    "manage_profile": "Manage profile",
+    "manage_profile_description": "Update your avatar, personal details and password.",
+    "avatar": "Avatar",
+    "avatar_hint": "Use a PNG, JPG or WEBP image. It will be resized automatically.",
+    "change_avatar": "Change avatar",
+    "upload_avatar": "Upload photo",
+    "remove_avatar": "Remove",
+    "crop_avatar": "Adjust photo",
+    "crop_avatar_description": "Drag to reposition and use the slider to zoom.",
+    "invalid_image": "Please select a valid image.",
+    "personal_details": "Personal details",
+    "personal_details_hint": "Keep your name and email up to date.",
+    "password_section": "Change password",
+    "password_section_hint": "Fill this in only if you want to set a new password.",
+    "profile_updated": "Profile updated successfully!",
+    "avatar_updated": "Avatar updated successfully!",
+    "avatar_removed": "Avatar removed successfully!",
+    "could_not_update": "Could not update the profile!",
+    "could_not_update_avatar": "Could not update the avatar!",
+    "could_not_remove_avatar": "Could not remove the avatar!"
   }
 }

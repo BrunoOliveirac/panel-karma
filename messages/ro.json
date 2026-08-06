@@ -23,6 +23,9 @@
     "cancel": "Anulează",
     "confirm": "Confirmă",
     "save": "Salvează",
+    "crop_image": "Ajustează imaginea",
+    "crop_image_description": "Trage pentru a repoziționa și folosește controlul pentru zoom.",
+    "zoom": "Zoom",
     "name": "Nume",
     "created_at": "Creat la",
     "status": "Stare",
@@ -260,6 +263,26 @@
     "could_not_load": "Nu s-au putut încărca proiectele!"
   },
   "profile": {
-    "profile": "Profil"
+    "profile": "Profil",
+    "manage_profile": "Gestionează profilul",
+    "manage_profile_description": "Actualizează avatarul, datele personale și parola.",
+    "avatar": "Avatar",
+    "avatar_hint": "Folosește o imagine PNG, JPG sau WEBP. Va fi redimensionată automat.",
+    "change_avatar": "Schimbă avatarul",
+    "upload_avatar": "Încarcă poza",
+    "remove_avatar": "Elimină",
+    "crop_avatar": "Ajustează fotografia",
+    "crop_avatar_description": "Trage pentru a repoziționa și folosește controlul pentru zoom.",
+    "invalid_image": "Selectează o imagine validă.",
+    "personal_details": "Date personale",
+    "personal_details_hint": "Păstrează-ți numele și e-mailul actualizate.",
+    "password_section": "Schimbă parola",
+    "password_section_hint": "Completează doar dacă vrei să setezi o parolă nouă.",
+    "profile_updated": "Profil actualizat cu succes!",
+    "avatar_updated": "Avatar actualizat cu succes!",
+    "avatar_removed": "Avatar eliminat cu succes!",
+    "could_not_update": "Nu s-a putut actualiza profilul!",
+    "could_not_update_avatar": "Nu s-a putut actualiza avatarul!",
+    "could_not_remove_avatar": "Nu s-a putut elimina avatarul!"
   }
 }
