@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { expect, test } from "../../../fixtures/auth.fixture";
+import { expect, test } from "../../fixtures/auth.fixture";
 
 const handleEditProject = async (userPage: Page) => {
   const firstProjectElement = userPage.getByTestId("project-row").first();

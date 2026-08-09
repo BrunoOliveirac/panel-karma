@@ -1,4 +1,4 @@
-import { expect, test } from "../../../fixtures/auth.fixture";
+import { expect, test } from "../../fixtures/auth.fixture";
 
 test("Should show a list of supports", async ({ adminPage }) => {
   await adminPage.goto("/supports");

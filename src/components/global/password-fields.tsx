@@ -14,11 +14,13 @@ import {
   Controller,
   FieldPath,
   FieldValues,
+  PathValue,
   useWatch,
 } from "react-hook-form";
 
 interface PasswordFieldsProps<T extends FieldValues> {
   control: Control<T>;
+  optional?: boolean;
   passwordName?: FieldPath<T>;
   confirmPasswordName?: FieldPath<T>;
   passwordDataSlot?: string;
@@ -27,6 +29,7 @@ interface PasswordFieldsProps<T extends FieldValues> {
 
 export default function PasswordFields<T extends FieldValues>({
   control,
+  optional = false,
   passwordName = "password" as FieldPath<T>,
   confirmPasswordName = "confirmPassword" as FieldPath<T>,
   passwordDataSlot = "password",
@@ -36,14 +39,26 @@ export default function PasswordFields<T extends FieldValues>({
   const validationT = useTranslations("validation");
   const [seePassword, setSeePassword] = useState(false);
   const [seeConfirmPassword, setSeeConfirmPassword] = useState(false);
-  const password = useWatch({ control, name: passwordName, defaultValue: "" });
+  const password = useWatch<T, FieldPath<T>>({
+    control,
+    name: passwordName,
+    defaultValue: "" as PathValue<T, FieldPath<T>>,
+  });
+  const passwordValue = String(password ?? "");
+  const hasPasswordInput = passwordValue.length > 0;
+  const showRequirementState = !optional || hasPasswordInput;
 
   const validations = {
-    length: (password ?? "").length >= 8,
-    upper: /[A-Z]/.test(password ?? ""),
-    lower: /[a-z]/.test(password ?? ""),
-    number: /[0-9]/.test(password ?? ""),
-    special: /[^A-Za-z0-9]/.test(password ?? ""),
+    length: passwordValue.length >= 8,
+    upper: /[A-Z]/.test(passwordValue),
+    lower: /[a-z]/.test(passwordValue),
+    number: /[0-9]/.test(passwordValue),
+    special: /[^A-Za-z0-9]/.test(passwordValue),
+  };
+
+  const requirementClass = (valid: boolean) => {
+    if (!showRequirementState) return "text-muted-foreground";
+    return valid ? "text-green-600" : "text-red-700";
   };
 
   return (
@@ -107,27 +122,23 @@ export default function PasswordFields<T extends FieldValues>({
       />
 
       <ul className="text-sm px-6 list-disc space-y-1">
-        <li
-          className={validations.length ? "text-green-600" : "text-red-700"}
-        >
+        <li className={requirementClass(validations.length)}>
           {validationT("password_min")}
         </li>
 
-        <li className={validations.upper ? "text-green-600" : "text-red-700"}>
+        <li className={requirementClass(validations.upper)}>
           {validationT("password_upper")}
         </li>
 
-        <li className={validations.lower ? "text-green-600" : "text-red-700"}>
+        <li className={requirementClass(validations.lower)}>
           {validationT("password_lower")}
         </li>
 
-        <li className={validations.number ? "text-green-600" : "text-red-700"}>
+        <li className={requirementClass(validations.number)}>
           {validationT("password_number")}
         </li>
 
-        <li
-          className={validations.special ? "text-green-600" : "text-red-700"}
-        >
+        <li className={requirementClass(validations.special)}>
           {validationT("password_special")}
         </li>
       </ul>

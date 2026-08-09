@@ -12,7 +12,19 @@ export const api = axios.create({
 
 api.interceptors.request.use((config) => {
   if (config.data && !(config.data instanceof FormData)) {
-    config.data = stripHtmlDeep(config.data);
+    const payload = config.data;
+
+    if (
+      typeof payload === "object" &&
+      payload !== null &&
+      !Array.isArray(payload) &&
+      "avatar" in payload
+    ) {
+      const { avatar, ...rest } = payload as Record<string, unknown>;
+      config.data = { ...stripHtmlDeep(rest), avatar };
+    } else {
+      config.data = stripHtmlDeep(payload);
+    }
   }
 
   if (config.params) config.params = stripHtmlDeep(config.params);

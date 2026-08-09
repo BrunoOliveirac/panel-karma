@@ -25,6 +25,11 @@ export class AuthService {
     await this.saveData(authResponse);
   };
 
+  /** Persist a JWT in the httpOnly session cookie (same path used by login/register). */
+  public persistToken = async (token: string): Promise<void> => {
+    await this.saveData(token);
+  };
+
   private saveData = async (token: string) => {
     return fetch("/api/login", {
       method: "POST",

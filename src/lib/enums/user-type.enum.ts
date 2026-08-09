@@ -9,5 +9,5 @@ export const UserRouteMap = new Map<UserTypeEnum, string>([
   [UserTypeEnum.ADMIN, "/dashboard"],
   [UserTypeEnum.USER, "/home"],
   [UserTypeEnum.SUPPORT, "/chat"],
-  [UserTypeEnum.MEMBER, "/profile"],
+  [UserTypeEnum.MEMBER, "/clients"],
 ]);

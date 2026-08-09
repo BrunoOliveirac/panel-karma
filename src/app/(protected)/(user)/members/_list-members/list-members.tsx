@@ -2,6 +2,7 @@
 "use client";
 
 import PaginationControls from "@/components/global/pagination-controls";
+import UserAvatar from "@/components/global/user-avatar";
 import { Button } from "@/components/ui/button";
 import {
   InputGroup,
@@ -323,7 +324,16 @@ const MemberRows = ({
 
   return members.map((member) => (
     <TableRow id={member.id} key={member.id} data-slot="member-row">
-      <TableCell>{member.name}</TableCell>
+      <TableCell>
+        <div className="flex items-center gap-3 min-w-0">
+          <UserAvatar
+            size={32}
+            name={member.name}
+            avatar={member.avatar}
+          />
+          <span className="truncate">{member.name}</span>
+        </div>
+      </TableCell>
       <TableCell>{member.email}</TableCell>
 
       <TableCell className="text-center">
