@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { expect, test } from "../../../fixtures/auth.fixture";
+import { expect, test } from "../../fixtures/auth.fixture";
 
 const openManageProjectsModal = async (userPage: Page) => {
   const firstMemberElement = userPage.getByTestId("member-row").first();

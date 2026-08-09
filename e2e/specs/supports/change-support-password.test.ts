@@ -1,4 +1,4 @@
-import { expect, test } from "../../../fixtures/auth.fixture";
+import { expect, test } from "../../fixtures/auth.fixture";
 
 const validPassword = "Support01@email.com";
 

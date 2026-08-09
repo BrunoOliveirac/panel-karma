@@ -1,4 +1,4 @@
-import { expect, test } from "../../../fixtures/auth.fixture";
+import { expect, test } from "../../fixtures/auth.fixture";
 
 test("Should close the client upsert modal", async ({ userPage }) => {
   await userPage.goto("/clients");

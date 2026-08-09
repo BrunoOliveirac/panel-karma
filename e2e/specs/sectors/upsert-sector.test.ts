@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { expect, test } from "../../../fixtures/auth.fixture";
+import { expect, test } from "../../fixtures/auth.fixture";
 
 const handleEditSector = async (userPage: Page) => {
   const firstSectorElement = userPage.getByTestId("sector-row").first();

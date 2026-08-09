@@ -35,6 +35,17 @@ test("Support Login successfully", async ({ page }) => {
   await expect(page).toHaveTitle(/Chat/);
 });
 
+test("Member Login successfully", async ({ page }) => {
+  await login({
+    page,
+    type: UserTypeEnum.MEMBER,
+    email: "member01@email.com",
+    password: "Member01@email.com",
+  });
+
+  await expect(page).toHaveTitle(/Clients/);
+});
+
 test("Login with wrong credentials", async ({ page }) => {
   await page.goto("/login");
   await page.getByTestId("en-locale-select").click();

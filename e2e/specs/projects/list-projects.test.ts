@@ -1,4 +1,4 @@
-import { expect, test } from "../../../fixtures/auth.fixture";
+import { expect, test } from "../../fixtures/auth.fixture";
 
 test("Should show an empty list of projects", async ({ emptyUserPage }) => {
   await emptyUserPage.goto("/projects");
