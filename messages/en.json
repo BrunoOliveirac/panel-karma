@@ -1,7 +1,4 @@
 {
-  "topbar": {
-    "notifications_not_found": "Notifications not found"
-  },
   "sidebar": {
     "dashboard": "Dashboard",
     "supports": "Supports",
@@ -39,6 +36,16 @@
     "manage_projects": "Manage projects",
     "activate": "Activate",
     "deactivate": "Deactivate"
+  },
+  "notifications": {
+    "notifications_not_found": "Notifications not found",
+    "linked_by_user": "You have been linked to a project by <strong>{name}</strong>.",
+    "unlinked_by_user": "You have been unlinked from a project by <strong>{name}</strong>.",
+    "linked_to_project": "You have been linked to project <strong>{project}</strong> by <strong>{name}</strong>.",
+    "mark_as_read": "Mark as read",
+    "delete": "Delete",
+    "mark_all_as_read": "Mark all as read",
+    "view_all": "View all"
   },
   "session_expired": {
     "title": "Session ended",

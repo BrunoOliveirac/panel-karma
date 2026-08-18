@@ -215,7 +215,7 @@ export default function ListClients() {
           <button
             data-slot="create-client"
             onClick={() => openUpsertClientModal()}
-            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-8 px-3 rounded-full transition-all place-content-center hover:brightness-90"
+            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-8 px-3 rounded-full transition-all place-content-center hover:brightness-75"
           >
             {t("create_client")}
           </button>

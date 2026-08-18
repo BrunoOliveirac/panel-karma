@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils/cn";
+
 interface DocumentTab {
   name: string;
   id: string;
@@ -21,7 +23,10 @@ export default function DocumentTabs({
           key={tab.id}
           data-slot={`tab-${tab.id}`}
           onClick={() => toggleTab(tab.id)}
-          className={`${selectedTab === tab.id ? "gradient-border" : ""} text-sm! h-8 px-3 w-max rounded-full! transition-all!`}
+          className={cn(
+            "text-sm! h-8 px-3 w-max rounded-full! transition-all! hover:brightness-75",
+            selectedTab === tab.id ? "gradient-border" : "",
+          )}
         >
           {tab.name}
         </button>

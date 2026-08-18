@@ -1,7 +1,4 @@
 {
-  "topbar": {
-    "notifications_not_found": "Notificările nu au fost găsite"
-  },
   "sidebar": {
     "dashboard": "Tablou de bord",
     "supports": "Suport",
@@ -39,6 +36,16 @@
     "manage_projects": "Gestionează proiectele",
     "activate": "Activează",
     "deactivate": "Dezactivează"
+  },
+  "notifications": {
+    "notifications_not_found": "Notificările nu au fost găsite",
+    "linked_by_user": "Ai fost asociat unui proiect de către <strong>{name}</strong>.",
+    "unlinked_by_user": "Ai fost dezasociat de la un proiect de către <strong>{name}</strong>.",
+    "linked_to_project": "Ai fost asociat proiectului <strong>{project}</strong> de către <strong>{name}</strong>.",
+    "mark_as_read": "Marchează ca citită",
+    "delete": "Șterge",
+    "mark_all_as_read": "Marchează toate ca citite",
+    "view_all": "Vezi toate"
   },
   "session_expired": {
     "title": "Sesiune încheiată",
@@ -252,7 +259,11 @@
     "could_not_create": "Nu s-a putut crea membrul!",
     "could_not_load": "Nu s-au putut încărca proiectele!",
     "format_is_not_valid": "Formatul nu este valid!",
-    "email_in_use": "Acest e-mail este deja utilizat!"
+    "email_in_use": "Acest e-mail este deja utilizat!",
+    "already_linked": "Acest membru este deja asociat!",
+    "want_link": "Doriți să asociați acest membru contului dvs.?",
+    "member_linked": "Membru asociat cu succes!",
+    "could_not_link": "Nu s-a putut asocia membrul!"
   },
   "management_projects": {
     "manage_projects": "Gestionează proiectele",

@@ -101,6 +101,7 @@
   --danger: #bc5557 !important;
   --success: #5bda1f !important;
   --gray: #333 !important;
+  --active-primary: #575495;
 }
 
 .dark {
@@ -147,6 +148,7 @@
   --danger: #bc5557 !important;
   --success: #5bda1f !important;
   --gray: #333 !important;
+  --active-primary: #a3a1d9;
 }
 
 @layer base {

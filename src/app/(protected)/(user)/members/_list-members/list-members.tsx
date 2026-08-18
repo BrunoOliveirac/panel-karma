@@ -195,7 +195,7 @@ export default function ListMembers() {
           <button
             data-slot="create-member"
             onClick={() => openCreateMemberModal()}
-            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-8 px-3 rounded-full transition-all place-content-center hover:brightness-90"
+            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-8 px-3 rounded-full transition-all place-content-center hover:brightness-75"
           >
             {t("create_member")}
           </button>
@@ -326,11 +326,7 @@ const MemberRows = ({
     <TableRow id={member.id} key={member.id} data-slot="member-row">
       <TableCell>
         <div className="flex items-center gap-3 min-w-0">
-          <UserAvatar
-            size={32}
-            name={member.name}
-            avatar={member.avatar}
-          />
+          <UserAvatar size={32} name={member.name} avatar={member.avatar} />
           <span className="truncate">{member.name}</span>
         </div>
       </TableCell>
