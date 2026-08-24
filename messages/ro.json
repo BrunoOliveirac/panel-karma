@@ -38,6 +38,7 @@
     "deactivate": "Dezactivează"
   },
   "notifications": {
+    "notifications": "Notificările",
     "notifications_not_found": "Notificările nu au fost găsite",
     "linked_by_user": "Ai fost asociat unui proiect de către <strong>{name}</strong>.",
     "unlinked_by_user": "Ai fost dezasociat de la un proiect de către <strong>{name}</strong>.",
@@ -45,7 +46,13 @@
     "mark_as_read": "Marchează ca citită",
     "delete": "Șterge",
     "mark_all_as_read": "Marchează toate ca citite",
-    "view_all": "Vezi toate"
+    "view_all": "Vezi toate",
+    "notification_marked_as_read": "Notificare marcată ca citită",
+    "notification_mark_as_read_failed": "Nu s-a putut marca notificarea ca citită",
+    "notification_marked_all_as_read": "Toate notificările marcate ca citite",
+    "notification_mark_all_as_read_failed": "Nu s-a putut marca toate notificările ca citite",
+    "notification_deleted": "Notificare ștearsă",
+    "notification_delete_failed": "Nu s-a putut șterge notificarea"
   },
   "session_expired": {
     "title": "Sesiune încheiată",

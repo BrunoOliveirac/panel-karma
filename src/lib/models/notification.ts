@@ -11,3 +11,8 @@ export interface Notification extends BaseModel {
   referenceId?: string;
   referenceLabel?: string;
 }
+
+export interface LatestNotificationsResponse {
+  notifications: Notification[];
+  hasUnreadNotifications: boolean;
+}

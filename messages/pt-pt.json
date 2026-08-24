@@ -38,6 +38,7 @@
     "deactivate": "Desativar"
   },
   "notifications": {
+    "notifications": "Notificações",
     "notifications_not_found": "Notificações não encontradas",
     "linked_by_user": "Foi vinculado a um projeto por <strong>{name}</strong>.",
     "unlinked_by_user": "Foi desvinculado de um projeto por <strong>{name}</strong>.",
@@ -45,7 +46,13 @@
     "mark_as_read": "Marcar como lida",
     "delete": "Eliminar",
     "mark_all_as_read": "Marcar todas como lidas",
-    "view_all": "Ver todas"
+    "view_all": "Ver todas",
+    "notification_marked_as_read": "Notificação marcada como lida",
+    "notification_mark_as_read_failed": "Não foi possível marcar a notificação como lida",
+    "notification_marked_all_as_read": "Todas as notificações marcadas como lidas",
+    "notification_mark_all_as_read_failed": "Não foi possível marcar todas as notificações como lidas",
+    "notification_deleted": "Notificação eliminada",
+    "notification_delete_failed": "Não foi possível eliminar a notificação"
   },
   "session_expired": {
     "title": "Sessão terminada",
