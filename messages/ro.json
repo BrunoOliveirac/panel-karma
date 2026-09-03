@@ -39,6 +39,9 @@
   },
   "notifications": {
     "notifications": "Notificările",
+    "search": "Caută după document",
+    "filters": "Filtre",
+    "notification_center": "Centrul de notificări",
     "notifications_not_found": "Notificările nu au fost găsite",
     "linked_by_user": "Ai fost asociat unui proiect de către <strong>{name}</strong>.",
     "unlinked_by_user": "Ai fost dezasociat de la un proiect de către <strong>{name}</strong>.",
@@ -52,7 +55,13 @@
     "notification_marked_all_as_read": "Toate notificările marcate ca citite",
     "notification_mark_all_as_read_failed": "Nu s-a putut marca toate notificările ca citite",
     "notification_deleted": "Notificare ștearsă",
-    "notification_delete_failed": "Nu s-a putut șterge notificarea"
+    "notification_delete_failed": "Nu s-a putut șterge notificarea",
+    "unread_notifications": "Notificări necitite",
+    "read_notifications": "Notificări citite",
+    "all_notifications": "Toate notificările",
+    "new_notifications_received": "Notificări noi primite!",
+    "refresh": "Actualizează",
+    "load_more": "Încarcă mai multe"
   },
   "session_expired": {
     "title": "Sesiune încheiată",

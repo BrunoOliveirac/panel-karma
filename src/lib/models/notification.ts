@@ -16,3 +16,23 @@ export interface LatestNotificationsResponse {
   notifications: Notification[];
   hasUnreadNotifications: boolean;
 }
+
+export type NotificationStatus = "all" | "unread" | "read";
+
+export interface NotificationCounts {
+  all: number;
+  unread: number;
+  read: number;
+}
+
+export interface NotificationListParams {
+  page: number;
+  query: string;
+  status: NotificationStatus;
+}
+
+export interface NotificationListResponse {
+  notifications: Notification[];
+  hasMore: boolean;
+  counts: NotificationCounts;
+}

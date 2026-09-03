@@ -39,6 +39,9 @@
   },
   "notifications": {
     "notifications": "Notificações",
+    "search": "Buscar por documento",
+    "filters": "Filtros",
+    "notification_center": "Centro de notificações",
     "notifications_not_found": "Notificações não encontradas",
     "linked_by_user": "Você foi vinculado a um projeto por <strong>{name}</strong>.",
     "unlinked_by_user": "Você foi desvinculado de um projeto por <strong>{name}</strong>.",
@@ -52,7 +55,13 @@
     "notification_marked_all_as_read": "Todas as notificações marcadas como lidas",
     "notification_mark_all_as_read_failed": "Não foi possível marcar todas as notificações como lidas",
     "notification_deleted": "Notificação excluída",
-    "notification_delete_failed": "Não foi possível excluir a notificação"
+    "notification_delete_failed": "Não foi possível excluir a notificação",
+    "unread_notifications": "Notificações não lidas",
+    "read_notifications": "Notificações lidas",
+    "all_notifications": "Todas as notificações",
+    "new_notifications_received": "Novas notificações recebidas!",
+    "refresh": "Atualizar",
+    "load_more": "Carregar mais"
   },
   "session_expired": {
     "title": "Sessão encerrada",

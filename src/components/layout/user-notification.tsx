@@ -16,8 +16,15 @@ import { useFormatter, useNow, useTranslations } from "next-intl";
 import { Suspense, use, useMemo } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  Popover,
+  PopoverClose,
+  PopoverContent,
+  PopoverTrigger,
+} from "../ui/popover";
 import { Spinner } from "../ui/spinner";
+import Link from "next/link";
+import { Separator } from "../ui/separator";
 
 interface UserNotificationProps {
   notificationsPromise: Promise<LatestNotificationsResponse>;
@@ -54,7 +61,7 @@ export default function UserNotification() {
         </button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-80 p-3! rounded-xl" align="end">
+      <PopoverContent className="w-80 py-3! px-0! rounded-xl" align="end">
         {notificationsPromise && (
           <Suspense
             fallback={
@@ -125,7 +132,7 @@ function NotificationItems({
       case "linked_to_project":
         intlParams = {
           project: notification.referenceLabel ?? "",
-          name: notification.user.name ?? "",
+          name: notification.actor?.name ?? "",
         };
 
         break;
@@ -182,8 +189,8 @@ function NotificationItems({
   };
 
   return notifications.length > 0 ? (
-    <>
-      <div className="flex justify-between items-center gap-2">
+    <div>
+      <div className="flex justify-between items-center gap-2 px-3 mb-4">
         <p>{t("notifications")}</p>
 
         <Button
@@ -198,69 +205,80 @@ function NotificationItems({
       </div>
 
       <div className="grid gap-2">
-        {notifications.map((notification) => (
-          <div
-            key={notification.id}
-            className="group flex items-start gap-2 hover:bg-secondary p-2 rounded-md transition"
-          >
-            <div
-              className={cn(
-                "rounded-md p-1.5",
-                notification.read
-                  ? "bg-black/20 text-black dark:bg-white/20 dark:text-white"
-                  : "bg-primary/40 text-primary",
-              )}
-            >
-              <div className="relative">
-                {notificationIconRecord[notification.type]}
+        {notifications.map((notification, index) => (
+          <div key={notification.id}>
+            {!index && <Separator />}
 
-                {!notification.read && (
-                  <span className="absolute -top-2 -left-2 bg-primary text-white rounded-full w-3 h-3 flex items-center justify-center text-xs"></span>
+            <div className="group flex items-start gap-2 rounded-md transition px-5 py-2">
+              <div
+                className={cn(
+                  "rounded-md p-1.5",
+                  notification.read
+                    ? "bg-black/20 text-black dark:bg-white/20 dark:text-white"
+                    : "bg-primary/40 text-primary",
                 )}
+              >
+                <div className="relative">
+                  {notificationIconRecord[notification.type]}
+
+                  {!notification.read && (
+                    <span className="absolute -top-2 -left-2 bg-primary text-white rounded-full w-3 h-3 flex items-center justify-center text-xs"></span>
+                  )}
+                </div>
               </div>
-            </div>
 
-            <div>
-              <p className="text-sm line-clamp-2">
-                {setContentNotification(notification)}
-              </p>
+              <div>
+                <p className="text-sm line-clamp-2">
+                  {setContentNotification(notification)}
+                </p>
 
-              <p className="text-xs text-muted-foreground my-1">
-                {format.relativeTime(
-                  Math.min(new Date(notification.createdAt).getTime(), now.getTime()),
-                  now,
-                )}
-              </p>
+                <p className="text-xs text-muted-foreground my-1">
+                  {format.relativeTime(
+                    Math.min(
+                      new Date(notification.createdAt).getTime(),
+                      now.getTime(),
+                    ),
+                    now,
+                  )}
+                </p>
 
-              <div className="flex gap-2">
-                {!notification.read && (
+                <div className="flex gap-2">
+                  {!notification.read && (
+                    <Button
+                      size="xs"
+                      className="rounded-sm"
+                      onClick={() => markNotificationAsRead(notification.id)}
+                    >
+                      {t("mark_as_read")}
+                    </Button>
+                  )}
+
                   <Button
                     size="xs"
+                    variant="destructive"
                     className="rounded-sm"
-                    onClick={() => markNotificationAsRead(notification.id)}
+                    onClick={() => deleteNotification(notification.id)}
                   >
-                    {t("mark_as_read")}
+                    {t("delete")}
                   </Button>
-                )}
-
-                <Button
-                  size="xs"
-                  variant="destructive"
-                  className="rounded-sm"
-                  onClick={() => deleteNotification(notification.id)}
-                >
-                  {t("delete")}
-                </Button>
+                </div>
               </div>
             </div>
+
+            <Separator />
           </div>
         ))}
 
-        <Button size="sm" className="rounded-sm max-w-28 mx-auto w-full mt-2">
-          {t("view_all")}
-        </Button>
+        <PopoverClose asChild>
+          <Link
+            href="/notifications"
+            className="rounded-sm max-w-28 mx-auto w-full transition bg-primary hover:bg-primary/80 text-white p-2 text-center mt-2"
+          >
+            {t("view_all")}
+          </Link>
+        </PopoverClose>
       </div>
-    </>
+    </div>
   ) : (
     <>
       <p>{t("notifications")}</p>

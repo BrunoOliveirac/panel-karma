@@ -1,6 +1,10 @@
 import { api } from "../client/axios";
 import { getLoggedUser } from "../helpers/get-logged-user";
-import { LatestNotificationsResponse } from "../models/notification";
+import {
+  LatestNotificationsResponse,
+  NotificationListParams,
+  NotificationListResponse,
+} from "../models/notification";
 
 /** Service layer for listing the logged-in user's notifications. */
 export class NotificationService {
@@ -20,6 +24,25 @@ export class NotificationService {
 
       return notifications;
     };
+
+  /**
+   * Get a paginated page of notifications for the current user.
+   * @param params Page, search query and status tab.
+   * @returns Notifications, hasMore flag and tab counts.
+   */
+  public getNotifications = async ({
+    page,
+    query,
+    status,
+  }: NotificationListParams): Promise<NotificationListResponse> => {
+    const user = getLoggedUser();
+
+    return (
+      await api.get<NotificationListResponse>(`/notifications/list/${user.id}`, {
+        params: { page, query, status },
+      })
+    ).data;
+  };
 
   /**
    * Mark a notification as read.

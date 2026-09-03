@@ -1,12 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LatestNotificationsResponse } from "../models/notification";
+import {
+  LatestNotificationsResponse,
+  Notification,
+} from "../models/notification";
 import { NotificationService } from "../services/notification.service";
 import { useLoggedUserStore } from "../store/use-logged-user-store";
 
+export type StreamNotificationPayload = {
+  notification: Notification | null;
+  latestPromise: Promise<LatestNotificationsResponse>;
+};
+
 const notificationService = new NotificationService();
 const listeners = new Set<() => void>();
+const streamListeners = new Set<(payload: StreamNotificationPayload) => void>();
 
 let eventSource: EventSource | null = null;
 let latestPromise: Promise<LatestNotificationsResponse> | null = null;
@@ -45,11 +54,57 @@ function markAllNotificationsReadLocally() {
   notify();
 }
 
+function parseStreamedNotification(data: string): Notification | null {
+  if (!data?.trim()) return null;
+
+  try {
+    const parsed = JSON.parse(data) as unknown;
+    if (!parsed || typeof parsed !== "object") return null;
+
+    const candidate = parsed as Record<string, unknown>;
+
+    const notification = [
+      candidate,
+      candidate.notification,
+      candidate.data,
+    ].find(
+      (value) =>
+        !!value &&
+        typeof value === "object" &&
+        "id" in value &&
+        "code" in value,
+    );
+
+    return (notification as Notification) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function handleStreamEvent(event: MessageEvent<string>) {
+  const notification = parseStreamedNotification(event.data);
+  const nextPromise = fetchLatestNotifications();
+
+  streamListeners.forEach((listener) =>
+    listener({ notification, latestPromise: nextPromise }),
+  );
+}
+
+function subscribeToStreamNotification(
+  listener: (payload: StreamNotificationPayload) => void,
+) {
+  streamListeners.add(listener);
+  return () => {
+    streamListeners.delete(listener);
+  };
+}
+
 function startNotificationStream() {
   if (eventSource) return;
 
   eventSource = new EventSource("/api/notifications/stream");
-  eventSource.onmessage = () => fetchLatestNotifications();
+  eventSource.onmessage = handleStreamEvent;
+  eventSource.addEventListener("notification", handleStreamEvent);
 }
 
 function stopNotificationSession() {
@@ -70,9 +125,7 @@ export function withLocalReadState(
   if (!readAllLocally && readIdsLocally.size === 0) return data;
 
   const notifications = data.notifications.map((notification) =>
-    notification.read ||
-    readAllLocally ||
-    readIdsLocally.has(notification.id)
+    notification.read || readAllLocally || readIdsLocally.has(notification.id)
       ? { ...notification, read: true }
       : notification,
   );
@@ -113,5 +166,6 @@ export function useNotificationStream() {
     refreshNotifications: fetchLatestNotifications,
     markNotificationReadLocally,
     markAllNotificationsReadLocally,
+    subscribeToStreamNotification,
   };
 }
