@@ -17,4 +17,8 @@ describe("groupByDate", () => {
       "morning",
     ]);
   });
+
+  it("returns an empty list when there are no items", () => {
+    expect(groupByDate([])).toEqual([]);
+  });
 });

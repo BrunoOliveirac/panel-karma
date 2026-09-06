@@ -16,6 +16,10 @@ describe("stripHtml", () => {
     expect(stripHtml("Tom & Jerry")).toBe("Tom & Jerry");
     expect(stripHtml("5 < 10 and 10 > 5")).toBe("5 < 10 and 10 > 5");
   });
+
+  it("returns empty or falsy strings unchanged", () => {
+    expect(stripHtml("")).toBe("");
+  });
 });
 
 describe("stripHtmlDeep", () => {
@@ -31,5 +35,11 @@ describe("stripHtmlDeep", () => {
       nested: { notes: "alert(1)ok" },
       tags: ["a", "b"],
     });
+  });
+
+  it("leaves numbers, null and undefined untouched", () => {
+    expect(stripHtmlDeep(12)).toBe(12);
+    expect(stripHtmlDeep(null)).toBeNull();
+    expect(stripHtmlDeep(undefined)).toBeUndefined();
   });
 });
