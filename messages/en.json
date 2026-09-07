@@ -1,7 +1,4 @@
 {
-  "topbar": {
-    "notifications_not_found": "Notifications not found"
-  },
   "sidebar": {
     "dashboard": "Dashboard",
     "supports": "Supports",
@@ -39,6 +36,32 @@
     "manage_projects": "Manage projects",
     "activate": "Activate",
     "deactivate": "Deactivate"
+  },
+  "notifications": {
+    "notifications": "Notifications",
+    "search": "Search by document",
+    "filters": "Filters",
+    "notification_center": "Notification Center",
+    "notifications_not_found": "Notifications not found",
+    "linked_by_user": "You have been linked to a project by <strong>{name}</strong>.",
+    "unlinked_by_user": "You have been unlinked from a project by <strong>{name}</strong>.",
+    "linked_to_project": "You have been linked to project <strong>{project}</strong> by <strong>{name}</strong>.",
+    "mark_as_read": "Mark as read",
+    "delete": "Delete",
+    "mark_all_as_read": "Mark all as read",
+    "view_all": "View all",
+    "notification_marked_as_read": "Notification marked as read",
+    "notification_mark_as_read_failed": "Failed to mark notification as read",
+    "notification_marked_all_as_read": "All notifications marked as read",
+    "notification_mark_all_as_read_failed": "Failed to mark all notifications as read",
+    "notification_deleted": "Notification deleted",
+    "notification_delete_failed": "Failed to delete notification",
+    "unread_notifications": "Unread notifications",
+    "read_notifications": "Read notifications",
+    "all_notifications": "All notifications",
+    "new_notifications_received": "New notifications received!",
+    "refresh": "Refresh",
+    "load_more": "Load more"
   },
   "session_expired": {
     "title": "Session ended",

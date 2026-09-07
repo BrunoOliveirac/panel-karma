@@ -7,17 +7,19 @@ import { LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import Cookies from "js-cookie";
+import { cn } from "@/lib/utils/cn";
 
 export default function Sidebar() {
   const router = useRouter();
-  const { data, refetch } = useAuth();
   const logout = useLogout();
+  const pathname = usePathname();
   const languages = LocaleOptions;
+  const { data, refetch } = useAuth();
   const t = useTranslations("sidebar");
   const { changeLocale } = useLocale();
   const sidebarItems = new SidebarItemMock().get(data!.user!.type);
@@ -52,7 +54,10 @@ export default function Sidebar() {
                 <Link
                   key={sidebarItem.name}
                   href={sidebarItem.path}
-                  className="text-primary hover:text-primary/80 hover:scale-125 transition-transform"
+                  className={cn(
+                    "text-primary hover:scale-125 hover:text-(--active-primary) transition-transform",
+                    pathname === sidebarItem.path && "text-(--active-primary)",
+                  )}
                 >
                   <sidebarItem.icon size={20} />
                 </Link>
@@ -98,7 +103,7 @@ export default function Sidebar() {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <button onClick={() => logout()}>
+            <button data-slot="logout" onClick={() => logout()}>
               <LogOut className="text-primary" size={20} />
             </button>
           </TooltipTrigger>

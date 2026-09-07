@@ -1,7 +1,4 @@
 {
-  "topbar": {
-    "notifications_not_found": "Notificações não encontradas"
-  },
   "sidebar": {
     "dashboard": "Painel",
     "supports": "Suportes",
@@ -39,6 +36,32 @@
     "manage_projects": "Gerenciar projetos",
     "activate": "Ativar",
     "deactivate": "Desativar"
+  },
+  "notifications": {
+    "notifications": "Notificações",
+    "search": "Buscar por documento",
+    "filters": "Filtros",
+    "notification_center": "Centro de notificações",
+    "notifications_not_found": "Notificações não encontradas",
+    "linked_by_user": "Você foi vinculado a um projeto por <strong>{name}</strong>.",
+    "unlinked_by_user": "Você foi desvinculado de um projeto por <strong>{name}</strong>.",
+    "linked_to_project": "Você foi vinculado ao projeto <strong>{project}</strong> por <strong>{name}</strong>.",
+    "mark_as_read": "Marcar como lida",
+    "delete": "Excluir",
+    "mark_all_as_read": "Marcar todas como lidas",
+    "view_all": "Ver todas",
+    "notification_marked_as_read": "Notificação marcada como lida",
+    "notification_mark_as_read_failed": "Não foi possível marcar a notificação como lida",
+    "notification_marked_all_as_read": "Todas as notificações marcadas como lidas",
+    "notification_mark_all_as_read_failed": "Não foi possível marcar todas as notificações como lidas",
+    "notification_deleted": "Notificação excluída",
+    "notification_delete_failed": "Não foi possível excluir a notificação",
+    "unread_notifications": "Notificações não lidas",
+    "read_notifications": "Notificações lidas",
+    "all_notifications": "Todas as notificações",
+    "new_notifications_received": "Novas notificações recebidas!",
+    "refresh": "Atualizar",
+    "load_more": "Carregar mais"
   },
   "session_expired": {
     "title": "Sessão encerrada",
@@ -252,7 +275,11 @@
     "could_not_create": "Não foi possível criar o membro!",
     "could_not_load": "Não foi possível carregar os projetos!",
     "format_is_not_valid": "Formato inválido!",
-    "email_in_use": "Este e-mail já está em uso!"
+    "email_in_use": "Este e-mail já está em uso!",
+    "already_linked": "Este membro já está vinculado!",
+    "want_link": "Deseja vincular este membro à sua conta?",
+    "member_linked": "Membro vinculado com sucesso!",
+    "could_not_link": "Não foi possível vincular o membro!"
   },
   "management_projects": {
     "manage_projects": "Gerenciar projetos",

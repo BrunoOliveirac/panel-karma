@@ -30,10 +30,9 @@ export default function ProtectedLayout({
   }
 
   const user = data?.user;
-  const allowedPaths = user ? new SidebarItemMock().getPaths(user.type) : [];
 
   const needsRedirect =
-    !!user && (pathname === "/" || !allowedPaths.includes(pathname));
+    !!user && !new SidebarItemMock().isAllowed(user.type, pathname);
 
   // Wait for /profile before rendering protected UI or allowing navigation
   if (isLoading || isError || !user || needsRedirect) {
@@ -58,7 +57,7 @@ export default function ProtectedLayout({
       <div className="w-[calc(100%-3.5rem)]">
         <Topbar />
 
-        <div className="flex flex-col flex-1 overflow-hidden px-4 md:px-8 max-h-[calc(100dvh-4.5rem)] h-full">
+        <div className="flex flex-col flex-1 overflow-hidden px-4 md:px-8 max-h-[calc(100dvh-4.5rem)] h-full container mx-auto">
           <ModalProvider>{children}</ModalProvider>
         </div>
       </div>

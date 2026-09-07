@@ -14,12 +14,13 @@ export async function POST() {
           Authorization: `Bearer ${token}`,
         },
         cache: "no-store",
+        signal: AbortSignal.timeout(3_000),
       });
     } catch {
       // Best-effort server-side revoke; cookie is cleared regardless.
     }
   }
 
-  cookieStore.delete("token");
+  cookieStore.delete({ name: "token", path: "/" });
   return Response.json({ ok: true });
 }

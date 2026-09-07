@@ -3,15 +3,10 @@ import { getLoggedUser } from "../helpers/get-logged-user";
 import { Member } from "../models/member";
 import { Pagination } from "../interfaces/pagination";
 
-/** Payload for updating an existing member's profile. */
-interface UpdateMemberParams {
-  id: string;
+/** Payload for creating a new member, including the owning user and initial projects. */
+interface CreateMemberParams {
   name: string;
   email: string;
-}
-
-/** Payload for creating a new member, including the owning user and initial projects. */
-interface CreateMemberParams extends Omit<UpdateMemberParams, "id"> {
   userId: string;
   password: string;
   projectIds: string[];
@@ -68,22 +63,6 @@ export class MemberService {
     };
 
     const response = await api.post<string>("/members/create", createMember);
-    return response.data;
-  };
-
-  /**
-   * Update a member user.
-   * @param updateMemberParams The member to update.
-   * @returns The id of the updated member.
-   */
-  public updateMember = async (
-    updateMemberParams: UpdateMemberParams,
-  ): Promise<string> => {
-    const response = await api.patch<string>(
-      `/members/update/${updateMemberParams.id}`,
-      updateMemberParams,
-    );
-
     return response.data;
   };
 

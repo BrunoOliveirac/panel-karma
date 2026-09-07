@@ -4,8 +4,8 @@ import { useTitle } from "@/lib/store/use-title-store";
 import { ChevronLeft, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
-import UserNotification from "./user-notification";
 import UserAvatar from "../global/user-avatar";
+import UserNotification from "./user-notification";
 
 export default function Topbar() {
   const router = useRouter();

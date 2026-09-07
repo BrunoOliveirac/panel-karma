@@ -24,6 +24,8 @@ const PROFILE_SIDEBAR_ITEM: SidebarItem = {
   icon: UserCircle,
 };
 
+const EXTRA_ALLOWED_PATHS = ["/notifications"];
+
 export class SidebarItemMock {
   public ADMIN_SIDEBAR_ITEMS: SidebarItem[] = [
     { name: "dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -57,6 +59,10 @@ export class SidebarItemMock {
   }
 
   public getPaths(userType: UserTypeEnum): string[] {
-    return this.get(userType).map((item) => item.path);
+    return [...this.get(userType).map((item) => item.path), ...EXTRA_ALLOWED_PATHS];
+  }
+
+  public isAllowed(userType: UserTypeEnum, pathname: string): boolean {
+    return pathname !== "/" && this.getPaths(userType).includes(pathname);
   }
 }

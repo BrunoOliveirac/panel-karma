@@ -270,12 +270,12 @@ export default function Profile() {
                 {t("avatar_hint")}
               </p>
 
-              <div className="flex w-full flex-col gap-2">
+              <div className="flex w-full max-sm:flex-col lg:flex-col gap-2 max-w-lg">
                 <button
                   type="button"
                   data-slot="profile-avatar-upload"
                   onClick={() => fileInputRef.current?.click()}
-                  className="h-9 w-full rounded-full bg-linear-to-br from-primary to-(--info) px-3.5 text-sm text-white transition hover:brightness-90"
+                  className="h-9 w-full rounded-full bg-linear-to-br from-primary to-(--info) px-3.5 text-sm text-white transition hover:brightness-75"
                 >
                   {t("upload_avatar")}
                 </button>

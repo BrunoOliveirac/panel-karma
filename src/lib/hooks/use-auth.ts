@@ -61,12 +61,9 @@ export function useAuth() {
     if (!user) return;
 
     const home = UserRouteMap.get(user.type) ?? "/home";
-    const allowedPaths = new SidebarItemMock().getPaths(user.type);
 
-    if (pathname === "/" || !allowedPaths.includes(pathname)) {
-      if (pathname !== home) {
-        router.replace(home);
-      }
+    if (!new SidebarItemMock().isAllowed(user.type, pathname) && pathname !== home) {
+      router.replace(home);
     }
   }, [query.data?.user, pathname, router, sessionExpired]);
 
