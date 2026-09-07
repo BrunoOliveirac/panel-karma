@@ -1,4 +1,5 @@
 import { test as base, type Page } from "@playwright/test";
+import { disableNextOverlay } from "../helpers/disable-next-overlay.helper";
 import { login } from "../helpers/login.helper";
 import { UserTypeEnum } from "@/lib/enums/user-type.enum";
 
@@ -11,6 +12,11 @@ type UserFixtures = {
 };
 
 export const test = base.extend<UserFixtures>({
+  page: async ({ page }, Use) => {
+    await disableNextOverlay(page);
+    await Use(page);
+  },
+
   userPage: async ({ page }, Use) => {
     await login({
       page,

@@ -33,7 +33,7 @@ describe("POST /api/logout", () => {
         headers: { Authorization: "Bearer jwt-token" },
       }),
     );
-    expect(cookieDelete).toHaveBeenCalledWith("token");
+    expect(cookieDelete).toHaveBeenCalledWith({ name: "token", path: "/" });
     await expect(response.json()).resolves.toEqual({ ok: true });
   });
 
@@ -43,7 +43,7 @@ describe("POST /api/logout", () => {
     await POST();
 
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(cookieDelete).toHaveBeenCalledWith("token");
+    expect(cookieDelete).toHaveBeenCalledWith({ name: "token", path: "/" });
   });
 
   it("still clears the cookie when the API revoke fails", async () => {
@@ -52,6 +52,6 @@ describe("POST /api/logout", () => {
 
     await POST();
 
-    expect(cookieDelete).toHaveBeenCalledWith("token");
+    expect(cookieDelete).toHaveBeenCalledWith({ name: "token", path: "/" });
   });
 });

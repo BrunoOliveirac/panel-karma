@@ -103,7 +103,7 @@ export default function Sidebar() {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <button onClick={() => logout()}>
+            <button data-slot="logout" onClick={() => logout()}>
               <LogOut className="text-primary" size={20} />
             </button>
           </TooltipTrigger>
