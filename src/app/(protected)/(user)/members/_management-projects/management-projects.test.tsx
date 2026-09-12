@@ -46,11 +46,13 @@ jest.mock("@/lib/services/project.service", () => {
   };
 });
 
+const createdAt = "2026-01-01T00:00:00.000Z";
+
 const member: Member = {
   id: "01",
   active: true,
   type: UserTypeEnum.MEMBER,
-  createdAt: new Date(),
+  createdAt,
   name: "Member 01",
   email: "member01@email.com",
 };
@@ -61,12 +63,12 @@ const mockProjects = [
     name: "Project Alpha",
     active: true,
     userId: "u1",
-    createdAt: new Date(),
+    createdAt,
     client: {
       id: "c1",
       name: "Acme Corp",
       active: true,
-      createdAt: new Date(),
+      createdAt,
     },
   },
   {
@@ -74,12 +76,12 @@ const mockProjects = [
     name: "Project Beta",
     active: true,
     userId: "u1",
-    createdAt: new Date(),
+    createdAt,
     client: {
       id: "c2",
       name: "Globex Inc",
       active: true,
-      createdAt: new Date(),
+      createdAt,
     },
   },
 ];

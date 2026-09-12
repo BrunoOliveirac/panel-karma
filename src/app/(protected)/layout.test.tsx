@@ -51,7 +51,7 @@ describe("ProtectedLayout", () => {
       sessionExpired: false,
       acknowledgeSessionExpired,
       refetch: jest.fn(),
-    } as ReturnType<typeof useAuth>);
+    } as unknown as ReturnType<typeof useAuth>);
 
     render(
       <ProtectedLayout>
@@ -72,7 +72,7 @@ describe("ProtectedLayout", () => {
       sessionExpired: true,
       acknowledgeSessionExpired,
       refetch: jest.fn(),
-    } as ReturnType<typeof useAuth>);
+    } as unknown as ReturnType<typeof useAuth>);
 
     render(
       <ProtectedLayout>
@@ -94,7 +94,7 @@ describe("ProtectedLayout", () => {
       sessionExpired: false,
       acknowledgeSessionExpired,
       refetch: jest.fn(),
-    } as ReturnType<typeof useAuth>);
+    } as unknown as ReturnType<typeof useAuth>);
 
     render(
       <ProtectedLayout>
@@ -117,7 +117,7 @@ describe("ProtectedLayout", () => {
       sessionExpired: false,
       acknowledgeSessionExpired,
       refetch: jest.fn(),
-    } as ReturnType<typeof useAuth>);
+    } as unknown as ReturnType<typeof useAuth>);
 
     render(
       <ProtectedLayout>

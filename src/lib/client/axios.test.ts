@@ -1,4 +1,5 @@
 import * as sanitize from "@/lib/utils/sanitize-html";
+import type { AxiosAdapter, InternalAxiosRequestConfig } from "axios";
 import { api } from "./axios";
 
 describe("api interceptors", () => {
@@ -17,8 +18,9 @@ describe("api interceptors", () => {
   const parseBody = (data: unknown) =>
     typeof data === "string" ? JSON.parse(data) : data;
 
-  const okAdapter = (inspect: (config: { data?: unknown; params?: unknown }) => void) =>
-    async (config: { data?: unknown; params?: unknown }) => {
+  const okAdapter =
+    (inspect: (config: InternalAxiosRequestConfig) => void): AxiosAdapter =>
+    async (config) => {
       inspect(config);
       return {
         data: { ok: true },

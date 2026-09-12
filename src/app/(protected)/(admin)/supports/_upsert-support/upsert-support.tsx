@@ -119,7 +119,7 @@ export default function UpsertSupport({
         ...support,
         ...payload,
         id: supportId,
-        createdAt: support?.createdAt ?? new Date(),
+        createdAt: support?.createdAt ?? new Date().toISOString(),
       } as Support;
 
       toast.success(t(`support_${support ? "updated" : "created"}`));

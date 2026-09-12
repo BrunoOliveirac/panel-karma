@@ -89,7 +89,7 @@ export default function UpsertProject({
         active: data.active,
         id: projectId,
         client: selectedClient ?? project?.client,
-        createdAt: project?.createdAt ?? new Date(),
+        createdAt: project?.createdAt ?? new Date().toISOString(),
       } as Project;
 
       toast.success(t(`project_${project ? "updated" : "created"}`));
