@@ -24,6 +24,12 @@ const PROFILE_SIDEBAR_ITEM: SidebarItem = {
   icon: UserCircle,
 };
 
+const HOME_SIDEBAR_ITEM: SidebarItem = {
+  name: "home",
+  path: "/home",
+  icon: Home,
+};
+
 const EXTRA_ALLOWED_PATHS = ["/notifications"];
 
 export class SidebarItemMock {
@@ -35,12 +41,13 @@ export class SidebarItemMock {
   ];
 
   public SUPPORT_SIDEBAR_ITEMS: SidebarItem[] = [
+    HOME_SIDEBAR_ITEM,
     { name: "chat", path: "/chat", icon: MessageCircle },
     PROFILE_SIDEBAR_ITEM,
   ];
 
   public USER_SIDEBAR_ITEMS: SidebarItem[] = [
-    { name: "home", path: "/home", icon: Home },
+    HOME_SIDEBAR_ITEM,
     // { name: "crm", path: "/crm", icon: LayoutList },
     // { name: "chat", path: "/chat", icon: MessageCircle },
     // { name: "arka", path: "/arka", icon: Bot }, // ARKA: AI-Ready Karma Assistant
@@ -50,6 +57,7 @@ export class SidebarItemMock {
   ];
 
   public MEMBER_SIDEBAR_ITEMS: SidebarItem[] = [
+    HOME_SIDEBAR_ITEM,
     ...USER_MEMBER_SIDEBAR_ITEMS,
     PROFILE_SIDEBAR_ITEM,
   ];
@@ -59,7 +67,10 @@ export class SidebarItemMock {
   }
 
   public getPaths(userType: UserTypeEnum): string[] {
-    return [...this.get(userType).map((item) => item.path), ...EXTRA_ALLOWED_PATHS];
+    return [
+      ...this.get(userType).map((item) => item.path),
+      ...EXTRA_ALLOWED_PATHS,
+    ];
   }
 
   public isAllowed(userType: UserTypeEnum, pathname: string): boolean {

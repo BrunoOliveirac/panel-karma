@@ -12,7 +12,8 @@
     "projects": "Projects",
     "sectors": "Sectors",
     "members": "Members",
-    "logout": "Logout"
+    "logout": "Logout",
+    "start_support": "Start support"
   },
   "shared": {
     "are_you_sure": "Are you sure?",
@@ -83,6 +84,14 @@
     "previous": "Previous",
     "next": "Next"
   },
+  "start_support": {
+    "support_created": "Support created successfully!",
+    "could_not_start_support": "Could not start the support!",
+    "title": "Title",
+    "enter_title": "Enter the title",
+    "description": "Description",
+    "enter_description": "Enter the description"
+  },
   "login": {
     "access_your_account": "Access your account",
     "email": "E-mail",
@@ -110,7 +119,17 @@
     "success": "Account created successfully!"
   },
   "home": {
-    "home": "Home"
+    "home": "Home",
+    "search": "Search by title or description",
+    "start_date": "Start date",
+    "end_date": "End date",
+    "page_size": "Items per page",
+    "tickets_not_found": "Tickets not found",
+    "all": "All",
+    "open": "Open",
+    "in_progress": "In progress",
+    "resolved": "Resolved",
+    "cancelled": "Cancelled"
   },
   "crm": {
     "crm": "CRM"

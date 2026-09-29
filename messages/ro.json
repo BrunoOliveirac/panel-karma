@@ -12,7 +12,8 @@
     "projects": "Proiecte",
     "sectors": "Sectoare",
     "members": "Membri",
-    "logout": "Deconectare"
+    "logout": "Deconectare",
+    "start_support": "Începe suportul"
   },
   "shared": {
     "are_you_sure": "Ești sigur?",
@@ -83,6 +84,14 @@
     "previous": "Anterior",
     "next": "Următor"
   },
+  "start_support": {
+    "support_created": "Suport creat cu succes!",
+    "could_not_start_support": "Nu s-a putut începe suportul!",
+    "title": "Titlu",
+    "enter_title": "Introduceți titlul",
+    "description": "Descriere",
+    "enter_description": "Introduceți descrierea"
+  },
   "login": {
     "access_your_account": "Accesează-ți contul",
     "email": "E-mail",
@@ -110,7 +119,17 @@
     "success": "Cont creat cu succes!"
   },
   "home": {
-    "home": "Acasă"
+    "home": "Acasă",
+    "search": "Caută după titlu sau descriere",
+    "start_date": "Data de început",
+    "end_date": "Data de sfârșit",
+    "page_size": "Elemente pe pagină",
+    "tickets_not_found": "Nu s-au găsit tichete",
+    "all": "Toate",
+    "open": "Deschise",
+    "in_progress": "În desfășurare",
+    "resolved": "Rezolvate",
+    "cancelled": "Anulate"
   },
   "crm": {
     "crm": "CRM"

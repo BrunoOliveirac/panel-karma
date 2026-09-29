@@ -10,8 +10,8 @@ test("Should redirect a member away from a user route", async ({
   memberPage,
 }) => {
   await memberPage.goto("/members");
-  await memberPage.waitForURL("/clients");
-  await expect(memberPage).toHaveTitle(/Clients/);
+  await memberPage.waitForURL("/home");
+  await expect(memberPage).toHaveTitle(/Home/);
 });
 
 test("Should redirect an admin away from a user route", async ({
@@ -26,6 +26,6 @@ test("Should redirect a support away from a user route", async ({
   supportPage,
 }) => {
   await supportPage.goto("/clients");
-  await supportPage.waitForURL("/chat");
-  await expect(supportPage).toHaveTitle(/Chat/);
+  await supportPage.waitForURL("/home");
+  await expect(supportPage).toHaveTitle(/Home/);
 });

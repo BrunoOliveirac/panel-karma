@@ -122,30 +122,26 @@ export default function UpsertSector({
         />
 
         <div className="flex justify-end items-center gap-6 mt-8">
-          <Field className="w-fit">
-            <Button
-              size="lg"
-              type="button"
-              disabled={submitting}
-              onClick={() => closeModal()}
-              data-slot="upsert-sector-cancel"
-              className="max-w-28 rounded bg-transparent text-black dark:text-white cursor-pointer hover:text-white dark:hover:text-black hover:bg-black dark:hover:bg-white"
-            >
-              {sharedT("cancel")}
-            </Button>
-          </Field>
+          <Button
+            size="lg"
+            type="button"
+            disabled={submitting}
+            onClick={() => closeModal()}
+            data-slot="upsert-sector-cancel"
+            className="max-w-28 rounded bg-transparent text-black dark:text-white cursor-pointer hover:text-white dark:hover:text-black hover:bg-black dark:hover:bg-white"
+          >
+            {sharedT("cancel")}
+          </Button>
 
-          <Field className="w-fit">
-            <SpinnerButton
-              size="lg"
-              type="submit"
-              loading={submitting}
-              dataSlot="upsert-sector-save"
-              className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
-            >
-              {sharedT("save")}
-            </SpinnerButton>
-          </Field>
+          <SpinnerButton
+            size="lg"
+            type="submit"
+            loading={submitting}
+            dataSlot="upsert-sector-save"
+            className="max-w-28 rounded bg-transparent border border-primary/40 cursor-pointer not-hover:text-primary"
+          >
+            {sharedT("save")}
+          </SpinnerButton>
         </div>
       </form>
     </section>

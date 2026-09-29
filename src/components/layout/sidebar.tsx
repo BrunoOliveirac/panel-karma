@@ -2,8 +2,11 @@ import { useAuth } from "@/lib/hooks/use-auth";
 import { useLocale } from "@/lib/hooks/use-locale";
 import { useLogout } from "@/lib/hooks/use-logout";
 import { SidebarItemMock } from "@/lib/mocks/sidebar-item.mock";
+import { useModal } from "@/lib/providers/modal-provider";
 import { LocaleOptions, LocaleType } from "@/lib/types/locale-type";
-import { LogOut } from "lucide-react";
+import { cn } from "@/lib/utils/cn";
+import Cookies from "js-cookie";
+import { CircleQuestionMark, LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,25 +14,35 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import Cookies from "js-cookie";
-import { cn } from "@/lib/utils/cn";
+import StartSupportModal from "./start-support-modal";
+import { UserTypeEnum } from "@/lib/enums/user-type.enum";
 
 export default function Sidebar() {
   const router = useRouter();
   const logout = useLogout();
   const pathname = usePathname();
   const languages = LocaleOptions;
+  const { openModal } = useModal();
   const { data, refetch } = useAuth();
   const t = useTranslations("sidebar");
   const { changeLocale } = useLocale();
   const sidebarItems = new SidebarItemMock().get(data!.user!.type);
   const [selectedLocale, setSelectedLocale] = useState(data?.locale);
 
+  /**
+   * Change the language of the application.
+   * @param locale The locale to change to.
+   */
   const changeLanguage = (locale: LocaleType) => {
     setSelectedLocale(locale);
     changeLocale(locale);
     Cookies.set("locale", locale);
     refetch();
+  };
+
+  const handleStartSupport = async () => {
+    const isCreated = (await openModal(StartSupportModal)) as boolean;
+    if (!isCreated) return;
   };
 
   return (
@@ -47,7 +60,7 @@ export default function Sidebar() {
           />
         </button>
 
-        <div className="flex flex-col items-center gap-4 overflow-y-auto h-[calc(100dvh-164px)] pt-6">
+        <div className="flex flex-col items-center gap-4 overflow-y-auto h-[calc(100dvh-184px)] pt-6">
           {sidebarItems.map((sidebarItem) => (
             <Tooltip key={sidebarItem.name}>
               <TooltipTrigger asChild>
@@ -72,6 +85,23 @@ export default function Sidebar() {
       </div>
 
       <div className="flex flex-col justify-center items-center gap-6">
+        {data!.user!.type !== UserTypeEnum.SUPPORT && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={handleStartSupport}
+                className="text-primary hover:scale-125 hover:text-(--active-primary) transition-transform"
+              >
+                <CircleQuestionMark size={20} />
+              </button>
+            </TooltipTrigger>
+
+            <TooltipContent side="right">
+              <p>{t("start_support")}</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+
         <Popover>
           <PopoverTrigger asChild>
             <button key={selectedLocale}>
@@ -100,7 +130,6 @@ export default function Sidebar() {
             </div>
           </PopoverContent>
         </Popover>
-
         <Tooltip>
           <TooltipTrigger asChild>
             <button data-slot="logout" onClick={() => logout()}>

@@ -1,4 +1,4 @@
-import { UserRouteMap } from "@/lib/enums/user-type.enum";
+import { UserRouteMap, UserTypeEnum } from "@/lib/enums/user-type.enum";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { useTitle } from "@/lib/store/use-title-store";
 import { ChevronLeft, Moon, Sun } from "lucide-react";
@@ -28,7 +28,7 @@ export default function Topbar() {
       </div>
 
       <div className="flex items-center gap-3">
-        <UserNotification />
+        {data?.user.type !== UserTypeEnum.ADMIN ? <UserNotification /> : null}
 
         {resolvedTheme === "dark" ? (
           <button className="cursor-pointer" onClick={() => setTheme("light")}>
