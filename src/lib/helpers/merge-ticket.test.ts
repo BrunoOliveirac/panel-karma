@@ -2,6 +2,7 @@ import { TicketStatusEnum } from "../enums/ticket-status.enum";
 import { UserTypeEnum } from "../enums/user-type.enum";
 import {
   applyTicketCountDelta,
+  formatTicketCode,
   resolvePreviousStatus,
   ticketChangesFilteredSet,
   updateListedTicket,
@@ -24,11 +25,22 @@ function ticket(overrides: Partial<Ticket> = {}): Ticket {
 }
 
 const counts: TicketCounts = {
-  all: 4,
+  open: 4,
   inProgress: 2,
   resolved: 1,
   cancelled: 1,
+  all: 8,
 };
+
+describe("formatTicketCode", () => {
+  it("pads codes below 10 and leaves the rest unchanged", () => {
+    expect(formatTicketCode(1)).toBe("01");
+    expect(formatTicketCode(8)).toBe("08");
+    expect(formatTicketCode(10)).toBe("10");
+    expect(formatTicketCode(166)).toBe("166");
+    expect(formatTicketCode(1090)).toBe("1090");
+  });
+});
 
 describe("updateListedTicket", () => {
   it("replaces a ticket already on the page", () => {
@@ -39,7 +51,14 @@ describe("updateListedTicket", () => {
     });
 
     expect(
-      updateListedTicket([current], incoming, UserTypeEnum.USER, "u1", null, ""),
+      updateListedTicket(
+        [current],
+        incoming,
+        UserTypeEnum.USER,
+        "u1",
+        null,
+        "",
+      ),
     ).toEqual([incoming]);
   });
 
@@ -51,7 +70,14 @@ describe("updateListedTicket", () => {
     });
 
     expect(
-      updateListedTicket([listed], incoming, UserTypeEnum.SUPPORT, "s1", TicketStatusEnum.OPEN, ""),
+      updateListedTicket(
+        [listed],
+        incoming,
+        UserTypeEnum.SUPPORT,
+        "s1",
+        TicketStatusEnum.OPEN,
+        "",
+      ),
     ).toEqual([listed]);
   });
 
@@ -64,7 +90,14 @@ describe("updateListedTicket", () => {
     const tickets = [current];
 
     expect(
-      updateListedTicket(tickets, incoming, UserTypeEnum.SUPPORT, "s1", TicketStatusEnum.OPEN, ""),
+      updateListedTicket(
+        tickets,
+        incoming,
+        UserTypeEnum.SUPPORT,
+        "s1",
+        TicketStatusEnum.OPEN,
+        "",
+      ),
     ).toBe(tickets);
   });
 
@@ -88,6 +121,55 @@ describe("updateListedTicket", () => {
     ).toEqual([]);
   });
 
+  it("keeps a ticket when the search matches its code", () => {
+    const current = ticket({ code: 8 });
+    const incoming = ticket({
+      code: 8,
+      updatedAt: "2026-01-03T00:00:00.000Z",
+    });
+
+    expect(
+      updateListedTicket(
+        [current],
+        incoming,
+        UserTypeEnum.USER,
+        "u1",
+        null,
+        "08",
+      ),
+    ).toEqual([incoming]);
+
+    expect(
+      updateListedTicket(
+        [ticket({ code: 1090 })],
+        ticket({ code: 1090, updatedAt: "2026-01-03T00:00:00.000Z" }),
+        UserTypeEnum.USER,
+        "u1",
+        null,
+        "109",
+      ),
+    ).toHaveLength(1);
+  });
+
+  it("drops a ticket when a padded code does not match", () => {
+    const current = ticket({ code: 10 });
+    const incoming = ticket({
+      code: 10,
+      updatedAt: "2026-01-03T00:00:00.000Z",
+    });
+
+    expect(
+      updateListedTicket(
+        [current],
+        incoming,
+        UserTypeEnum.USER,
+        "u1",
+        null,
+        "01",
+      ),
+    ).toEqual([]);
+  });
+
   it("keeps an in-progress ticket on the user list when the filter is all", () => {
     const current = ticket();
     const incoming = ticket({
@@ -96,7 +178,14 @@ describe("updateListedTicket", () => {
     });
 
     expect(
-      updateListedTicket([current], incoming, UserTypeEnum.USER, "u1", null, ""),
+      updateListedTicket(
+        [current],
+        incoming,
+        UserTypeEnum.USER,
+        "u1",
+        null,
+        "",
+      ),
     ).toEqual([incoming]);
   });
 
@@ -221,10 +310,10 @@ describe("ticketChangesFilteredSet", () => {
 });
 
 describe("applyTicketCountDelta", () => {
-  it("counts a new open ticket on the user total only", () => {
+  it("counts a new open ticket on the user open card and the total", () => {
     expect(
       applyTicketCountDelta(counts, UserTypeEnum.USER, "u1", null, ticket()),
-    ).toEqual({ ...counts, all: 5 });
+    ).toEqual({ ...counts, open: 5, all: 9 });
   });
 
   it("moves a user ticket from open into in progress", () => {
@@ -236,7 +325,7 @@ describe("applyTicketCountDelta", () => {
         TicketStatusEnum.OPEN,
         ticket({ status: TicketStatusEnum.IN_PROGRESS }),
       ),
-    ).toEqual({ ...counts, inProgress: 3 });
+    ).toEqual({ ...counts, open: 3, inProgress: 3 });
   });
 
   it("moves a user ticket from in progress to resolved", () => {
@@ -266,7 +355,7 @@ describe("applyTicketCountDelta", () => {
   it("counts a new open ticket for every support", () => {
     expect(
       applyTicketCountDelta(counts, UserTypeEnum.SUPPORT, "s1", null, ticket()),
-    ).toEqual({ ...counts, all: 5 });
+    ).toEqual({ ...counts, open: 5, all: 9 });
   });
 
   it("moves the support open count into in progress only for the assignee", () => {
@@ -283,7 +372,7 @@ describe("applyTicketCountDelta", () => {
         TicketStatusEnum.OPEN,
         incoming,
       ),
-    ).toEqual({ ...counts, all: 3, inProgress: 3 });
+    ).toEqual({ ...counts, open: 3, inProgress: 3 });
   });
 
   it("decrements only the open count when another support accepts the ticket", () => {
@@ -300,13 +389,15 @@ describe("applyTicketCountDelta", () => {
         TicketStatusEnum.OPEN,
         incoming,
       ),
-    ).toEqual({ ...counts, all: 3 });
+    ).toEqual({ ...counts, open: 3, all: 7 });
   });
 
   it("uses the listed status when the event has no previous status", () => {
     const listed = ticket({ status: TicketStatusEnum.IN_PROGRESS });
 
-    expect(resolvePreviousStatus(null, listed)).toBe(TicketStatusEnum.IN_PROGRESS);
+    expect(resolvePreviousStatus(null, listed)).toBe(
+      TicketStatusEnum.IN_PROGRESS,
+    );
     expect(resolvePreviousStatus(TicketStatusEnum.OPEN, listed)).toBe(
       TicketStatusEnum.OPEN,
     );

@@ -12,10 +12,11 @@ export interface Ticket extends BaseModel {
 }
 
 export interface TicketCounts {
-  all: number;
+  open: number;
   inProgress: number;
   resolved: number;
   cancelled: number;
+  all: number;
 }
 
 export type TicketPageSize = 5;

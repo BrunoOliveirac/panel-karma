@@ -120,16 +120,16 @@
   },
   "home": {
     "home": "Home",
-    "search": "Search by title or description",
+    "search": "Search tickets",
     "start_date": "Start date",
     "end_date": "End date",
     "page_size": "Items per page",
     "tickets_not_found": "Tickets not found",
-    "all": "All",
-    "open": "Open",
-    "in_progress": "In progress",
-    "resolved": "Resolved",
-    "cancelled": "Cancelled"
+    "all": "All Tickets",
+    "open": "Open Tickets",
+    "in_progress": "Pending Tickets",
+    "resolved": "Completed Tickets",
+    "cancelled": "Cancelled Tickets"
   },
   "crm": {
     "crm": "CRM"

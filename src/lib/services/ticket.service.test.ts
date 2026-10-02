@@ -15,7 +15,13 @@ describe("TicketService", () => {
   const service = new TicketService();
 
   it("counts tickets by the logged user id", async () => {
-    const counts = { all: 1, inProgress: 0, resolved: 0, cancelled: 0 };
+    const counts = {
+      open: 1,
+      inProgress: 0,
+      resolved: 0,
+      cancelled: 0,
+      all: 1,
+    };
     apiMock.get.mockResolvedValue({ data: counts });
 
     await expect(service.countTickets()).resolves.toEqual(counts);
@@ -31,7 +37,7 @@ describe("TicketService", () => {
       type: UserTypeEnum.SUPPORT,
     });
     apiMock.get.mockResolvedValue({
-      data: { all: 3, inProgress: 1, resolved: 0, cancelled: 0 },
+      data: { open: 2, inProgress: 1, resolved: 0, cancelled: 0, all: 3 },
     });
 
     await service.countTickets();

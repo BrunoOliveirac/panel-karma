@@ -120,16 +120,16 @@
   },
   "home": {
     "home": "Acasă",
-    "search": "Caută după titlu sau descriere",
+    "search": "Caută tichete",
     "start_date": "Data de început",
     "end_date": "Data de sfârșit",
     "page_size": "Elemente pe pagină",
     "tickets_not_found": "Nu s-au găsit tichete",
-    "all": "Toate",
-    "open": "Deschise",
-    "in_progress": "În desfășurare",
-    "resolved": "Rezolvate",
-    "cancelled": "Anulate"
+    "all": "Toate tichetele",
+    "open": "Tichete deschise",
+    "in_progress": "Tichete în așteptare",
+    "resolved": "Tichete finalizate",
+    "cancelled": "Tichete anulate"
   },
   "crm": {
     "crm": "CRM"

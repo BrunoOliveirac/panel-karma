@@ -69,10 +69,11 @@ describe("Home", () => {
   beforeEach(() => {
     streamListener = null;
     countTicketsMock.mockResolvedValue({
-      all: 2,
+      open: 1,
       inProgress: 1,
       resolved: 0,
       cancelled: 0,
+      all: 2,
     });
     listTicketsMock.mockResolvedValue({
       items: [ticket()],
@@ -84,6 +85,7 @@ describe("Home", () => {
   afterEach(() => {
     view?.unmount();
     view = undefined;
+    setMockLoggedUser();
   });
 
   it("loads counts once and requests the next page without recounting", async () => {
@@ -125,6 +127,9 @@ describe("Home", () => {
     });
 
     expect(screen.getByTestId("ticket-count-value-all")).toHaveTextContent("2");
+    expect(screen.getByTestId("ticket-count-value-open")).toHaveTextContent(
+      "0",
+    );
     expect(
       screen.getByTestId("ticket-count-value-in_progress"),
     ).toHaveTextContent("2");
@@ -156,9 +161,50 @@ describe("Home", () => {
     });
 
     expect(await screen.findByText("New ticket")).toBeInTheDocument();
+    expect(screen.getByTestId("ticket-count-value-open")).toHaveTextContent(
+      "2",
+    );
     expect(screen.getByTestId("ticket-count-value-all")).toHaveTextContent("3");
     expect(listTicketsMock).toHaveBeenCalledTimes(callsBefore + 1);
     expect(countTicketsMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("filters the user list from the count cards", async () => {
+    view = await renderWithProvidersAsync(<Home />);
+
+    expect(await screen.findByText("Printer")).toBeInTheDocument();
+    expect(screen.getByTestId("ticket-count-all")).toBeInTheDocument();
+    expect(screen.getByTestId("ticket-count-open")).toBeInTheDocument();
+    expect(screen.getByTestId("ticket-count-value-open")).toHaveTextContent(
+      "1",
+    );
+    expect(screen.getByTestId("ticket-count-all")).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+
+    fireEvent.click(screen.getByTestId("ticket-count-open"));
+
+    await waitFor(() => {
+      expect(listTicketsMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          page: 1,
+          status: TicketStatusEnum.OPEN,
+        }),
+      );
+    });
+    expect(screen.getByTestId("ticket-count-open")).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+
+    fireEvent.click(screen.getByTestId("ticket-count-all"));
+
+    await waitFor(() => {
+      expect(listTicketsMock).toHaveBeenCalledWith(
+        expect.objectContaining({ page: 1, status: null }),
+      );
+    });
   });
 
   it("opens the support home on the shared open queue", async () => {
@@ -179,5 +225,9 @@ describe("Home", () => {
       );
     });
     expect(screen.getByTestId("ticket-count-open")).toBeInTheDocument();
+    expect(screen.getByTestId("ticket-count-value-open")).toHaveTextContent(
+      "1",
+    );
+    expect(screen.queryByTestId("ticket-count-all")).not.toBeInTheDocument();
   });
 });

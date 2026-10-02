@@ -51,9 +51,32 @@ function matchesQuery(ticket: Ticket, query: string): boolean {
   const normalized = query.trim().toLowerCase();
   if (!normalized) return true;
 
-  return `${ticket.title}\n${ticket.description}`
-    .toLowerCase()
-    .includes(normalized);
+  if (
+    `${ticket.title}\n${ticket.description}`.toLowerCase().includes(normalized)
+  ) {
+    return true;
+  }
+
+  if (ticket.code == null) return false;
+  if (String(ticket.code).includes(normalized)) return true;
+
+  const code = codeQuery(normalized);
+  return code != null && ticket.code === code;
+}
+
+/**
+ * Sequential code with at least two digits: 01, 08, 10, 166, 1090.
+ */
+export function formatTicketCode(code: number): string {
+  return String(code).padStart(2, "0");
+}
+
+function codeQuery(query: string): number | null {
+  const value = query.startsWith("#") ? query.slice(1).trim() : query;
+  if (!/^\d+$/.test(value)) return null;
+
+  const code = Number(value);
+  return Number.isSafeInteger(code) ? code : null;
 }
 
 /**
@@ -183,9 +206,11 @@ export function updateListedTicket(
   return tickets.map((item) => (item.id === ticket.id ? ticket : item));
 }
 
+type StatusCountKey = "open" | "inProgress" | "resolved" | "cancelled";
+
 function bump(
   counts: TicketCounts,
-  key: keyof TicketCounts,
+  key: StatusCountKey,
   delta: number,
 ): TicketCounts {
   return {
@@ -194,9 +219,18 @@ function bump(
   };
 }
 
+function withTotal(counts: TicketCounts): TicketCounts {
+  return {
+    ...counts,
+    all: counts.open + counts.inProgress + counts.resolved + counts.cancelled,
+  };
+}
+
 function statusBucket(
   status: TicketStatusEnum | null,
-): keyof TicketCounts | null {
+  includeOpen: boolean,
+): StatusCountKey | null {
+  if (status === TicketStatusEnum.OPEN) return includeOpen ? "open" : null;
   if (status === TicketStatusEnum.IN_PROGRESS) return "inProgress";
   if (status === TicketStatusEnum.RESOLVED) return "resolved";
   if (status === TicketStatusEnum.CANCELLED) return "cancelled";
@@ -207,9 +241,10 @@ function moveBucket(
   counts: TicketCounts,
   previousStatus: TicketStatusEnum | null,
   nextStatus: TicketStatusEnum,
+  includeOpen: boolean,
 ): TicketCounts {
-  const from = statusBucket(previousStatus);
-  const to = statusBucket(nextStatus);
+  const from = statusBucket(previousStatus, includeOpen);
+  const to = statusBucket(nextStatus, includeOpen);
   let next = counts;
 
   if (from && from !== to) next = bump(next, from, -1);
@@ -218,8 +253,10 @@ function moveBucket(
 }
 
 /**
- * Adjust the four cards from a status change.
+ * Adjust the status cards from a status change, then set all to their sum.
  * A null previous status means the ticket was just created.
+ * User and member buckets follow userId. Support open is global.
+ * Support's other statuses follow supportId.
  */
 export function applyTicketCountDelta(
   counts: TicketCounts,
@@ -234,9 +271,18 @@ export function applyTicketCountDelta(
 
   if (!OWNER_ROLES.has(role) || incoming.userId !== viewerId) return counts;
 
-  let next = counts;
-  if (previousStatus == null) next = bump(next, "all", 1);
-  return moveBucket(next, previousStatus, incoming.status);
+  return withTotal(moveBucket(counts, previousStatus, incoming.status, true));
+}
+
+function applyOpenDelta(
+  counts: TicketCounts,
+  previousStatus: TicketStatusEnum | null,
+  nextStatus: TicketStatusEnum,
+): TicketCounts {
+  const wasOpen = previousStatus === TicketStatusEnum.OPEN;
+  const isOpen = nextStatus === TicketStatusEnum.OPEN;
+  if (wasOpen === isOpen) return counts;
+  return bump(counts, "open", wasOpen ? -1 : 1);
 }
 
 function applySupportCountDelta(
@@ -245,13 +291,11 @@ function applySupportCountDelta(
   previousStatus: TicketStatusEnum | null,
   incoming: Ticket,
 ): TicketCounts {
-  let next = counts;
-  const wasOpen = previousStatus === TicketStatusEnum.OPEN;
-  const isOpen = incoming.status === TicketStatusEnum.OPEN;
+  let next = applyOpenDelta(counts, previousStatus, incoming.status);
 
-  if (previousStatus == null && isOpen) next = bump(next, "all", 1);
-  if (wasOpen && !isOpen) next = bump(next, "all", -1);
+  if (incoming.supportId === viewerId) {
+    next = moveBucket(next, previousStatus, incoming.status, false);
+  }
 
-  if (incoming.supportId !== viewerId) return next;
-  return moveBucket(next, previousStatus, incoming.status);
+  return withTotal(next);
 }

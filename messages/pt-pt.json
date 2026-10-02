@@ -120,16 +120,16 @@
   },
   "home": {
     "home": "Início",
-    "search": "Pesquisar por título ou descrição",
+    "search": "Pesquisar tickets",
     "start_date": "Data inicial",
     "end_date": "Data final",
     "page_size": "Itens por página",
     "tickets_not_found": "Tickets não encontrados",
-    "all": "Todos",
-    "open": "Em aberto",
-    "in_progress": "Em andamento",
-    "resolved": "Concluídos",
-    "cancelled": "Cancelados"
+    "all": "Todos os tickets",
+    "open": "Tickets abertos",
+    "in_progress": "Tickets pendentes",
+    "resolved": "Tickets concluídos",
+    "cancelled": "Tickets cancelados"
   },
   "crm": {
     "crm": "CRM"
