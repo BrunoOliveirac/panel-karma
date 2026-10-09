@@ -47,6 +47,32 @@ describe("TicketService", () => {
     });
   });
 
+  it("resolves a ticket as the logged user", async () => {
+    apiMock.post.mockResolvedValue({ data: "ok" });
+
+    await expect(service.resolveTicket("t1")).resolves.toBe("ok");
+    expect(apiMock.post).toHaveBeenCalledWith("/tickets/resolve", {
+      ticketId: "t1",
+      userId: mockLoggedUser.id,
+    });
+  });
+
+  it("cancels a ticket as the assigned support", async () => {
+    setMockLoggedUser({
+      ...mockLoggedUser,
+      id: "s1",
+      type: UserTypeEnum.SUPPORT,
+    });
+    apiMock.post.mockResolvedValue({ data: "ok" });
+
+    await service.cancelTicket("t9");
+
+    expect(apiMock.post).toHaveBeenCalledWith("/tickets/cancel", {
+      ticketId: "t9",
+      supportId: "s1",
+    });
+  });
+
   it("lists a page with only the filters that were set", async () => {
     apiMock.get.mockResolvedValue({
       data: { items: [], totalPages: 0, total: 0 },
@@ -58,16 +84,18 @@ describe("TicketService", () => {
       query: " printer ",
       status: TicketStatusEnum.IN_PROGRESS,
       startDate: "2026-09-01",
+      timeZone: "America/Sao_Paulo",
     });
 
     expect(apiMock.get).toHaveBeenCalledWith("/tickets/list", {
       params: {
         page: 2,
-        pageSize: 4,
+        pageSize: 5,
         userId: mockLoggedUser.id,
         query: "printer",
         status: TicketStatusEnum.IN_PROGRESS,
         startDate: "2026-09-01",
+        timeZone: "America/Sao_Paulo",
       },
     });
   });

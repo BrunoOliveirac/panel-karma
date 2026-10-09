@@ -6,9 +6,14 @@ export interface Ticket extends BaseModel {
   description: string;
   status: TicketStatusEnum;
   userId: string;
+  userName?: string | null;
+  userAvatar?: string | null;
   supportId?: string | null;
+  supportName?: string | null;
+  supportAvatar?: string | null;
   code?: number | null;
   acceptedAt?: string | null;
+  finishedAt?: string | null;
 }
 
 export interface TicketCounts {
@@ -28,6 +33,7 @@ export interface TicketListParams {
   status?: TicketStatusEnum | null;
   startDate?: string;
   endDate?: string;
+  timeZone?: string;
 }
 
 export interface TicketListResponse {

@@ -281,7 +281,7 @@ function NotificationItems({
     </div>
   ) : (
     <>
-      <p>{t("notifications")}</p>
+      <p className="px-3">{t("notifications")}</p>
 
       <p className="text-center text-gray-600 dark:text-gray-400 text-sm">
         {t("notifications_not_found")}

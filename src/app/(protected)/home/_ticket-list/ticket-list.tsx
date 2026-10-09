@@ -1,18 +1,25 @@
 "use client";
 
 import PaginationControls from "@/components/global/pagination-controls";
+import UserAvatar from "@/components/global/user-avatar";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
+import { UserTypeEnum } from "@/lib/enums/user-type.enum";
 import { formatTicketCode } from "@/lib/helpers/merge-ticket";
 import { Ticket } from "@/lib/models/ticket";
 import { cn } from "@/lib/utils/cn";
+import { statusCardMeta } from "@/lib/utils/status-card-meta";
 import { parseISO } from "date-fns";
 import { useFormatter, useTranslations } from "next-intl";
+import TicketCardActions from "./ticket-card-actions";
 
 type TicketListProps = {
   page: number;
   tickets: Ticket[];
   isLoading: boolean;
   totalPages: number;
+  viewerType: UserTypeEnum;
   className?: string;
   onPageChange: (page: number) => void;
 };
@@ -23,6 +30,7 @@ export default function TicketList({
   isLoading,
   className,
   totalPages,
+  viewerType,
   onPageChange,
 }: TicketListProps) {
   const format = useFormatter();
@@ -31,55 +39,152 @@ export default function TicketList({
   return (
     <div
       data-slot="ticket-list"
-      className={cn("flex flex-col gap-4", className)}
-    >
-      {isLoading ? (
-        <div className="flex justify-center py-10">
-          <Spinner />
-        </div>
-      ) : tickets.length === 0 ? (
-        <p className="py-10 text-center text-muted-foreground">
-          {t("tickets_not_found")}
-        </p>
-      ) : (
-        <div className="flex flex-col gap-3">
-          {tickets.map((ticket) => (
-            <article
-              key={ticket.id}
-              data-slot="ticket-card"
-              className="rounded-2xl bg-card px-4 py-3 ring-1 ring-foreground/10"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <h2 className="font-medium">
-                  {ticket.code ? `#${formatTicketCode(ticket.code)} ` : ""}
-                  {ticket.title}
-                </h2>
-                <span className="text-xs text-muted-foreground">
-                  {t(ticket.status.toLowerCase())}
-                </span>
-              </div>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {ticket.description}
-              </p>
-              {ticket.createdAt ? (
-                <p className="mt-2 text-xs text-muted-foreground">
-                  {format.dateTime(parseISO(ticket.createdAt), {
-                    dateStyle: "short",
-                  })}
-                </p>
-              ) : null}
-            </article>
-          ))}
-        </div>
+      className={cn(
+        "flex min-h-0 flex-col gap-4 md:flex-1 md:overflow-hidden",
+        className,
       )}
+    >
+      <div className="overflow-y-auto max-md:max-h-[min(24rem,70dvh)] md:min-h-0 md:flex-1">
+        {isLoading ? (
+          <div className="flex justify-center py-10">
+            <Spinner />
+          </div>
+        ) : tickets.length === 0 ? (
+          <p className="py-10 text-center text-muted-foreground">
+            {t("tickets_not_found")}
+          </p>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {tickets.map((ticket) => (
+              <article
+                key={ticket.id}
+                data-slot="ticket-card"
+                className="rounded-lg bg-card px-4 py-3 ring-1 ring-foreground/10"
+              >
+                <div className="flex justify-between">
+                  <div data-slot="ticket-user" className="flex gap-2">
+                    <UserAvatar
+                      size={28}
+                      avatar={ticket.userAvatar}
+                      name={ticket.userName ?? ""}
+                    />
 
-      {totalPages > 1 ? (
+                    <div>
+                      <h4 className="truncate">
+                        {ticket.userName}
+
+                        <span className="text-muted-foreground">
+                          {" - "}
+
+                          {ticket.code
+                            ? `#${formatTicketCode(ticket.code)} `
+                            : ""}
+                        </span>
+                      </h4>
+
+                      <p className="text-[10px] text-muted-foreground">
+                        {format.dateTime(parseISO(ticket.createdAt), {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2">
+                    <Badge
+                      className={cn(
+                        "shrink-0 text-xs rounded",
+                        statusCardMeta[ticket.status].class,
+                      )}
+                    >
+                      {t(ticket.status.toLowerCase())}
+                    </Badge>
+
+                    <TicketCardActions
+                      ticket={ticket}
+                      viewerType={viewerType}
+                    />
+                  </div>
+                </div>
+
+                <p className="mt-2 text-sm text-muted-foreground line-clamp-4">
+                  {ticket.description}
+                </p>
+
+                <Separator className="my-2 bg-muted-foreground" />
+
+                <div className="grid grid-cols-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      {t("assignee")}:
+                    </p>
+
+                    {ticket.supportId ? (
+                      <div
+                        data-slot="ticket-support"
+                        className="flex items-center gap-2"
+                      >
+                        <UserAvatar
+                          size={28}
+                          avatar={ticket.supportAvatar}
+                          name={ticket.supportName ?? ""}
+                        />
+
+                        <p className="text-sm">{ticket.supportName}</p>
+                      </div>
+                    ) : (
+                      "-"
+                    )}
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      {t("assignee_date")}:
+                    </p>
+
+                    {ticket.acceptedAt ? (
+                      <p className="text-sm">
+                        {format.dateTime(parseISO(ticket.acceptedAt), {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}
+                      </p>
+                    ) : (
+                      "-"
+                    )}
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      {t("completion_date")}:
+                    </p>
+
+                    {ticket.finishedAt ? (
+                      <p className="text-sm">
+                        {format.dateTime(parseISO(ticket.finishedAt), {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}
+                      </p>
+                    ) : (
+                      "-"
+                    )}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="shrink-0">
         <PaginationControls
           page={page}
           totalPages={totalPages}
           onPageChange={onPageChange}
         />
-      ) : null}
+      </div>
     </div>
   );
 }

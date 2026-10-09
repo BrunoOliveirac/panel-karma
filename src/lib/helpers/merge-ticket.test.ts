@@ -307,6 +307,38 @@ describe("ticketChangesFilteredSet", () => {
       ),
     ).toBe(false);
   });
+
+  it("includes the last evening of the end day in the viewer time zone", () => {
+    expect(
+      ticketChangesFilteredSet(
+        [],
+        ticket({ createdAt: "2026-02-01T02:00:00.000Z" }),
+        UserTypeEnum.USER,
+        "u1",
+        null,
+        "",
+        "2026-01-01",
+        "2026-01-31",
+        "America/Sao_Paulo",
+      ),
+    ).toBe(true);
+  });
+
+  it("excludes that evening when the same dates are read in UTC", () => {
+    expect(
+      ticketChangesFilteredSet(
+        [],
+        ticket({ createdAt: "2026-02-01T02:00:00.000Z" }),
+        UserTypeEnum.USER,
+        "u1",
+        null,
+        "",
+        "2026-01-01",
+        "2026-01-31",
+        "UTC",
+      ),
+    ).toBe(false);
+  });
 });
 
 describe("applyTicketCountDelta", () => {

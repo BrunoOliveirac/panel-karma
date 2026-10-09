@@ -14,6 +14,7 @@ import { Ticket, TicketCounts, TicketStreamEvent } from "@/lib/models/ticket";
 import { TicketService } from "@/lib/services/ticket.service";
 import { useLoggedUserStore } from "@/lib/store/use-logged-user-store";
 import { useTitle } from "@/lib/store/use-title-store";
+import { browserTimeZone } from "@/lib/utils/calendar-day";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -110,6 +111,7 @@ export default function Home() {
         pageSize: 5,
         endDate: endDate || undefined,
         startDate: startDate || undefined,
+        timeZone: startDate || endDate ? browserTimeZone() : undefined,
       });
 
       if (requestId !== listRequestRef.current) return;
@@ -169,6 +171,7 @@ export default function Home() {
           query,
           startDate,
           endDate,
+          browserTimeZone(),
         )
       ) {
         loadList();
@@ -226,47 +229,46 @@ export default function Home() {
   if (!user) return null;
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      <div className="contents md:flex md:flex-col md:gap-6">
-        <TicketFilters
-          search={search}
-          endDate={endDate}
-          startDate={startDate}
-          className="max-md:order-1"
-          onSearchChange={(value) => {
-            setSearch(value);
-            debouncedSetQuery(value);
-          }}
-          onStartDateChange={(value) => {
-            setPage(1);
-            setStartDate(value);
-          }}
-          onEndDateChange={(value) => {
-            setPage(1);
-            setEndDate(value);
-          }}
-        />
+    <div className="min-h-0 flex-1 overflow-y-auto px-1">
+      <div className="grid gap-4 pb-6 md:h-full md:min-h-112 md:grid-cols-2 md:gap-6">
+        <div className="contents md:flex md:min-h-0 md:flex-col md:gap-6 md:overflow-hidden">
+          <TicketFilters
+            search={search}
+            endDate={endDate}
+            startDate={startDate}
+            onSearchChange={(value) => {
+              setSearch(value);
+              debouncedSetQuery(value);
+            }}
+            onPeriodChange={(nextStart, nextEnd) => {
+              setPage(1);
+              setStartDate(nextStart);
+              setEndDate(nextEnd);
+            }}
+          />
 
-        <TicketList
-          page={page}
-          tickets={tickets}
-          isLoading={isLoading}
-          totalPages={totalPages}
-          className="max-md:order-3"
-          onPageChange={setPage}
+          <TicketList
+            page={page}
+            tickets={tickets}
+            isLoading={isLoading}
+            totalPages={totalPages}
+            viewerType={user.type}
+            className="max-md:order-3"
+            onPageChange={setPage}
+          />
+        </div>
+
+        <TicketCountCards
+          counts={counts}
+          status={status}
+          isSupport={isSupport}
+          className="max-md:order-2"
+          onStatusChange={(nextStatus) => {
+            setPage(1);
+            setStatus(nextStatus);
+          }}
         />
       </div>
-
-      <TicketCountCards
-        counts={counts}
-        status={status}
-        isSupport={isSupport}
-        className="max-md:order-2"
-        onStatusChange={(nextStatus) => {
-          setPage(1);
-          setStatus(nextStatus);
-        }}
-      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { PeriodPicker } from "@/components/ui/period-picker";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils/cn";
 import { useTranslations } from "next-intl";
@@ -10,8 +11,7 @@ type TicketFiltersProps = {
   startDate: string;
   className?: string;
   onSearchChange: (value: string) => void;
-  onEndDateChange: (value: string) => void;
-  onStartDateChange: (value: string) => void;
+  onPeriodChange: (startDate: string, endDate: string) => void;
 };
 
 export default function TicketFilters({
@@ -20,8 +20,7 @@ export default function TicketFilters({
   startDate,
   className,
   onSearchChange,
-  onEndDateChange,
-  onStartDateChange,
+  onPeriodChange,
 }: TicketFiltersProps) {
   const t = useTranslations("home");
 
@@ -29,7 +28,7 @@ export default function TicketFilters({
     <div
       data-slot="ticket-filters"
       className={cn(
-        "flex flex-col gap-3 md:flex-row md:items-center",
+        "flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center",
         className,
       )}
     >
@@ -37,21 +36,14 @@ export default function TicketFilters({
         value={search}
         data-slot="ticket-search"
         placeholder={t("search")}
+        className="sm:min-w-0 sm:flex-1"
         onChange={(event) => onSearchChange(event.target.value)}
       />
-      <Input
-        type="date"
-        value={startDate}
-        data-slot="ticket-start-date"
-        aria-label={t("start_date")}
-        onChange={(event) => onStartDateChange(event.target.value)}
-      />
-      <Input
-        type="date"
-        value={endDate}
-        data-slot="ticket-end-date"
-        aria-label={t("end_date")}
-        onChange={(event) => onEndDateChange(event.target.value)}
+
+      <PeriodPicker
+        endDate={endDate}
+        startDate={startDate}
+        onChange={onPeriodChange}
       />
     </div>
   );

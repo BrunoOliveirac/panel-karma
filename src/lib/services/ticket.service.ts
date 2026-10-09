@@ -51,6 +51,38 @@ export class TicketService {
   };
 
   /**
+   * Resolve a ticket. The list and the chat call this same method.
+   * @param ticketId Ticket's ID.
+   * @returns Status.
+   */
+  public resolveTicket = async (ticketId: string): Promise<string> => {
+    const user = getLoggedUser();
+
+    const response = await api.post<string>("/tickets/resolve", {
+      ticketId,
+      ...scopeParams(user.type, user.id),
+    });
+
+    return response.data;
+  };
+
+  /**
+   * Cancel a ticket. The list and the chat call this same method.
+   * @param ticketId Ticket's ID.
+   * @returns Status.
+   */
+  public cancelTicket = async (ticketId: string): Promise<string> => {
+    const user = getLoggedUser();
+
+    const response = await api.post<string>("/tickets/cancel", {
+      ticketId,
+      ...scopeParams(user.type, user.id),
+    });
+
+    return response.data;
+  };
+
+  /**
    * Card totals for the logged user.
    * Users and members are counted by userId. Support is counted by supportId.
    */
@@ -75,6 +107,7 @@ export class TicketService {
     status,
     startDate,
     endDate,
+    timeZone,
   }: TicketListParams): Promise<TicketListResponse> => {
     const user = getLoggedUser();
 
@@ -88,6 +121,7 @@ export class TicketService {
     if (status) params.status = status;
     if (startDate) params.startDate = startDate;
     if (endDate) params.endDate = endDate;
+    if ((startDate || endDate) && timeZone) params.timeZone = timeZone;
 
     return (await api.get<TicketListResponse>("/tickets/list", { params }))
       .data;

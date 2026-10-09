@@ -23,6 +23,7 @@ jest.mock("next-intl", () => {
   const translate = (key: string) => key;
   return {
     useTranslations: () => translate,
+    useLocale: () => "en",
     useFormatter: () => ({
       dateTime: (value: Date) => value.toISOString().slice(0, 10),
     }),
@@ -39,6 +40,19 @@ jest.mock("@/lib/hooks/use-ticket-stream", () => ({
     },
     subscribeToResync: () => () => undefined,
   }),
+}));
+
+jest.mock("sonner", () => ({
+  toast: { success: jest.fn(), error: jest.fn() },
+}));
+
+jest.mock("sweetalert2", () => ({
+  __esModule: true,
+  default: { fire: jest.fn() },
+}));
+
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({ push: jest.fn() }),
 }));
 
 jest.mock("@/lib/services/ticket.service", () => ({
@@ -58,7 +72,11 @@ function ticket(overrides: Partial<Ticket> = {}): Ticket {
     description: "Paper jam",
     status: TicketStatusEnum.OPEN,
     userId: mockLoggedUser.id,
+    userName: "Ana Costa",
+    userAvatar: null,
     supportId: null,
+    supportName: null,
+    supportAvatar: null,
     ...overrides,
   };
 }
@@ -91,7 +109,9 @@ describe("Home", () => {
   it("loads counts once and requests the next page without recounting", async () => {
     view = await renderWithProvidersAsync(<Home />);
 
-    expect(await screen.findByText("Printer")).toBeInTheDocument();
+    expect(await screen.findByText("Paper jam")).toBeInTheDocument();
+    expect(screen.getByTestId("ticket-user")).toHaveTextContent("Ana Costa");
+    expect(screen.queryByTestId("ticket-support")).not.toBeInTheDocument();
     expect(countTicketsMock).toHaveBeenCalledTimes(1);
     expect(listTicketsMock).toHaveBeenCalledWith(
       expect.objectContaining({ page: 1, pageSize: 5, status: null }),
@@ -109,7 +129,7 @@ describe("Home", () => {
 
   it("updates the listed ticket and the counters from the stream", async () => {
     view = await renderWithProvidersAsync(<Home />);
-    expect(await screen.findByText("Printer")).toBeInTheDocument();
+    expect(await screen.findByText("Paper jam")).toBeInTheDocument();
     expect(
       screen.getByTestId("ticket-count-value-in_progress"),
     ).toHaveTextContent("1");
@@ -121,6 +141,9 @@ describe("Home", () => {
         previousStatus: TicketStatusEnum.OPEN,
         ticket: ticket({
           status: TicketStatusEnum.IN_PROGRESS,
+          supportId: "s1",
+          supportName: "Bruno Lima",
+          supportAvatar: null,
           updatedAt: "2026-01-03T00:00:00.000Z",
         }),
       });
@@ -134,17 +157,21 @@ describe("Home", () => {
       screen.getByTestId("ticket-count-value-in_progress"),
     ).toHaveTextContent("2");
     expect(screen.getByTestId("ticket-card")).toHaveTextContent("in_progress");
+    expect(screen.getByTestId("ticket-support")).toHaveTextContent("Bruno Lima");
     expect(listTicketsMock).toHaveBeenCalledTimes(callsBefore);
     expect(countTicketsMock).toHaveBeenCalledTimes(1);
   });
 
   it("reloads the list when a new ticket arrives and does not recount", async () => {
     view = await renderWithProvidersAsync(<Home />);
-    expect(await screen.findByText("Printer")).toBeInTheDocument();
+    expect(await screen.findByText("Paper jam")).toBeInTheDocument();
 
     const callsBefore = listTicketsMock.mock.calls.length;
     listTicketsMock.mockResolvedValue({
-      items: [ticket({ id: "t2", title: "New ticket" }), ticket()],
+      items: [
+        ticket({ id: "t2", title: "New ticket", description: "New ticket" }),
+        ticket(),
+      ],
       totalPages: 1,
       total: 2,
     });
@@ -155,6 +182,7 @@ describe("Home", () => {
         ticket: ticket({
           id: "t2",
           title: "New ticket",
+          description: "New ticket",
           updatedAt: "2026-01-03T00:00:00.000Z",
         }),
       });
@@ -172,7 +200,7 @@ describe("Home", () => {
   it("filters the user list from the count cards", async () => {
     view = await renderWithProvidersAsync(<Home />);
 
-    expect(await screen.findByText("Printer")).toBeInTheDocument();
+    expect(await screen.findByText("Paper jam")).toBeInTheDocument();
     expect(screen.getByTestId("ticket-count-all")).toBeInTheDocument();
     expect(screen.getByTestId("ticket-count-open")).toBeInTheDocument();
     expect(screen.getByTestId("ticket-count-value-open")).toHaveTextContent(

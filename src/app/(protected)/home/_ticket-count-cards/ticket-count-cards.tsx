@@ -3,14 +3,8 @@
 import { TicketStatusEnum } from "@/lib/enums/ticket-status.enum";
 import { TicketCounts } from "@/lib/models/ticket";
 import { cn } from "@/lib/utils/cn";
-import {
-  TicketCheck,
-  Ticket as TicketIcon,
-  Tickets,
-  TicketsPlane,
-  TicketX,
-  type LucideIcon,
-} from "lucide-react";
+import { statusCardMeta } from "@/lib/utils/status-card-meta";
+import { Tickets, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 type CountCardLabel = "all" | "open" | "in_progress" | "resolved" | "cancelled";
@@ -23,37 +17,6 @@ type CountCard = {
   status: TicketStatusEnum | null;
   label: CountCardLabel;
 };
-
-const statusCardMeta = {
-  [TicketStatusEnum.OPEN]: {
-    class: "bg-[#7c79d4] [--ticket-ring:color-mix(in_srgb,#7c79d4_55%,white)]",
-    icon: TicketIcon,
-    countKey: "open",
-  },
-  [TicketStatusEnum.IN_PROGRESS]: {
-    class:
-      "bg-[#2b7a9e] [--ticket-ring:color-mix(in_srgb,#2b7a9e_55%,white)] dark:bg-[#06638d] dark:[--ticket-ring:color-mix(in_srgb,#06638d_55%,white)]",
-    icon: TicketsPlane,
-    countKey: "inProgress",
-  },
-  [TicketStatusEnum.RESOLVED]: {
-    class: "bg-[#2C695B] [--ticket-ring:color-mix(in_srgb,#2C695B_55%,white)]",
-    icon: TicketCheck,
-    countKey: "resolved",
-  },
-  [TicketStatusEnum.CANCELLED]: {
-    class: "bg-[#C2C2C4] [--ticket-ring:color-mix(in_srgb,#C2C2C4_55%,white)]",
-    icon: TicketX,
-    countKey: "cancelled",
-  },
-} as const satisfies Record<
-  TicketStatusEnum,
-  {
-    class: string;
-    icon: LucideIcon;
-    countKey: "open" | "inProgress" | "resolved" | "cancelled";
-  }
->;
 
 const countCardStatuses = [
   TicketStatusEnum.OPEN,
@@ -82,7 +45,7 @@ function buildCountCards(
       status,
       icon: meta.icon,
       class: meta.class,
-      count: counts[meta.countKey],
+      count: counts[meta.type],
     };
   });
 
@@ -122,7 +85,10 @@ export default function TicketCountCards({
   return (
     <div
       data-slot="ticket-count-cards"
-      className={cn("grid grid-cols-2 content-start gap-6 pt-1", className)}
+      className={cn(
+        "grid grid-cols-2 content-start gap-4 md:gap-6 pt-1",
+        className,
+      )}
     >
       {cards.map((card) => {
         const Icon = card.icon;
@@ -146,7 +112,7 @@ export default function TicketCountCards({
               <Icon size={24} />
             </div>
 
-            <p className="text-sm font-medium">{t(card.label)}</p>
+            <p className="text-sm font-medium">{t(card.label)} Supports</p>
 
             <span
               className="text-2xl font-medium"

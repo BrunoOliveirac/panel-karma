@@ -1,6 +1,7 @@
 import { TicketStatusEnum } from "../enums/ticket-status.enum";
 import { UserTypeEnum } from "../enums/user-type.enum";
 import { Ticket, TicketCounts } from "../models/ticket";
+import { addIsoDays, zonedDayStart } from "../utils/calendar-day";
 
 const OWNER_ROLES = new Set<UserTypeEnum>([
   UserTypeEnum.USER,
@@ -103,20 +104,15 @@ export function ticketMatchesList(
   return ticket.status === status;
 }
 
-function utcDayStart(date: string): number {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
-  if (!match) return Number.NaN;
-
-  return Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-}
-
 /**
- * Same bounds as the list query: start of the start day, exclusive start of the day after the end day, both in UTC.
+ * Same bounds as the list query: start of the start day through the end day,
+ * both inclusive, in the given IANA time zone.
  */
 function matchesCreatedRange(
   ticket: Ticket,
   startDate: string,
   endDate: string,
+  timeZone: string,
 ): boolean {
   if (!startDate && !endDate) return true;
   if (!ticket.createdAt) return false;
@@ -125,15 +121,13 @@ function matchesCreatedRange(
   if (Number.isNaN(createdAt)) return false;
 
   if (startDate) {
-    const start = utcDayStart(startDate);
+    const start = zonedDayStart(startDate, timeZone);
     if (!Number.isNaN(start) && createdAt < start) return false;
   }
 
   if (endDate) {
-    const end = utcDayStart(endDate);
-    if (!Number.isNaN(end) && createdAt >= end + 24 * 60 * 60 * 1000) {
-      return false;
-    }
+    const end = zonedDayStart(addIsoDays(endDate, 1), timeZone);
+    if (!Number.isNaN(end) && createdAt >= end) return false;
   }
 
   return true;
@@ -147,10 +141,11 @@ function belongsToFilteredList(
   query: string,
   startDate: string,
   endDate: string,
+  timeZone: string,
 ): boolean {
   if (!ticket.active) return false;
   if (!ticketMatchesList(ticket, role, viewerId, status, query)) return false;
-  return matchesCreatedRange(ticket, startDate, endDate);
+  return matchesCreatedRange(ticket, startDate, endDate, timeZone);
 }
 
 /**
@@ -166,6 +161,7 @@ export function ticketChangesFilteredSet(
   query: string,
   startDate = "",
   endDate = "",
+  timeZone = "UTC",
 ): boolean {
   const listed = tickets.some((item) => item.id === ticket.id);
   const matches = belongsToFilteredList(
@@ -176,6 +172,7 @@ export function ticketChangesFilteredSet(
     query,
     startDate,
     endDate,
+    timeZone,
   );
 
   return listed ? !matches : matches;
@@ -206,11 +203,11 @@ export function updateListedTicket(
   return tickets.map((item) => (item.id === ticket.id ? ticket : item));
 }
 
-type StatusCountKey = "open" | "inProgress" | "resolved" | "cancelled";
+type StatusType = "open" | "inProgress" | "resolved" | "cancelled";
 
 function bump(
   counts: TicketCounts,
-  key: StatusCountKey,
+  key: StatusType,
   delta: number,
 ): TicketCounts {
   return {
@@ -229,7 +226,7 @@ function withTotal(counts: TicketCounts): TicketCounts {
 function statusBucket(
   status: TicketStatusEnum | null,
   includeOpen: boolean,
-): StatusCountKey | null {
+): StatusType | null {
   if (status === TicketStatusEnum.OPEN) return includeOpen ? "open" : null;
   if (status === TicketStatusEnum.IN_PROGRESS) return "inProgress";
   if (status === TicketStatusEnum.RESOLVED) return "resolved";
