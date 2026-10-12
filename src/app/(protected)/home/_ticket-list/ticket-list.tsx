@@ -108,38 +108,49 @@ export default function TicketList({
                   </div>
                 </div>
 
-                <p className="mt-2 text-sm text-muted-foreground line-clamp-4">
+                <p className="mt-2 text-sm line-clamp-4">{ticket.title}</p>
+
+                <p className="mt-2 text-xs text-muted-foreground line-clamp-4">
                   {ticket.description}
                 </p>
 
                 <Separator className="my-2 bg-muted-foreground" />
 
-                <div className="grid grid-cols-3">
+                <div
+                  className={cn(
+                    "grid *:flex *:flex-col *:justify-center *:items-center",
+                    viewerType === UserTypeEnum.SUPPORT
+                      ? "grid-cols-2"
+                      : "grid-cols-3",
+                  )}
+                >
+                  {viewerType === UserTypeEnum.SUPPORT ? null : (
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        {t("assignee")}:
+                      </p>
+
+                      {ticket.supportId ? (
+                        <div
+                          data-slot="ticket-support"
+                          className="flex items-center gap-2"
+                        >
+                          <UserAvatar
+                            size={28}
+                            avatar={ticket.supportAvatar}
+                            name={ticket.supportName ?? ""}
+                          />
+
+                          <p className="text-sm">{ticket.supportName}</p>
+                        </div>
+                      ) : (
+                        "-"
+                      )}
+                    </div>
+                  )}
+
                   <div>
-                    <p className="text-sm text-muted-foreground">
-                      {t("assignee")}:
-                    </p>
-
-                    {ticket.supportId ? (
-                      <div
-                        data-slot="ticket-support"
-                        className="flex items-center gap-2"
-                      >
-                        <UserAvatar
-                          size={28}
-                          avatar={ticket.supportAvatar}
-                          name={ticket.supportName ?? ""}
-                        />
-
-                        <p className="text-sm">{ticket.supportName}</p>
-                      </div>
-                    ) : (
-                      "-"
-                    )}
-                  </div>
-
-                  <div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground mb-1">
                       {t("assignee_date")}:
                     </p>
 
@@ -156,7 +167,7 @@ export default function TicketList({
                   </div>
 
                   <div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground mb-1">
                       {t("completion_date")}:
                     </p>
 

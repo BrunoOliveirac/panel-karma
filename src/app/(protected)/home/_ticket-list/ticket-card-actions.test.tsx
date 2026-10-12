@@ -63,7 +63,7 @@ describe("TicketCardActions", () => {
     (Swal.fire as jest.Mock).mockResolvedValue({ isConfirmed: true });
   });
 
-  it("accepts an open ticket in one click for support", async () => {
+  it("accepts an open ticket from the support menu", async () => {
     render(
       <TicketCardActions
         ticket={ticket()}
@@ -71,7 +71,10 @@ describe("TicketCardActions", () => {
       />,
     );
 
-    expect(screen.queryByTestId("ticket-actions")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("ticket-action-accept"),
+    ).not.toBeInTheDocument();
+    await user.click(screen.getByTestId("ticket-actions"));
     await user.click(screen.getByTestId("ticket-action-accept"));
 
     expect(acceptTicket).toHaveBeenCalledWith("t1");

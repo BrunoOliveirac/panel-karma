@@ -111,6 +111,7 @@ describe("Home", () => {
 
     expect(await screen.findByText("Paper jam")).toBeInTheDocument();
     expect(screen.getByTestId("ticket-user")).toHaveTextContent("Ana Costa");
+    expect(screen.getByText("assignee:")).toBeInTheDocument();
     expect(screen.queryByTestId("ticket-support")).not.toBeInTheDocument();
     expect(countTicketsMock).toHaveBeenCalledTimes(1);
     expect(listTicketsMock).toHaveBeenCalledWith(
@@ -241,6 +242,18 @@ describe("Home", () => {
       id: "s1",
       type: UserTypeEnum.SUPPORT,
     });
+    listTicketsMock.mockResolvedValue({
+      items: [
+        ticket({
+          supportId: "s1",
+          supportName: "Bruno Lima",
+          acceptedAt: "2026-01-02T00:00:00.000Z",
+          finishedAt: "2026-01-03T00:00:00.000Z",
+        }),
+      ],
+      totalPages: 1,
+      total: 1,
+    });
 
     view = await renderWithProvidersAsync(<Home />);
 
@@ -257,5 +270,9 @@ describe("Home", () => {
       "1",
     );
     expect(screen.queryByTestId("ticket-count-all")).not.toBeInTheDocument();
+    expect(screen.queryByText("assignee:")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("ticket-support")).not.toBeInTheDocument();
+    expect(screen.getByText("assignee_date:")).toBeInTheDocument();
+    expect(screen.getByText("completion_date:")).toBeInTheDocument();
   });
 });

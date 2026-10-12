@@ -13,7 +13,7 @@ describe("ticketCardActions", () => {
       ticketCardActions(UserTypeEnum.SUPPORT, {
         status: TicketStatusEnum.OPEN,
       }),
-    ).toEqual({ primary: "accept", menu: [] });
+    ).toEqual(["accept"]);
   });
 
   it("lets support open the chat and resolve or cancel while it is in progress", () => {
@@ -22,10 +22,7 @@ describe("ticketCardActions", () => {
         status: TicketStatusEnum.IN_PROGRESS,
         supportId: "s1",
       }),
-    ).toEqual({
-      primary: null,
-      menu: ["open_chat", "resolve", "cancel"],
-    });
+    ).toEqual(["open_chat", "resolve", "cancel"]);
   });
 
   it("keeps only the chat on a closed support ticket", () => {
@@ -34,21 +31,21 @@ describe("ticketCardActions", () => {
         status: TicketStatusEnum.RESOLVED,
         supportId: "s1",
       }),
-    ).toEqual({ primary: null, menu: ["open_chat"] });
+    ).toEqual(["open_chat"]);
 
     expect(
       ticketCardActions(UserTypeEnum.SUPPORT, {
         status: TicketStatusEnum.CANCELLED,
         acceptedAt: "2026-01-02T00:00:00.000Z",
       }),
-    ).toEqual({ primary: null, menu: ["open_chat"] });
+    ).toEqual(["open_chat"]);
   });
 
   it("lets the owner cancel an open ticket without a chat", () => {
     for (const role of [UserTypeEnum.USER, UserTypeEnum.MEMBER]) {
       expect(
         ticketCardActions(role, { status: TicketStatusEnum.OPEN }),
-      ).toEqual({ primary: null, menu: ["cancel"] });
+      ).toEqual(["cancel"]);
     }
   });
 
@@ -58,7 +55,7 @@ describe("ticketCardActions", () => {
         status: TicketStatusEnum.IN_PROGRESS,
         supportId: "s1",
       }),
-    ).toEqual({ primary: null, menu: ["open_chat", "cancel"] });
+    ).toEqual(["open_chat", "cancel"]);
   });
 
   it("opens the chat for a closed owner ticket that was actually attended", () => {
@@ -67,13 +64,13 @@ describe("ticketCardActions", () => {
         status: TicketStatusEnum.RESOLVED,
         supportId: "s1",
       }),
-    ).toEqual({ primary: null, menu: ["open_chat"] });
+    ).toEqual(["open_chat"]);
 
     expect(
       ticketCardActions(UserTypeEnum.USER, {
         status: TicketStatusEnum.CANCELLED,
       }),
-    ).toEqual({ primary: null, menu: [] });
+    ).toEqual([]);
   });
 
   it("hides every action from roles that do not own the home queue", () => {
@@ -81,7 +78,7 @@ describe("ticketCardActions", () => {
       ticketCardActions(UserTypeEnum.ADMIN, {
         status: TicketStatusEnum.OPEN,
       }),
-    ).toEqual({ primary: null, menu: [] });
+    ).toEqual([]);
   });
 });
 

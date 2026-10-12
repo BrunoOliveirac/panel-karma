@@ -5,11 +5,6 @@ export type TicketCardAction = "accept" | "open_chat" | "resolve" | "cancel";
 
 export type TicketTransition = "accept" | "resolve" | "cancel";
 
-export type TicketCardActionSet = {
-  primary: TicketCardAction | null;
-  menu: TicketCardAction[];
-};
-
 export type TicketActionSource = {
   status: TicketStatusEnum;
   supportId?: string | null;
@@ -48,39 +43,39 @@ export function ticketActionNeedsConfirm(
 }
 
 /**
- * Primary shortcut and overflow menu for one ticket card.
- * Open chat sits in the menu with resolve and cancel.
+ * Every card action lives in the vertical ellipsis.
+ * Open chat sits with resolve and cancel when a conversation exists.
  */
 export function ticketCardActions(
   role: UserTypeEnum,
   ticket: TicketActionSource,
-): TicketCardActionSet {
+): TicketCardAction[] {
   const menu = (actions: TicketCardAction[]): TicketCardAction[] =>
     ticketHasChat(ticket) ? ["open_chat", ...actions] : actions;
 
   if (role === UserTypeEnum.SUPPORT) {
     if (ticket.status === TicketStatusEnum.OPEN) {
-      return { primary: "accept", menu: [] };
+      return ["accept"];
     }
 
     if (ticket.status === TicketStatusEnum.IN_PROGRESS) {
-      return { primary: null, menu: menu(["resolve", "cancel"]) };
+      return menu(["resolve", "cancel"]);
     }
 
-    return { primary: null, menu: menu([]) };
+    return menu([]);
   }
 
   if (!OWNER_ROLES.has(role)) {
-    return { primary: null, menu: [] };
+    return [];
   }
 
   if (ticket.status === TicketStatusEnum.OPEN) {
-    return { primary: null, menu: ["cancel"] };
+    return ["cancel"];
   }
 
   if (ticket.status === TicketStatusEnum.IN_PROGRESS) {
-    return { primary: null, menu: menu(["cancel"]) };
+    return menu(["cancel"]);
   }
 
-  return { primary: null, menu: menu([]) };
+  return menu([]);
 }

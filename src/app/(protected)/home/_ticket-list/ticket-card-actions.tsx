@@ -42,7 +42,7 @@ export default function TicketCardActions({
   const { pending, run } = useTicketTransition();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { primary, menu } = ticketCardActions(viewerType, ticket);
+  const menu = ticketCardActions(viewerType, ticket);
 
   const label = (action: TicketCardAction) =>
     action === "cancel" ? t("cancel_ticket") : t(action);
@@ -77,60 +77,44 @@ export default function TicketCardActions({
     await run(ticket.id, action);
   };
 
-  if (!primary && menu.length === 0) return null;
+  if (menu.length === 0) return null;
 
   return (
-    <div className="flex items-center gap-2">
-      {primary ? (
+    <Popover open={menuOpen} onOpenChange={setMenuOpen}>
+      <PopoverTrigger asChild>
         <button
           type="button"
           disabled={pending}
-          data-slot={actionSlot(primary)}
-          onClick={() => void onAction(primary)}
-          className="inline-flex cursor-pointer items-center gap-1 text-xs text-primary disabled:opacity-50"
+          data-slot="ticket-actions"
+          aria-label={t("ticket_actions")}
+          className="inline-flex cursor-pointer items-center text-muted-foreground disabled:opacity-50"
         >
-          {pending && primary === "accept" ? (
-            <Spinner className="size-3" />
-          ) : null}
-          {label(primary)}
+          {pending ? (
+            <Spinner className="size-4" />
+          ) : (
+            <EllipsisVertical size={18} />
+          )}
         </button>
-      ) : null}
+      </PopoverTrigger>
 
-      {menu.length > 0 ? (
-        <Popover open={menuOpen} onOpenChange={setMenuOpen}>
-          <PopoverTrigger asChild>
-            <button
-              type="button"
-              disabled={pending}
-              data-slot="ticket-actions"
-              aria-label={t("ticket_actions")}
-              className="inline-flex cursor-pointer items-center text-muted-foreground"
-            >
-              <EllipsisVertical size={18} />
-            </button>
-          </PopoverTrigger>
-
-          <PopoverContent align="end" className="w-44 gap-1 p-1">
-            {menu.map((action) => (
-              <Button
-                key={action}
-                size="sm"
-                type="button"
-                variant="ghost"
-                data-slot={actionSlot(action)}
-                onClick={() => void onAction(action)}
-                className={cn(
-                  "h-8 w-full cursor-pointer justify-start rounded-lg px-2 font-normal",
-                  action === "cancel" &&
-                    "text-destructive hover:text-destructive",
-                )}
-              >
-                {label(action)}
-              </Button>
-            ))}
-          </PopoverContent>
-        </Popover>
-      ) : null}
-    </div>
+      <PopoverContent align="end" className="w-44 gap-1 p-1">
+        {menu.map((action) => (
+          <Button
+            key={action}
+            size="sm"
+            type="button"
+            variant="ghost"
+            data-slot={actionSlot(action)}
+            onClick={() => void onAction(action)}
+            className={cn(
+              "h-8 w-full cursor-pointer justify-start rounded-lg px-2 font-normal",
+              action === "cancel" && "text-destructive hover:text-destructive",
+            )}
+          >
+            {label(action)}
+          </Button>
+        ))}
+      </PopoverContent>
+    </Popover>
   );
 }

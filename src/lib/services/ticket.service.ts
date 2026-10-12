@@ -56,13 +56,7 @@ export class TicketService {
    * @returns Status.
    */
   public resolveTicket = async (ticketId: string): Promise<string> => {
-    const user = getLoggedUser();
-
-    const response = await api.post<string>("/tickets/resolve", {
-      ticketId,
-      ...scopeParams(user.type, user.id),
-    });
-
+    const response = await api.post<string>(`/tickets/resolve/${ticketId}`);
     return response.data;
   };
 
@@ -72,13 +66,7 @@ export class TicketService {
    * @returns Status.
    */
   public cancelTicket = async (ticketId: string): Promise<string> => {
-    const user = getLoggedUser();
-
-    const response = await api.post<string>("/tickets/cancel", {
-      ticketId,
-      ...scopeParams(user.type, user.id),
-    });
-
+    const response = await api.post<string>(`/tickets/cancel/${ticketId}`);
     return response.data;
   };
 
