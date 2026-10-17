@@ -5,7 +5,7 @@ import {
   mockLoggedUser,
   setMockLoggedUser,
 } from "@/lib/mocks/logged-user.mock";
-import { Ticket, TicketStreamEvent } from "@/lib/models/ticket";
+import { Ticket, TicketCounts, TicketStreamEvent } from "@/lib/models/ticket";
 import { act, fireEvent, screen, waitFor } from "@testing-library/react";
 import Home from "./home";
 
@@ -13,6 +13,7 @@ const listTicketsMock = jest.fn();
 const countTicketsMock = jest.fn();
 
 let streamListener: ((event: TicketStreamEvent) => void) | null = null;
+let resyncListener: (() => void) | null = null;
 
 jest.mock("use-intl", () => {
   const translate = (key: string) => key;
@@ -38,7 +39,12 @@ jest.mock("@/lib/hooks/use-ticket-stream", () => ({
         streamListener = null;
       };
     },
-    subscribeToResync: () => () => undefined,
+    subscribeToResync: (listener: () => void) => {
+      resyncListener = listener;
+      return () => {
+        resyncListener = null;
+      };
+    },
   }),
 }));
 
@@ -86,6 +92,7 @@ describe("Home", () => {
 
   beforeEach(() => {
     streamListener = null;
+    resyncListener = null;
     countTicketsMock.mockResolvedValue({
       open: 1,
       inProgress: 1,
@@ -158,7 +165,9 @@ describe("Home", () => {
       screen.getByTestId("ticket-count-value-in_progress"),
     ).toHaveTextContent("2");
     expect(screen.getByTestId("ticket-card")).toHaveTextContent("in_progress");
-    expect(screen.getByTestId("ticket-support")).toHaveTextContent("Bruno Lima");
+    expect(screen.getByTestId("ticket-support")).toHaveTextContent(
+      "Bruno Lima",
+    );
     expect(listTicketsMock).toHaveBeenCalledTimes(callsBefore);
     expect(countTicketsMock).toHaveBeenCalledTimes(1);
   });
@@ -170,7 +179,11 @@ describe("Home", () => {
     const callsBefore = listTicketsMock.mock.calls.length;
     listTicketsMock.mockResolvedValue({
       items: [
-        ticket({ id: "t2", title: "New ticket", description: "New ticket" }),
+        ticket({
+          id: "t2",
+          title: "New ticket",
+          description: "Arrived from the stream",
+        }),
         ticket(),
       ],
       totalPages: 1,
@@ -183,7 +196,7 @@ describe("Home", () => {
         ticket: ticket({
           id: "t2",
           title: "New ticket",
-          description: "New ticket",
+          description: "Arrived from the stream",
           updatedAt: "2026-01-03T00:00:00.000Z",
         }),
       });
@@ -274,5 +287,177 @@ describe("Home", () => {
     expect(screen.queryByTestId("ticket-support")).not.toBeInTheDocument();
     expect(screen.getByText("assignee_date:")).toBeInTheDocument();
     expect(screen.getByText("completion_date:")).toBeInTheDocument();
+  });
+
+  it("applies a queued event only after the first counts and list finish", async () => {
+    let resolveCounts: (counts: TicketCounts) => void = () => undefined;
+    let resolveList: (response: {
+      items: Ticket[];
+      totalPages: number;
+      total: number;
+    }) => void = () => undefined;
+
+    countTicketsMock.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveCounts = resolve;
+        }),
+    );
+    listTicketsMock.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveList = resolve;
+        }),
+    );
+
+    view = await renderWithProvidersAsync(<Home />);
+    expect(streamListener).toEqual(expect.any(Function));
+
+    await act(async () => {
+      streamListener?.({
+        previousStatus: null,
+        ticket: ticket({
+          id: "t2",
+          title: "Queued",
+          description: "Queued",
+          updatedAt: "2026-01-03T00:00:00.000Z",
+        }),
+      });
+    });
+
+    expect(listTicketsMock).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      resolveCounts({
+        open: 1,
+        inProgress: 0,
+        resolved: 0,
+        cancelled: 0,
+        all: 1,
+      });
+    });
+
+    expect(screen.getByTestId("ticket-count-value-open")).toHaveTextContent(
+      "1",
+    );
+    expect(listTicketsMock).toHaveBeenCalledTimes(1);
+
+    listTicketsMock.mockResolvedValue({
+      items: [ticket({ id: "t2", title: "Queued", description: "Queued" })],
+      totalPages: 1,
+      total: 1,
+    });
+
+    await act(async () => {
+      resolveList({ items: [ticket()], totalPages: 1, total: 1 });
+    });
+
+    await waitFor(() => {
+      expect(listTicketsMock).toHaveBeenCalledTimes(2);
+    });
+    expect(screen.getByTestId("ticket-count-value-open")).toHaveTextContent(
+      "2",
+    );
+    expect(screen.getByTestId("ticket-count-value-all")).toHaveTextContent("2");
+    expect(countTicketsMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("ignores a repeated status and leaves the counters untouched", async () => {
+    view = await renderWithProvidersAsync(<Home />);
+    expect(await screen.findByText("Paper jam")).toBeInTheDocument();
+
+    const callsBefore = listTicketsMock.mock.calls.length;
+
+    await act(async () => {
+      streamListener?.({
+        previousStatus: TicketStatusEnum.OPEN,
+        ticket: ticket({ title: "Stale title", description: "Stale body" }),
+      });
+    });
+
+    expect(screen.getByText("Paper jam")).toBeInTheDocument();
+    expect(screen.queryByText("Stale title")).not.toBeInTheDocument();
+    expect(screen.getByTestId("ticket-count-value-open")).toHaveTextContent(
+      "1",
+    );
+    expect(screen.getByTestId("ticket-count-value-all")).toHaveTextContent("2");
+    expect(listTicketsMock).toHaveBeenCalledTimes(callsBefore);
+    expect(countTicketsMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("updates the counters without reloading when the event stays off the filter", async () => {
+    view = await renderWithProvidersAsync(<Home />);
+    expect(await screen.findByText("Paper jam")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("ticket-count-resolved"));
+
+    await waitFor(() => {
+      expect(listTicketsMock).toHaveBeenCalledWith(
+        expect.objectContaining({ status: TicketStatusEnum.RESOLVED }),
+      );
+    });
+
+    const callsBefore = listTicketsMock.mock.calls.length;
+
+    await act(async () => {
+      streamListener?.({
+        previousStatus: null,
+        ticket: ticket({
+          id: "t2",
+          title: "Still open",
+          description: "Still open",
+          updatedAt: "2026-01-03T00:00:00.000Z",
+        }),
+      });
+    });
+
+    expect(screen.queryByText("Still open")).not.toBeInTheDocument();
+    expect(screen.getByTestId("ticket-count-value-open")).toHaveTextContent(
+      "2",
+    );
+    expect(screen.getByTestId("ticket-count-value-all")).toHaveTextContent("3");
+    expect(listTicketsMock).toHaveBeenCalledTimes(callsBefore);
+    expect(countTicketsMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("reloads counts and the list when the stream reconnects", async () => {
+    view = await renderWithProvidersAsync(<Home />);
+    expect(await screen.findByText("Paper jam")).toBeInTheDocument();
+    expect(resyncListener).toEqual(expect.any(Function));
+
+    const listCalls = listTicketsMock.mock.calls.length;
+    const countCalls = countTicketsMock.mock.calls.length;
+
+    await act(async () => {
+      resyncListener?.();
+    });
+
+    await waitFor(() => {
+      expect(listTicketsMock).toHaveBeenCalledTimes(listCalls + 1);
+      expect(countTicketsMock).toHaveBeenCalledTimes(countCalls + 1);
+    });
+  });
+
+  it("trims the search and resets the page", async () => {
+    view = await renderWithProvidersAsync(<Home />);
+    expect(await screen.findByText("Paper jam")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("pagination-link-2"));
+
+    await waitFor(() => {
+      expect(listTicketsMock).toHaveBeenCalledWith(
+        expect.objectContaining({ page: 2 }),
+      );
+    });
+
+    fireEvent.change(screen.getByTestId("ticket-search"), {
+      target: { value: "  printer  " },
+    });
+
+    await waitFor(() => {
+      expect(listTicketsMock).toHaveBeenLastCalledWith(
+        expect.objectContaining({ page: 1, query: "printer" }),
+      );
+    });
   });
 });

@@ -4,6 +4,7 @@ import {
   applyTicketCountDelta,
   formatTicketCode,
   resolvePreviousStatus,
+  shouldIgnoreTicketEvent,
   ticketChangesFilteredSet,
   updateListedTicket,
 } from "./merge-ticket";
@@ -39,6 +40,46 @@ describe("formatTicketCode", () => {
     expect(formatTicketCode(10)).toBe("10");
     expect(formatTicketCode(166)).toBe("166");
     expect(formatTicketCode(1090)).toBe("1090");
+  });
+});
+
+describe("shouldIgnoreTicketEvent", () => {
+  it("ignores an older event and a repeat of the same status", () => {
+    const current = ticket({ updatedAt: "2026-01-03T00:00:00.000Z" });
+
+    expect(
+      shouldIgnoreTicketEvent(
+        ticket({ updatedAt: "2026-01-01T00:00:00.000Z" }),
+        current,
+      ),
+    ).toBe(true);
+    expect(
+      shouldIgnoreTicketEvent(
+        ticket({ title: "Same moment", updatedAt: current.updatedAt }),
+        current,
+      ),
+    ).toBe(true);
+  });
+
+  it("keeps a status change that shares the listed timestamp", () => {
+    const current = ticket({ updatedAt: "2026-01-03T00:00:00.000Z" });
+
+    expect(
+      shouldIgnoreTicketEvent(
+        ticket({
+          status: TicketStatusEnum.IN_PROGRESS,
+          updatedAt: current.updatedAt,
+        }),
+        current,
+      ),
+    ).toBe(false);
+  });
+
+  it("keeps an event when either copy has no timestamp", () => {
+    expect(
+      shouldIgnoreTicketEvent(ticket({ updatedAt: undefined }), ticket()),
+    ).toBe(false);
+    expect(shouldIgnoreTicketEvent(ticket(), undefined)).toBe(false);
   });
 });
 
@@ -119,6 +160,51 @@ describe("updateListedTicket", () => {
         "",
       ),
     ).toEqual([]);
+    expect(
+      updateListedTicket(
+        [current],
+        incoming,
+        UserTypeEnum.SUPPORT,
+        "s1",
+        null,
+        "",
+      ),
+    ).toEqual([]);
+  });
+
+  it("keeps only the assignee on a support status filter", () => {
+    const incoming = ticket({
+      status: TicketStatusEnum.IN_PROGRESS,
+      supportId: "s1",
+      title: "Mine",
+      updatedAt: "2026-01-03T00:00:00.000Z",
+    });
+
+    expect(
+      updateListedTicket(
+        [ticket({ status: TicketStatusEnum.IN_PROGRESS, supportId: "s1" })],
+        incoming,
+        UserTypeEnum.SUPPORT,
+        "s1",
+        TicketStatusEnum.IN_PROGRESS,
+        "",
+      ),
+    ).toEqual([incoming]);
+
+    expect(
+      updateListedTicket(
+        [ticket({ status: TicketStatusEnum.IN_PROGRESS, supportId: "s2" })],
+        ticket({
+          status: TicketStatusEnum.IN_PROGRESS,
+          supportId: "s2",
+          updatedAt: "2026-01-03T00:00:00.000Z",
+        }),
+        UserTypeEnum.SUPPORT,
+        "s1",
+        TicketStatusEnum.IN_PROGRESS,
+        "",
+      ),
+    ).toEqual([]);
   });
 
   it("keeps a ticket when the search matches its code", () => {
@@ -135,7 +221,7 @@ describe("updateListedTicket", () => {
         UserTypeEnum.USER,
         "u1",
         null,
-        "08",
+        "#08",
       ),
     ).toEqual([incoming]);
 
@@ -149,6 +235,31 @@ describe("updateListedTicket", () => {
         "109",
       ),
     ).toHaveLength(1);
+  });
+
+  it("drops a ticket when the search misses the title, description, and code", () => {
+    const current = ticket({
+      title: "Printer",
+      description: "Paper jam",
+      code: 12,
+    });
+    const incoming = ticket({
+      title: "Printer",
+      description: "Paper jam",
+      code: 12,
+      updatedAt: "2026-01-03T00:00:00.000Z",
+    });
+
+    expect(
+      updateListedTicket(
+        [current],
+        incoming,
+        UserTypeEnum.USER,
+        "u1",
+        null,
+        "scanner",
+      ),
+    ).toEqual([]);
   });
 
   it("drops a ticket when a padded code does not match", () => {
@@ -293,6 +404,30 @@ describe("ticketChangesFilteredSet", () => {
     ).toBe(true);
   });
 
+  it("skips an inactive ticket and reloads when a listed one is deactivated", () => {
+    expect(
+      ticketChangesFilteredSet(
+        [],
+        ticket({ active: false }),
+        UserTypeEnum.USER,
+        "u1",
+        null,
+        "",
+      ),
+    ).toBe(false);
+
+    expect(
+      ticketChangesFilteredSet(
+        [ticket()],
+        ticket({ active: false }),
+        UserTypeEnum.USER,
+        "u1",
+        null,
+        "",
+      ),
+    ).toBe(true);
+  });
+
   it("skips a new ticket outside the created-at range", () => {
     expect(
       ticketChangesFilteredSet(
@@ -372,6 +507,18 @@ describe("applyTicketCountDelta", () => {
     ).toEqual({ ...counts, inProgress: 1, resolved: 2 });
   });
 
+  it("moves a user ticket from open to cancelled without changing the total", () => {
+    expect(
+      applyTicketCountDelta(
+        counts,
+        UserTypeEnum.USER,
+        "u1",
+        TicketStatusEnum.OPEN,
+        ticket({ status: TicketStatusEnum.CANCELLED }),
+      ),
+    ).toEqual({ ...counts, open: 3, cancelled: 2 });
+  });
+
   it("ignores a ticket that belongs to another user", () => {
     expect(
       applyTicketCountDelta(
@@ -405,6 +552,30 @@ describe("applyTicketCountDelta", () => {
         incoming,
       ),
     ).toEqual({ ...counts, open: 3, inProgress: 3 });
+  });
+
+  it("moves the assignee from in progress to resolved", () => {
+    expect(
+      applyTicketCountDelta(
+        counts,
+        UserTypeEnum.SUPPORT,
+        "s1",
+        TicketStatusEnum.IN_PROGRESS,
+        ticket({ status: TicketStatusEnum.RESOLVED, supportId: "s1" }),
+      ),
+    ).toEqual({ ...counts, inProgress: 1, resolved: 2 });
+  });
+
+  it("leaves the assignee buckets alone when another support resolves", () => {
+    expect(
+      applyTicketCountDelta(
+        counts,
+        UserTypeEnum.SUPPORT,
+        "s1",
+        TicketStatusEnum.IN_PROGRESS,
+        ticket({ status: TicketStatusEnum.RESOLVED, supportId: "s2" }),
+      ),
+    ).toEqual(counts);
   });
 
   it("decrements only the open count when another support accepts the ticket", () => {

@@ -89,7 +89,10 @@ describe("useTicketStream", () => {
     });
 
     act(() => {
-      MockEventSource.instances[0].emit("ticket", JSON.stringify(streamedTicket));
+      MockEventSource.instances[0].emit(
+        "ticket",
+        JSON.stringify(streamedTicket),
+      );
     });
 
     expect(listener).toHaveBeenCalledWith({
@@ -112,12 +115,24 @@ describe("useTicketStream", () => {
     act(() => {
       MockEventSource.instances[0].emit(
         "ticket",
-        JSON.stringify({ ticket: streamedTicket }),
+        JSON.stringify({ data: streamedTicket }),
       );
     });
 
     expect(listener).toHaveBeenCalledWith({
       ticket: expect.objectContaining({ id: "t1" }),
+      previousStatus: null,
+    });
+
+    act(() => {
+      MockEventSource.instances[0].emit(
+        "ticket",
+        JSON.stringify({ ticket: { ...streamedTicket, id: "t2" } }),
+      );
+    });
+
+    expect(listener).toHaveBeenLastCalledWith({
+      ticket: expect.objectContaining({ id: "t2" }),
       previousStatus: null,
     });
   });
@@ -183,8 +198,8 @@ describe("useTicketStream", () => {
     expect(listener).toHaveBeenCalledTimes(1);
   });
 
-  it("closes the stream when the user logs out", () => {
-    renderHook(() => useTicketStream());
+  it("closes the stream on logout and opens a new one after the next login", () => {
+    const { rerender } = renderHook(() => useTicketStream());
     const source = MockEventSource.instances[0];
 
     act(() => {
@@ -192,5 +207,13 @@ describe("useTicketStream", () => {
     });
 
     expect(source.close).toHaveBeenCalled();
+
+    act(() => {
+      setMockLoggedUser();
+    });
+    rerender();
+
+    expect(MockEventSource.instances).toHaveLength(2);
+    expect(MockEventSource.instances[1]?.url).toBe("/api/tickets/stream");
   });
 });

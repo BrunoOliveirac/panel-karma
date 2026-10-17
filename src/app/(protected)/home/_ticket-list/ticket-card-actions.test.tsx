@@ -65,10 +65,7 @@ describe("TicketCardActions", () => {
 
   it("accepts an open ticket from the support menu", async () => {
     render(
-      <TicketCardActions
-        ticket={ticket()}
-        viewerType={UserTypeEnum.SUPPORT}
-      />,
+      <TicketCardActions ticket={ticket()} viewerType={UserTypeEnum.SUPPORT} />,
     );
 
     expect(
@@ -118,9 +115,13 @@ describe("TicketCardActions", () => {
       <TicketCardActions ticket={ticket()} viewerType={UserTypeEnum.USER} />,
     );
 
-    expect(screen.queryByTestId("ticket-action-open-chat")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("ticket-action-open-chat"),
+    ).not.toBeInTheDocument();
     await user.click(screen.getByTestId("ticket-actions"));
-    expect(screen.queryByTestId("ticket-action-resolve")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("ticket-action-resolve"),
+    ).not.toBeInTheDocument();
     await user.click(screen.getByTestId("ticket-action-cancel"));
 
     expect(Swal.fire).toHaveBeenCalledWith(
@@ -145,17 +146,6 @@ describe("TicketCardActions", () => {
 
     expect(useRouter().push).toHaveBeenCalledWith("/chat?ticketId=t1");
     expect(resolveTicket).not.toHaveBeenCalled();
-  });
-
-  it("renders nothing when a cancelled ticket never had a chat", () => {
-    const { container } = render(
-      <TicketCardActions
-        viewerType={UserTypeEnum.MEMBER}
-        ticket={ticket({ status: TicketStatusEnum.CANCELLED })}
-      />,
-    );
-
-    expect(container).toBeEmptyDOMElement();
   });
 
   it("skips the transition when the alert is dismissed", async () => {

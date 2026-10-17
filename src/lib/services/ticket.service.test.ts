@@ -47,17 +47,21 @@ describe("TicketService", () => {
     });
   });
 
-  it("resolves a ticket as the logged user", async () => {
-    apiMock.post.mockResolvedValue({ data: "ok" });
+  it("creates a ticket for the logged user", async () => {
+    apiMock.post.mockResolvedValue({ data: "t1" });
 
-    await expect(service.resolveTicket("t1")).resolves.toBe("ok");
-    expect(apiMock.post).toHaveBeenCalledWith("/tickets/resolve", {
-      ticketId: "t1",
+    await expect(
+      service.createTicket({ title: "Printer", description: "Paper jam" }),
+    ).resolves.toBe("t1");
+
+    expect(apiMock.post).toHaveBeenCalledWith("/tickets/create", {
+      title: "Printer",
+      description: "Paper jam",
       userId: mockLoggedUser.id,
     });
   });
 
-  it("cancels a ticket as the assigned support", async () => {
+  it("accepts a ticket as the logged support", async () => {
     setMockLoggedUser({
       ...mockLoggedUser,
       id: "s1",
@@ -65,12 +69,21 @@ describe("TicketService", () => {
     });
     apiMock.post.mockResolvedValue({ data: "ok" });
 
-    await service.cancelTicket("t9");
-
-    expect(apiMock.post).toHaveBeenCalledWith("/tickets/cancel", {
-      ticketId: "t9",
+    await expect(service.acceptTicket("t1")).resolves.toBe("ok");
+    expect(apiMock.post).toHaveBeenCalledWith("/tickets/accept", {
+      ticketId: "t1",
       supportId: "s1",
     });
+  });
+
+  it("resolves and cancels a ticket by id", async () => {
+    apiMock.post.mockResolvedValue({ data: "ok" });
+
+    await expect(service.resolveTicket("t1")).resolves.toBe("ok");
+    await expect(service.cancelTicket("t9")).resolves.toBe("ok");
+
+    expect(apiMock.post).toHaveBeenCalledWith("/tickets/resolve/t1");
+    expect(apiMock.post).toHaveBeenCalledWith("/tickets/cancel/t9");
   });
 
   it("lists a page with only the filters that were set", async () => {
@@ -97,6 +110,29 @@ describe("TicketService", () => {
         startDate: "2026-09-01",
         timeZone: "America/Sao_Paulo",
       },
+    });
+
+    await service.listTickets({
+      page: 1,
+      pageSize: 5,
+      query: "   ",
+      status: null,
+    });
+
+    expect(apiMock.get).toHaveBeenCalledWith("/tickets/list", {
+      params: { page: 1, pageSize: 5, userId: mockLoggedUser.id },
+    });
+
+    setMockLoggedUser({
+      ...mockLoggedUser,
+      id: "s1",
+      type: UserTypeEnum.SUPPORT,
+    });
+
+    await service.listTickets({ page: 1, pageSize: 5 });
+
+    expect(apiMock.get).toHaveBeenCalledWith("/tickets/list", {
+      params: { page: 1, pageSize: 5, supportId: "s1" },
     });
   });
 });
