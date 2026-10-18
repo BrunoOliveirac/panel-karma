@@ -89,6 +89,7 @@ export default function Sidebar() {
           <Tooltip>
             <TooltipTrigger asChild>
               <button
+                data-slot="start-support"
                 onClick={handleStartSupport}
                 className="text-primary hover:scale-125 hover:text-(--active-primary) transition-transform"
               >
