@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "cls && jest",
+    "test": "jest",
     "watch:e2e": "npx playwright test --ui"
   },
   "dependencies": {

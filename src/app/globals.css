@@ -194,6 +194,29 @@ html {
   z-index: -1;
 }
 
+@keyframes ticket-count-ring {
+  0% {
+    box-shadow: 0 0 0 0 var(--ticket-ring);
+  }
+  70% {
+    box-shadow: 0 0 0 3px var(--ticket-ring);
+  }
+  100% {
+    box-shadow: 0 0 0 2px var(--ticket-ring);
+  }
+}
+
+.ticket-count-selected {
+  box-shadow: 0 0 0 3px var(--ticket-ring);
+  animation: ticket-count-ring 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticket-count-selected {
+    animation: none;
+  }
+}
+
 /* Phone input */
 .react-tel-input .form-control,
 .react-tel-input .flag-dropdown {

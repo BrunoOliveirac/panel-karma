@@ -12,7 +12,8 @@
     "projects": "Projetos",
     "sectors": "Setores",
     "members": "Membros",
-    "logout": "Terminar sessão"
+    "logout": "Terminar sessão",
+    "start_support": "Iniciar suporte"
   },
   "shared": {
     "are_you_sure": "Tem a certeza?",
@@ -36,6 +37,20 @@
     "manage_projects": "Gerenciar projetos",
     "activate": "Ativar",
     "deactivate": "Desativar"
+  },
+  "period": {
+    "start_date": "Data inicial",
+    "end_date": "Data final",
+    "last_7_days": "Últimos 7 dias",
+    "last_14_days": "Últimos 14 dias",
+    "last_30_days": "Últimos 30 dias",
+    "last_3_months": "Últimos 3 meses",
+    "last_6_months": "Últimos 6 meses",
+    "custom_range": "Intervalo personalizado",
+    "clear": "Limpar",
+    "apply": "Aplicar",
+    "previous_month": "Mês anterior",
+    "next_month": "Mês seguinte"
   },
   "notifications": {
     "notifications": "Notificações",
@@ -83,6 +98,14 @@
     "previous": "Anterior",
     "next": "Seguinte"
   },
+  "start_support": {
+    "support_created": "Suporte criado com sucesso!",
+    "could_not_start_support": "Não foi possível iniciar o suporte!",
+    "title": "Título",
+    "enter_title": "Introduza o título",
+    "description": "Descrição",
+    "enter_description": "Introduza a descrição"
+  },
   "login": {
     "access_your_account": "Aceda à sua conta",
     "email": "E-mail",
@@ -110,7 +133,35 @@
     "success": "Conta criada com sucesso!"
   },
   "home": {
-    "home": "Início"
+    "home": "Início",
+    "search": "Pesquisar atendimentos",
+    "page_size": "Itens por página",
+    "tickets_not_found": "Atendimentos não encontrados",
+    "user": "Utilizador",
+    "support": "Suporte",
+    "all": "Todos os atendimentos",
+    "open": "Atendimentos abertos",
+    "in_progress": "Atendimentos pendentes",
+    "resolved": "Atendimentos concluídos",
+    "cancelled": "Atendimentos cancelados",
+    "assignee": "Responsável",
+    "assignee_date": "Data de atribuição",
+    "completion_date": "Data de conclusão",
+    "accept": "Aceitar",
+    "open_chat": "Abrir chat",
+    "resolve": "Resolver",
+    "cancel_ticket": "Cancelar atendimento",
+    "ticket_actions": "Ações do atendimento",
+    "resolve_title": "Resolver este atendimento?",
+    "resolve_description": "A conversa continua disponível como histórico.",
+    "cancel_title": "Cancelar este atendimento?",
+    "cancel_description": "Este atendimento será encerrado.",
+    "ticket_accepted": "Atendimento aceite.",
+    "ticket_resolved": "Atendimento resolvido.",
+    "ticket_cancelled": "Atendimento cancelado.",
+    "could_not_accept": "Não foi possível aceitar o atendimento.",
+    "could_not_resolve": "Não foi possível resolver o atendimento.",
+    "could_not_cancel": "Não foi possível cancelar o atendimento."
   },
   "crm": {
     "crm": "CRM"

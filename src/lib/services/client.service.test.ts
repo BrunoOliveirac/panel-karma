@@ -3,7 +3,7 @@ import { apiMock } from "@/lib/mocks/api.mock";
 import { ClientService } from "./client.service";
 
 jest.mock("@/lib/client/axios", () => ({
-  api: require("@/lib/mocks/api.mock").apiMock,
+  api: apiMock,
 }));
 
 describe("ClientService", () => {
@@ -13,7 +13,9 @@ describe("ClientService", () => {
     apiMock.get.mockResolvedValue({ data: [{ id: "01" }] });
 
     await expect(service.getAllClients()).resolves.toEqual([{ id: "01" }]);
-    expect(apiMock.get).toHaveBeenCalledWith(`/clients/list/${mockLoggedUser.id}`);
+    expect(apiMock.get).toHaveBeenCalledWith(
+      `/clients/list/${mockLoggedUser.id}`,
+    );
   });
 
   it("checks whether an email is available", async () => {

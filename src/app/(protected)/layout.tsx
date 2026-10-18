@@ -52,15 +52,17 @@ export default function ProtectedLayout({
 
   return (
     <div className="flex h-dvh p-2">
-      <Sidebar />
+      <ModalProvider>
+        <Sidebar />
 
-      <div className="w-[calc(100%-3.5rem)]">
-        <Topbar />
+        <div className="w-[calc(100%-3.5rem)]">
+          <Topbar />
 
-        <div className="flex flex-col flex-1 overflow-hidden px-4 md:px-8 max-h-[calc(100dvh-4.5rem)] h-full container mx-auto">
-          <ModalProvider>{children}</ModalProvider>
+          <div className="flex flex-col flex-1 overflow-hidden px-4 md:px-8 max-h-[calc(100dvh-4.5rem)] h-full container mx-auto">
+            {children}
+          </div>
         </div>
-      </div>
+      </ModalProvider>
     </div>
   );
 }

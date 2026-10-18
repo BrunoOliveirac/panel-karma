@@ -12,7 +12,8 @@
     "projects": "Proiecte",
     "sectors": "Sectoare",
     "members": "Membri",
-    "logout": "Deconectare"
+    "logout": "Deconectare",
+    "start_support": "Începe suportul"
   },
   "shared": {
     "are_you_sure": "Ești sigur?",
@@ -36,6 +37,20 @@
     "manage_projects": "Gestionează proiectele",
     "activate": "Activează",
     "deactivate": "Dezactivează"
+  },
+  "period": {
+    "start_date": "Data de început",
+    "end_date": "Data de sfârșit",
+    "last_7_days": "Ultimele 7 zile",
+    "last_14_days": "Ultimele 14 zile",
+    "last_30_days": "Ultimele 30 de zile",
+    "last_3_months": "Ultimele 3 luni",
+    "last_6_months": "Ultimele 6 luni",
+    "custom_range": "Interval personalizat",
+    "clear": "Șterge",
+    "apply": "Aplică",
+    "previous_month": "Luna anterioară",
+    "next_month": "Luna următoare"
   },
   "notifications": {
     "notifications": "Notificările",
@@ -83,6 +98,14 @@
     "previous": "Anterior",
     "next": "Următor"
   },
+  "start_support": {
+    "support_created": "Suport creat cu succes!",
+    "could_not_start_support": "Nu s-a putut începe suportul!",
+    "title": "Titlu",
+    "enter_title": "Introduceți titlul",
+    "description": "Descriere",
+    "enter_description": "Introduceți descrierea"
+  },
   "login": {
     "access_your_account": "Accesează-ți contul",
     "email": "E-mail",
@@ -110,7 +133,35 @@
     "success": "Cont creat cu succes!"
   },
   "home": {
-    "home": "Acasă"
+    "home": "Acasă",
+    "search": "Caută asistențe",
+    "page_size": "Elemente pe pagină",
+    "tickets_not_found": "Nu s-au găsit asistențe",
+    "user": "Utilizator",
+    "support": "Suport",
+    "all": "Toate asistențele",
+    "open": "Asistențe deschise",
+    "in_progress": "Asistențe în așteptare",
+    "resolved": "Asistențe finalizate",
+    "cancelled": "Asistențe anulate",
+    "assignee": "Responsabil",
+    "assignee_date": "Data atribuirii",
+    "completion_date": "Data finalizării",
+    "accept": "Acceptă",
+    "open_chat": "Deschide chatul",
+    "resolve": "Rezolvă",
+    "cancel_ticket": "Anulează asistența",
+    "ticket_actions": "Acțiuni ale asistenței",
+    "resolve_title": "Rezolvi această asistență?",
+    "resolve_description": "Conversația rămâne disponibilă ca istoric.",
+    "cancel_title": "Anulezi această asistență?",
+    "cancel_description": "Această asistență va fi închisă.",
+    "ticket_accepted": "Asistență acceptată.",
+    "ticket_resolved": "Asistență rezolvată.",
+    "ticket_cancelled": "Asistență anulată.",
+    "could_not_accept": "Nu s-a putut accepta asistența.",
+    "could_not_resolve": "Nu s-a putut rezolva asistența.",
+    "could_not_cancel": "Nu s-a putut anula asistența."
   },
   "crm": {
     "crm": "CRM"
