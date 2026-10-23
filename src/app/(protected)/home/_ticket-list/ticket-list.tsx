@@ -1,7 +1,7 @@
 "use client";
 
-import PaginationControls from "@/components/global/pagination-controls";
-import UserAvatar from "@/components/global/user-avatar";
+import PaginationControls from "@/components/global/pagination-controls/pagination-controls";
+import UserAvatar from "@/components/global/user-avatar/user-avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";

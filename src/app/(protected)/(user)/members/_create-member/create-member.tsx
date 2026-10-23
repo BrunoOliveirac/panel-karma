@@ -1,7 +1,7 @@
 "use client";
 
-import PasswordFields from "@/components/global/password-fields";
-import { InlineConfirmDialog } from "@/components/global/inline-confirm-dialog";
+import PasswordFields from "@/components/global/password-fields/password-fields";
+import { InlineConfirmDialog } from "@/components/global/inline-confirm-dialog/inline-confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";

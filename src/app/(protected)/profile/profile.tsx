@@ -1,8 +1,8 @@
 "use client";
 
-import { ImageCropDialog } from "@/components/global/image-crop-dialog";
-import PasswordFields from "@/components/global/password-fields";
-import UserAvatar from "@/components/global/user-avatar";
+import { ImageCropDialog } from "@/components/global/image-crop-dialog/image-crop-dialog";
+import PasswordFields from "@/components/global/password-fields/password-fields";
+import UserAvatar from "@/components/global/user-avatar/user-avatar";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";

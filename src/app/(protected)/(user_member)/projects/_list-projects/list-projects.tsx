@@ -1,6 +1,6 @@
 "use client";
 
-import PaginationControls from "@/components/global/pagination-controls";
+import PaginationControls from "@/components/global/pagination-controls/pagination-controls";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,8 +23,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Project } from "@/lib/models/project";
 import { Client } from "@/lib/models/client";
+import { Project } from "@/lib/models/project";
 import { useModal } from "@/lib/providers/modal-provider";
 import { ClientService } from "@/lib/services/client.service";
 import { ProjectService } from "@/lib/services/project.service";
@@ -46,21 +46,25 @@ export default function ListProjects() {
   const [page, setPage] = useState(1);
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
-  const [clients, setClients] = useState<Client[]>([]);
-  const [selectedClientId, setSelectedClientId] = useState<string>("");
-  const t = useTranslations("list_projects");
   const sharedT = useTranslations("shared");
+  const t = useTranslations("list_projects");
   const [loading, setLoading] = useState(false);
   const setTitle = useTitle((state) => state.setTitle);
+  const [clients, setClients] = useState<Client[]>([]);
   const [mainProjects, setMainProjects] = useState<Project[]>([]);
-  const projectService = useMemo(() => new ProjectService(), []);
+  const [selectedClientId, setSelectedClientId] = useState<string>("");
+
   const clientService = useMemo(() => new ClientService(), []);
+  const projectService = useMemo(() => new ProjectService(), []);
 
   const clientFilterField = useMemo(
     () => ({
       name: "clientFilter",
       value: selectedClientId,
-      onChange: (value: string | null) => setSelectedClientId(value ?? ""),
+      onChange: (value: string | null) => {
+        setSelectedClientId(value ?? "");
+        setPage(1);
+      },
       onBlur: () => undefined,
       ref: () => undefined,
     }),
@@ -132,10 +136,6 @@ export default function ListProjects() {
     },
     [mainProjects, openModal, router, searchParams],
   );
-
-  useEffect(() => {
-    setPage(1);
-  }, [search, selectedClientId]);
 
   useEffect(() => {
     async function loadData() {
@@ -232,13 +232,18 @@ export default function ListProjects() {
     }
   };
 
+  /**
+   * Get the status of a project.
+   * @param isActive - The status of the project.
+   * @returns The status of the project.
+   */
   const projectStatus = (isActive: boolean) => {
     return isActive ? "active" : "inactive";
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden gap-6 pb-6">
-      <div className="shrink-0 max-h-fit grid sm:flex flex-1 justify-between items-center flex-wrap gap-4">
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden gap-6 pb-6">
+      <div className="shrink-0 max-h-fit grid sm:flex justify-between items-center flex-wrap gap-4">
         <p className="text-lg font-medium">{t("manage_projects")}</p>
 
         <div className="flex flex-1 justify-end items-center gap-4 flex-wrap">
@@ -246,7 +251,10 @@ export default function ListProjects() {
             <InputGroupInput
               placeholder={t("search")}
               dataSlot="list-projects-search"
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
             />
 
             <InputGroupAddon>
@@ -267,7 +275,7 @@ export default function ListProjects() {
           <button
             data-slot="create-project"
             onClick={() => openUpsertProjectModal()}
-            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-8 px-3 rounded-full transition-all place-content-center hover:brightness-75"
+            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-9 px-3 rounded transition-all place-content-center hover:brightness-75"
           >
             {t("create_project")}
           </button>
@@ -275,7 +283,7 @@ export default function ListProjects() {
       </div>
 
       <>
-        <div className="flex-1 overflow-auto">
+        <div className="min-h-0 flex-1 overflow-auto">
           <Table>
             <TableHeader>
               <TableRow>

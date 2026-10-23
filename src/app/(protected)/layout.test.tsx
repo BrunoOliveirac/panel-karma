@@ -24,7 +24,7 @@ jest.mock("@/components/layout/topbar", () => ({
   default: () => <div data-slot="topbar" />,
 }));
 
-jest.mock("@/components/global/session-expired-dialog", () => ({
+jest.mock("@/components/global/session-expired-dialog/session-expired-dialog", () => ({
   __esModule: true,
   default: ({ open, onClose }: { open: boolean; onClose: () => void }) =>
     open ? (

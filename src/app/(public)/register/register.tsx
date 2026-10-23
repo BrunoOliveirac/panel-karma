@@ -1,6 +1,6 @@
 "use client";
 
-import SelectLanguage from "@/components/global/select-language";
+import SelectLanguage from "@/components/global/select-language/select-language";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -245,7 +245,7 @@ export default function Register() {
         <Link
           href="/login"
           data-slot="login-link"
-          className="flex justify-self-center text-sm text-gray-600 dark:text-gray-400 cursor-pointer py-4"
+          className="flex justify-center text-sm text-gray-600 dark:text-gray-400 cursor-pointer pt-6 pb-4"
         >
           {registerT("login")}
         </Link>

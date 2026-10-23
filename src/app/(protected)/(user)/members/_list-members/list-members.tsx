@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import PaginationControls from "@/components/global/pagination-controls";
-import UserAvatar from "@/components/global/user-avatar";
+import PaginationControls from "@/components/global/pagination-controls/pagination-controls";
+import UserAvatar from "@/components/global/user-avatar/user-avatar";
 import { Button } from "@/components/ui/button";
 import {
   InputGroup,
@@ -56,6 +56,12 @@ export default function ListMembers() {
   const query = searchParams.get("query") ?? "";
   const [isPending, startTransition] = useTransition();
   const [searchInput, setSearchInput] = useState(query);
+  const [syncedQuery, setSyncedQuery] = useState(query);
+
+  if (query !== syncedQuery) {
+    setSyncedQuery(query);
+    setSearchInput(query);
+  }
   const setTitle = useTitle((state) => state.setTitle);
   const memberService = useMemo(() => new MemberService(), []);
 
@@ -98,14 +104,6 @@ export default function ListMembers() {
    * @returns void
    */
   useEffect(() => setTitle(t("member_list")), [setTitle, t]);
-
-  /**
-   * Set the search input to the query
-   * @returns void
-   */
-  useEffect(() => {
-    setSearchInput(query);
-  }, [query]);
 
   /**
    * Reload the member list from the server.
@@ -171,8 +169,8 @@ export default function ListMembers() {
   );
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden gap-6 pb-6">
-      <div className="shrink-0 max-h-fit grid sm:flex flex-1 justify-between items-center flex-wrap gap-4">
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden gap-6 pb-6">
+      <div className="shrink-0 max-h-fit grid sm:flex justify-between items-center flex-wrap gap-4">
         <p className="text-lg font-medium">{t("manage_members")}</p>
 
         <div className="flex flex-1 justify-end items-center gap-4">
@@ -195,14 +193,14 @@ export default function ListMembers() {
           <button
             data-slot="create-member"
             onClick={() => openCreateMemberModal()}
-            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-8 px-3 rounded-full transition-all place-content-center hover:brightness-75"
+            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-9 px-3 rounded transition-all place-content-center hover:brightness-75"
           >
             {t("create_member")}
           </button>
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="min-h-0 flex-1 overflow-auto">
         <Table>
           <TableHeader>
             <TableRow>

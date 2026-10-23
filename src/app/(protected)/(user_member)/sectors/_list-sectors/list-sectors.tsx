@@ -1,6 +1,6 @@
 "use client";
 
-import PaginationControls from "@/components/global/pagination-controls";
+import PaginationControls from "@/components/global/pagination-controls/pagination-controls";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -199,8 +199,8 @@ export default function ListSectors() {
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden gap-6 pb-6">
-      <div className="shrink-0 max-h-fit grid sm:flex flex-1 justify-between items-center flex-wrap gap-4">
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden gap-6 pb-6">
+      <div className="shrink-0 max-h-fit grid sm:flex justify-between items-center flex-wrap gap-4">
         <p className="text-lg font-medium">{t("manage_sectors")}</p>
 
         <div className="flex flex-1 justify-end items-center gap-4">
@@ -219,7 +219,7 @@ export default function ListSectors() {
           <button
             data-slot="create-sector"
             onClick={() => openUpsertSectorModal()}
-            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-8 px-3 rounded-full transition-all place-content-center hover:brightness-75"
+            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-9 px-3 rounded transition-all place-content-center hover:brightness-75"
           >
             {t("create_sector")}
           </button>
@@ -227,7 +227,7 @@ export default function ListSectors() {
       </div>
 
       <>
-        <div className="flex-1 overflow-auto">
+        <div className="min-h-0 flex-1 overflow-auto">
           <Table>
             <TableHeader>
               <TableRow>

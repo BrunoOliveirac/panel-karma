@@ -26,7 +26,7 @@ jest.mock("@/lib/services/auth.service", () => ({
   })),
 }));
 
-jest.mock("@/components/global/select-language", () => ({
+jest.mock("@/components/global/select-language/select-language", () => ({
   __esModule: true,
   default: () => <div data-slot="select-language" />,
 }));

@@ -53,7 +53,7 @@ jest.mock("@/lib/services/profile.service", () => {
   };
 });
 
-jest.mock("@/components/global/image-crop-dialog", () => ({
+jest.mock("@/components/global/image-crop-dialog/image-crop-dialog", () => ({
   ImageCropDialog: ({
     open,
     imageSrc,

@@ -1,6 +1,6 @@
 "use client";
 
-import SessionExpiredDialog from "@/components/global/session-expired-dialog";
+import SessionExpiredDialog from "@/components/global/session-expired-dialog/session-expired-dialog";
 import Sidebar from "@/components/layout/sidebar";
 import Topbar from "@/components/layout/topbar";
 import { useAuth } from "@/lib/hooks/use-auth";
