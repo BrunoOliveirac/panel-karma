@@ -22,6 +22,7 @@ jest.mock("use-intl", () => ({
 jest.mock("next-intl", () => ({
   useTranslations: () => (t: _Translator<Record<string, any>>) => t,
   useFormatter: jest.fn(),
+  useLocale: () => "en",
 }));
 
 jest.mock("@/components/ui/tooltip", () => ({

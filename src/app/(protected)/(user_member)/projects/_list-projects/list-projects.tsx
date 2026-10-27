@@ -265,24 +265,22 @@ export default function ListProjects() {
    * @param project The project to toggle.
    */
   const toogleProjectStatus = async (project: Project) => {
+    const active = !project.active;
+
     try {
       await projectService.toggleProjectActive(project.id);
 
       setMainProjects((projects) => {
         const newProjects = [...projects];
         const index = newProjects.findIndex((p) => p.id === project.id);
-        newProjects[index].active = !project.active;
+        newProjects[index] = { ...newProjects[index], active };
         return newProjects;
       });
 
-      toast.success(
-        t(`successfully_${project.active ? "activated" : "deactivated"}`),
-      );
+      toast.success(t(`successfully_${active ? "activated" : "deactivated"}`));
     } catch (error) {
       console.error(error);
-      toast.error(
-        t(`could_not_${!project.active ? "activate" : "deactivate"}`),
-      );
+      toast.error(t(`could_not_${active ? "activate" : "deactivate"}`));
     }
   };
 
