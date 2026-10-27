@@ -140,7 +140,7 @@ test("Should deactivate project status", async ({ userPage }) => {
   );
 
   await projectRow.getByTestId(`toggle-project-status-${projectId}`).click();
-  await expect(projectRow.getByTestId("active-project-status")).toBeVisible();
+  await expect(projectRow.getByTestId("inactive-project-status")).toBeVisible();
 });
 
 test("Should activate project status", async ({ userPage }) => {
@@ -163,6 +163,20 @@ test("Should activate project status", async ({ userPage }) => {
 
   await projectRow.getByTestId(`toggle-project-status-${projectId}`).click();
   await expect(projectRow.getByTestId("active-project-status")).toBeVisible();
+});
+
+test("Should export the current page of projects", async ({ userPage }) => {
+  await userPage.goto("/projects");
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
+  await expect(userPage.getByTestId("project-row").first()).toBeVisible();
+
+  await userPage.getByTestId("export-menu-projects").click();
+
+  const downloadPromise = userPage.waitForEvent("download");
+  await userPage.getByRole("menuitem", { name: "Current page" }).click();
+  const download = await downloadPromise;
+
+  expect(download.suggestedFilename()).toBe("projects.xlsx");
 });
 
 test("Should open the project create modal", async ({ userPage }) => {
