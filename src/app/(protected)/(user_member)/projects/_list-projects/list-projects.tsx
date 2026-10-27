@@ -3,6 +3,7 @@
 import PaginationControls from "@/components/global/pagination-controls/pagination-controls";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   InputGroup,
   InputGroupAddon,
@@ -36,6 +37,27 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
 import UpsertProject from "../_upsert-project/upsert-project";
+import ExportMenu from "@/components/global/export-menu/export-menu";
+
+/**
+ * Drop selected ids that are no longer in the visible project list.
+ * @param current Currently selected project ids.
+ * @param projects Projects that remain visible.
+ */
+function retainVisibleSelection(current: Set<string>, projects: Project[]) {
+  if (!current.size) return current;
+
+  const visibleIds = new Set(projects.map((project) => project.id));
+  let changed = false;
+  const next = new Set<string>();
+
+  for (const id of current) {
+    if (visibleIds.has(id)) next.add(id);
+    else changed = true;
+  }
+
+  return changed ? next : current;
+}
 
 export default function ListProjects() {
   const pageSize = 10;
@@ -53,6 +75,7 @@ export default function ListProjects() {
   const [clients, setClients] = useState<Client[]>([]);
   const [mainProjects, setMainProjects] = useState<Project[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<string>("");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
 
   const clientService = useMemo(() => new ClientService(), []);
   const projectService = useMemo(() => new ProjectService(), []);
@@ -94,6 +117,69 @@ export default function ListProjects() {
     const start = (page - 1) * pageSize;
     return filteredProjects.slice(start, start + pageSize);
   }, [filteredProjects, page, pageSize]);
+
+  const pageSelection = useMemo(() => {
+    let selectedCount = 0;
+
+    for (const project of paginatedProjects) {
+      if (selectedIds.has(project.id)) selectedCount += 1;
+    }
+
+    return {
+      allPageSelected:
+        paginatedProjects.length > 0 &&
+        selectedCount === paginatedProjects.length,
+      somePageSelected:
+        selectedCount > 0 && selectedCount < paginatedProjects.length,
+    };
+  }, [paginatedProjects, selectedIds]);
+
+  const selectedProjectIds = useMemo(() => [...selectedIds], [selectedIds]);
+  const visibleProjectIds = filteredProjects
+    .map((project) => project.id)
+    .join("\0");
+  const [trackedVisibleProjectIds, setTrackedVisibleProjectIds] =
+    useState(visibleProjectIds);
+
+  if (visibleProjectIds !== trackedVisibleProjectIds) {
+    setTrackedVisibleProjectIds(visibleProjectIds);
+    setSelectedIds((current) =>
+      retainVisibleSelection(current, filteredProjects),
+    );
+  }
+
+  /**
+   * Select or clear every project on the current page.
+   * @param checked Whether the page should be selected.
+   */
+  const togglePage = (checked: boolean) => {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+
+      for (const project of paginatedProjects) {
+        if (checked) next.add(project.id);
+        else next.delete(project.id);
+      }
+
+      return next;
+    });
+  };
+
+  /**
+   * Select or clear a single project.
+   * @param projectId The project id.
+   * @param checked Whether the project should be selected.
+   */
+  const toggleRow = (projectId: string, checked: boolean) => {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+
+      if (checked) next.add(projectId);
+      else next.delete(projectId);
+
+      return next;
+    });
+  };
 
   /**
    * Open the upsert project modal.
@@ -225,6 +311,13 @@ export default function ListProjects() {
 
       if (paginatedProjects.length === 1) setPage(page - 1);
 
+      setSelectedIds((current) => {
+        if (!current.has(projectId)) return current;
+
+        const next = new Set(current);
+        next.delete(projectId);
+        return next;
+      });
       setMainProjects((projects) => projects.filter((p) => p.id !== projectId));
     } catch (error) {
       console.error(error);
@@ -272,13 +365,21 @@ export default function ListProjects() {
             triggerDataSlot="list-projects-client-filter"
           />
 
-          <button
-            data-slot="create-project"
-            onClick={() => openUpsertProjectModal()}
-            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-9 px-3 rounded transition-all place-content-center hover:brightness-75"
-          >
-            {t("create_project")}
-          </button>
+          <div className="flex items-center gap-4">
+            <ExportMenu
+              paginatedData={paginatedProjects}
+              selectedIds={selectedProjectIds}
+              type="projects"
+            />
+
+            <button
+              data-slot="create-project"
+              onClick={() => openUpsertProjectModal()}
+              className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-9 px-3 rounded transition-all place-content-center hover:brightness-75"
+            >
+              {t("create_project")}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -287,6 +388,24 @@ export default function ListProjects() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-10">
+                  <div className="flex justify-center">
+                    <Checkbox
+                      aria-label={t("select_page")}
+                      data-slot="select-page"
+                      disabled={!paginatedProjects.length}
+                      checked={
+                        pageSelection.somePageSelected
+                          ? "indeterminate"
+                          : pageSelection.allPageSelected
+                      }
+                      onCheckedChange={(checked) =>
+                        togglePage(checked === true)
+                      }
+                    />
+                  </div>
+                </TableHead>
+
                 <TableHead>{sharedT("name")}</TableHead>
 
                 <TableHead>{t("client")}</TableHead>
@@ -308,7 +427,7 @@ export default function ListProjects() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5}>
+                  <TableCell colSpan={6}>
                     <div className="flex justify-center">
                       <Spinner />
                     </div>
@@ -316,7 +435,7 @@ export default function ListProjects() {
                 </TableRow>
               ) : !paginatedProjects.length ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center">
+                  <TableCell colSpan={6} className="text-center">
                     {t("projects_not_found")}
                   </TableCell>
                 </TableRow>
@@ -327,6 +446,21 @@ export default function ListProjects() {
                     key={project.id}
                     data-slot="project-row"
                   >
+                    <TableCell>
+                      <div className="flex justify-center">
+                        <Checkbox
+                          checked={selectedIds.has(project.id)}
+                          aria-label={t("select_project", {
+                            name: project.name,
+                          })}
+                          data-slot={`select-project-${project.id}`}
+                          onCheckedChange={(checked) =>
+                            toggleRow(project.id, checked === true)
+                          }
+                        />
+                      </div>
+                    </TableCell>
+
                     <TableCell>{project.name}</TableCell>
                     <TableCell>{project.client?.name}</TableCell>
 

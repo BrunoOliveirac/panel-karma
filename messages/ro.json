@@ -36,7 +36,20 @@
     "unlink": "Dezactivează legătura",
     "manage_projects": "Gestionează proiectele",
     "activate": "Activează",
-    "deactivate": "Dezactivează"
+    "deactivate": "Dezactivează",
+    "client": "Client"
+  },
+  "export_menu": {
+    "export": "Exportă",
+    "all": "Toate",
+    "current_page": "Pagina curentă",
+    "selected": "Selectate",
+    "name": "Nume",
+    "client": "Client",
+    "status": "Stare",
+    "created_at": "Creat la",
+    "active": "Activ",
+    "inactive": "Inactiv"
   },
   "period": {
     "start_date": "Data de început",
@@ -240,6 +253,8 @@
     "search": "Caută proiecte",
     "client": "Client",
     "all_clients": "Toți clienții",
+    "select_page": "Selectează pagina curentă",
+    "select_project": "Selectează {name}",
     "projects_not_found": "Proiecte negăsite",
     "project_deleted": "Proiect șters cu succes!",
     "could_not_delete": "Nu s-a putut șterge proiectul!",

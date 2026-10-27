@@ -24,6 +24,7 @@ jest.mock("use-intl", () => ({
 jest.mock("next-intl", () => ({
   useTranslations: () => (t: _Translator<Record<string, any>>) => t,
   useFormatter: jest.fn(),
+  useLocale: () => "en",
 }));
 
 jest.mock("@/components/ui/tooltip", () => ({
@@ -180,7 +181,8 @@ describe("ListProjects", () => {
     renderWithProviders(<ListProjects />);
 
     await waitFor(
-      async () => await userEvent.click(screen.getByTestId("delete-project-01")),
+      async () =>
+        await userEvent.click(screen.getByTestId("delete-project-01")),
     );
 
     expect(deleteProjectMock).toHaveBeenCalledWith("01");
@@ -242,6 +244,132 @@ describe("ListProjects", () => {
       expect(deleteProjectMock).not.toHaveBeenCalled();
       expect(screen.getByText("Project 01")).toBeInTheDocument();
     });
+  });
+
+  it("Should select and clear only the current page", async () => {
+    getAllProjectsMock.mockResolvedValue(mockProjects());
+    renderWithProviders(<ListProjects />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Project 01")).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByTestId("select-page"));
+
+    for (let index = 1; index <= 10; index += 1) {
+      const id = index.toString().padStart(2, "0");
+      expect(screen.getByTestId(`select-project-${id}`)).toHaveAttribute(
+        "aria-checked",
+        "true",
+      );
+    }
+
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+
+    await userEvent.click(screen.getByTestId("pagination-link-2"));
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+    expect(screen.getByTestId("select-project-11")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+
+    await userEvent.click(screen.getByTestId("pagination-link-1"));
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+
+    await userEvent.click(screen.getByTestId("select-page"));
+    expect(screen.getByTestId("select-project-01")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+  });
+
+  it("Should keep selections from other pages when the header changes", async () => {
+    getAllProjectsMock.mockResolvedValue(mockProjects());
+    renderWithProviders(<ListProjects />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Project 01")).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByTestId("select-page"));
+    await userEvent.click(screen.getByTestId("pagination-link-2"));
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+
+    await userEvent.click(screen.getByTestId("select-project-11"));
+    await userEvent.click(screen.getByTestId("pagination-link-1"));
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    expect(screen.getByTestId("select-project-01")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+
+    await userEvent.click(screen.getByTestId("select-page"));
+    await userEvent.click(screen.getByTestId("pagination-link-2"));
+    expect(screen.getByTestId("select-project-11")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "mixed",
+    );
+  });
+
+  it("Should mark the page checkbox as indeterminate for a partial page", async () => {
+    getAllProjectsMock.mockResolvedValue(mockProjects());
+    renderWithProviders(<ListProjects />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Project 01")).toBeInTheDocument();
+    });
+
+    for (let index = 1; index <= 9; index += 1) {
+      const id = index.toString().padStart(2, "0");
+      await userEvent.click(screen.getByTestId(`select-project-${id}`));
+    }
+
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "mixed",
+    );
+    expect(screen.getByTestId("select-project-10")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+
+    await userEvent.click(screen.getByTestId("select-page"));
+
+    for (let index = 1; index <= 10; index += 1) {
+      const id = index.toString().padStart(2, "0");
+      expect(screen.getByTestId(`select-project-${id}`)).toHaveAttribute(
+        "aria-checked",
+        "true",
+      );
+    }
+
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
   });
 
   it("Should open the project's create modal", async () => {

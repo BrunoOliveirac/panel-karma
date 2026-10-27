@@ -36,7 +36,20 @@
     "unlink": "Desvincular",
     "manage_projects": "Gestionar proyectos",
     "activate": "Activar",
-    "deactivate": "Desactivar"
+    "deactivate": "Desactivar",
+    "client": "Cliente"
+  },
+  "export_menu": {
+    "export": "Exportar",
+    "all": "Todos",
+    "current_page": "Página actual",
+    "selected": "Seleccionados",
+    "name": "Nombre",
+    "client": "Cliente",
+    "status": "Estado",
+    "created_at": "Creado en",
+    "active": "Activo",
+    "inactive": "Inactivo"
   },
   "period": {
     "start_date": "Fecha inicial",
@@ -240,6 +253,8 @@
     "search": "Buscar proyectos",
     "client": "Cliente",
     "all_clients": "Todos los clientes",
+    "select_page": "Seleccionar página actual",
+    "select_project": "Seleccionar {name}",
     "projects_not_found": "Proyectos no encontrados",
     "project_deleted": "¡Proyecto eliminado con éxito!",
     "could_not_delete": "¡No se pudo eliminar el proyecto!",

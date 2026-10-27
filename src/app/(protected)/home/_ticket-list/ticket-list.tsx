@@ -118,15 +118,15 @@ export default function TicketList({
 
                 <div
                   className={cn(
-                    "grid *:flex *:flex-col *:justify-center *:items-center",
+                    "grid *:flex *:flex-col *:justify-center *:items-center gap-3",
                     viewerType === UserTypeEnum.SUPPORT
                       ? "grid-cols-2"
                       : "grid-cols-3",
                   )}
                 >
                   {viewerType === UserTypeEnum.SUPPORT ? null : (
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">
+                    <div className="text-sm md:text-xs lg:text-sm">
+                      <p className="text-muted-foreground mb-1">
                         {t("assignee")}:
                       </p>
 
@@ -141,7 +141,7 @@ export default function TicketList({
                             name={ticket.supportName ?? ""}
                           />
 
-                          <p className="text-sm">{ticket.supportName}</p>
+                          <p>{ticket.supportName}</p>
                         </div>
                       ) : (
                         "-"
@@ -149,13 +149,13 @@ export default function TicketList({
                     </div>
                   )}
 
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">
+                  <div className="text-sm md:text-xs lg:text-sm">
+                    <p className="text-muted-foreground mb-1">
                       {t("assignee_date")}:
                     </p>
 
                     {ticket.acceptedAt ? (
-                      <p className="text-sm">
+                      <p>
                         {format.dateTime(parseISO(ticket.acceptedAt), {
                           dateStyle: "medium",
                           timeStyle: "short",
@@ -166,13 +166,13 @@ export default function TicketList({
                     )}
                   </div>
 
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">
+                  <div className="text-sm md:text-xs lg:text-sm">
+                    <p className="text-muted-foreground mb-1">
                       {t("completion_date")}:
                     </p>
 
                     {ticket.finishedAt ? (
-                      <p className="text-sm">
+                      <p>
                         {format.dateTime(parseISO(ticket.finishedAt), {
                           dateStyle: "medium",
                           timeStyle: "short",
