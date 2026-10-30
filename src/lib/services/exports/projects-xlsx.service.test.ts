@@ -63,7 +63,7 @@ describe("ProjectsXlsxService", () => {
   it("exports the projects already loaded on the current page", () => {
     const projects = [project({ active: false })];
 
-    service.exportCurrentPage({ locale, t, projects });
+    service.exportCurrentPage({ locale, t, data: projects });
 
     expect(apiMock.get).not.toHaveBeenCalled();
     expect(apiMock.post).not.toHaveBeenCalled();

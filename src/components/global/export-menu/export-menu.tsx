@@ -10,15 +10,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ProjectsXlsxService } from "@/lib/services/exports/projects-xlsx.service";
+import { SectorsXlsxService } from "@/lib/services/exports/sectors-xlsx.service";
 import { DownloadCloud } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface ExportMenuProps {
-  type: "projects";
   paginatedData: any[];
   selectedIds?: string[];
+  type: "projects" | "sectors";
 }
 
 enum ExportType {
@@ -35,8 +36,13 @@ export default function ExportMenu({
   const locale = useLocale();
   const t = useTranslations("export_menu");
 
+  const sectorsXlsxService = useMemo(() => new SectorsXlsxService(), []);
   const projectsXlsxService = useMemo(() => new ProjectsXlsxService(), []);
-  const services = { projects: projectsXlsxService };
+
+  const services = {
+    sectors: sectorsXlsxService,
+    projects: projectsXlsxService,
+  };
 
   const handleExport = (exportType: ExportType) => {
     const currentService = services[type as keyof typeof services];
@@ -47,16 +53,11 @@ export default function ExportMenu({
         break;
 
       case ExportType.CURRENT_PAGE:
-        currentService.exportCurrentPage({
-          projects: paginatedData,
-          locale,
-          t,
-        });
-
+        currentService.exportCurrentPage({ data: paginatedData, locale, t });
         break;
 
       case ExportType.SELECTED:
-        currentService.exportSelected({ locale, t, projectIds: selectedIds });
+        currentService.exportSelected({ locale, t, dataIds: selectedIds });
         break;
     }
   };

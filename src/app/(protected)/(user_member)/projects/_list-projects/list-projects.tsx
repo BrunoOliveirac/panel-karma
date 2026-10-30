@@ -381,179 +381,172 @@ export default function ListProjects() {
         </div>
       </div>
 
-      <>
-        <div className="min-h-0 flex-1 overflow-auto">
-          <Table>
-            <TableHeader>
+      <div className="min-h-0 flex-1 overflow-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-10">
+                <div className="flex justify-center">
+                  <Checkbox
+                    aria-label={sharedT("select_page")}
+                    data-slot="select-page"
+                    disabled={!paginatedProjects.length}
+                    checked={
+                      pageSelection.somePageSelected
+                        ? "indeterminate"
+                        : pageSelection.allPageSelected
+                    }
+                    onCheckedChange={(checked) => togglePage(checked === true)}
+                  />
+                </div>
+              </TableHead>
+
+              <TableHead>{sharedT("name")}</TableHead>
+              <TableHead>{t("client")}</TableHead>
+
+              <TableHead className="text-center">
+                {sharedT("created_at")}
+              </TableHead>
+
+              <TableHead className="text-center">{sharedT("status")}</TableHead>
+
+              <TableHead className="text-center">
+                {sharedT("actions")}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {loading ? (
               <TableRow>
-                <TableHead className="w-10">
+                <TableCell colSpan={6}>
                   <div className="flex justify-center">
-                    <Checkbox
-                      aria-label={t("select_page")}
-                      data-slot="select-page"
-                      disabled={!paginatedProjects.length}
-                      checked={
-                        pageSelection.somePageSelected
-                          ? "indeterminate"
-                          : pageSelection.allPageSelected
-                      }
-                      onCheckedChange={(checked) =>
-                        togglePage(checked === true)
-                      }
-                    />
+                    <Spinner />
                   </div>
-                </TableHead>
-
-                <TableHead>{sharedT("name")}</TableHead>
-
-                <TableHead>{t("client")}</TableHead>
-
-                <TableHead className="text-center">
-                  {sharedT("created_at")}
-                </TableHead>
-
-                <TableHead className="text-center">
-                  {sharedT("status")}
-                </TableHead>
-
-                <TableHead className="text-center">
-                  {sharedT("actions")}
-                </TableHead>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={6}>
+            ) : !paginatedProjects.length ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center">
+                  {t("projects_not_found")}
+                </TableCell>
+              </TableRow>
+            ) : (
+              paginatedProjects.map((project) => (
+                <TableRow
+                  id={project.id}
+                  key={project.id}
+                  data-slot="project-row"
+                >
+                  <TableCell>
                     <div className="flex justify-center">
-                      <Spinner />
+                      <Checkbox
+                        checked={selectedIds.has(project.id)}
+                        aria-label={sharedT("select_name", {
+                          name: project.name,
+                        })}
+                        data-slot={`select-project-${project.id}`}
+                        onCheckedChange={(checked) =>
+                          toggleRow(project.id, checked === true)
+                        }
+                      />
+                    </div>
+                  </TableCell>
+
+                  <TableCell>{project.name}</TableCell>
+                  <TableCell>{project.client?.name}</TableCell>
+
+                  <TableCell className="text-center">
+                    {format.dateTime(new Date(project.createdAt), {
+                      dateStyle: "short",
+                      timeStyle: "short",
+                    })}
+                  </TableCell>
+
+                  <TableCell className="text-center">
+                    <Badge
+                      variant={project.active ? "success" : "danger"}
+                      data-slot={`${projectStatus(project.active)}-project-status`}
+                    >
+                      {sharedT(projectStatus(project.active))}
+                    </Badge>
+                  </TableCell>
+
+                  <TableCell>
+                    <div className="flex justify-center items-center gap-2">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="icon-sm"
+                            variant="outline"
+                            onClick={() => toogleProjectStatus(project)}
+                            data-slot={`toggle-project-status-${project.id}`}
+                          >
+                            {project.active ? <Lock /> : <Unlock />}
+                          </Button>
+                        </TooltipTrigger>
+
+                        <TooltipContent>
+                          <p>
+                            {sharedT(
+                              project.active ? "deactivate" : "activate",
+                            )}
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="icon-sm"
+                            variant="outline"
+                            data-slot={`edit-project-${project.id}`}
+                            onClick={() => openUpsertProjectModal(project)}
+                          >
+                            <Pencil />
+                          </Button>
+                        </TooltipTrigger>
+
+                        <TooltipContent>
+                          <p>{sharedT("edit")}</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            color="error"
+                            size="icon-sm"
+                            variant="destructive"
+                            onClick={() => deleteProject(project.id)}
+                            data-slot={`delete-project-${project.id}`}
+                          >
+                            <Trash />
+                          </Button>
+                        </TooltipTrigger>
+
+                        <TooltipContent>
+                          <p>{sharedT("delete")}</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </TableCell>
                 </TableRow>
-              ) : !paginatedProjects.length ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center">
-                    {t("projects_not_found")}
-                  </TableCell>
-                </TableRow>
-              ) : (
-                paginatedProjects.map((project) => (
-                  <TableRow
-                    id={project.id}
-                    key={project.id}
-                    data-slot="project-row"
-                  >
-                    <TableCell>
-                      <div className="flex justify-center">
-                        <Checkbox
-                          checked={selectedIds.has(project.id)}
-                          aria-label={t("select_project", {
-                            name: project.name,
-                          })}
-                          data-slot={`select-project-${project.id}`}
-                          onCheckedChange={(checked) =>
-                            toggleRow(project.id, checked === true)
-                          }
-                        />
-                      </div>
-                    </TableCell>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
-                    <TableCell>{project.name}</TableCell>
-                    <TableCell>{project.client?.name}</TableCell>
-
-                    <TableCell className="text-center">
-                      {format.dateTime(new Date(project.createdAt), {
-                        dateStyle: "short",
-                        timeStyle: "short",
-                      })}
-                    </TableCell>
-
-                    <TableCell className="text-center">
-                      <Badge
-                        variant={project.active ? "success" : "danger"}
-                        data-slot={`${projectStatus(project.active)}-project-status`}
-                      >
-                        {sharedT(projectStatus(project.active))}
-                      </Badge>
-                    </TableCell>
-
-                    <TableCell>
-                      <div className="flex justify-center items-center gap-2">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              size="icon-sm"
-                              variant="outline"
-                              onClick={() => toogleProjectStatus(project)}
-                              data-slot={`toggle-project-status-${project.id}`}
-                            >
-                              {project.active ? <Lock /> : <Unlock />}
-                            </Button>
-                          </TooltipTrigger>
-
-                          <TooltipContent>
-                            <p>
-                              {sharedT(
-                                project.active ? "deactivate" : "activate",
-                              )}
-                            </p>
-                          </TooltipContent>
-                        </Tooltip>
-
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              size="icon-sm"
-                              variant="outline"
-                              data-slot={`edit-project-${project.id}`}
-                              onClick={() => openUpsertProjectModal(project)}
-                            >
-                              <Pencil />
-                            </Button>
-                          </TooltipTrigger>
-
-                          <TooltipContent>
-                            <p>{sharedT("edit")}</p>
-                          </TooltipContent>
-                        </Tooltip>
-
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              color="error"
-                              size="icon-sm"
-                              variant="destructive"
-                              onClick={() => deleteProject(project.id)}
-                              data-slot={`delete-project-${project.id}`}
-                            >
-                              <Trash />
-                            </Button>
-                          </TooltipTrigger>
-
-                          <TooltipContent>
-                            <p>{sharedT("delete")}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+      {filteredProjects.length ? (
+        <div className="shrink-0">
+          <PaginationControls
+            page={page}
+            onPageChange={setPage}
+            totalPages={Math.ceil(filteredProjects.length / pageSize)}
+          />
         </div>
-
-        {filteredProjects.length ? (
-          <div className="shrink-0">
-            <PaginationControls
-              page={page}
-              onPageChange={setPage}
-              totalPages={Math.ceil(filteredProjects.length / pageSize)}
-            />
-          </div>
-        ) : null}
-      </>
+      ) : null}
     </div>
   );
 }

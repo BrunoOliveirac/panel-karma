@@ -2,19 +2,11 @@ import { Project } from "@/lib/models/project";
 import { exportToExcel } from "./base-xlsx.service";
 import { api } from "@/lib/client/axios";
 import { getLoggedUser } from "@/lib/helpers/get-logged-user";
-
-interface IExportParams {
-  locale: string;
-  t: (key: string) => string;
-}
-
-interface ExportCurrentPageParams extends IExportParams {
-  projects: Project[];
-}
-
-interface ExportSelectedParams extends IExportParams {
-  projectIds: string[];
-}
+import {
+  ExportCurrentPageParams,
+  ExportSelectedParams,
+  IExportParams,
+} from "@/lib/interfaces/xlsx";
 
 export class ProjectsXlsxService {
   /**
@@ -27,14 +19,14 @@ export class ProjectsXlsxService {
     const projects = (await api.get<Project[]>(`/projects/list/${user.id}`))
       .data;
 
-    this.export({ locale, t, projects });
+    this.export({ locale, t, data: projects });
   }
 
   /**
    * Export the current page of projects to an Excel file
    * @param exportParams - locale, translation function and projects
    */
-  public exportCurrentPage(exportParams: ExportCurrentPageParams) {
+  public exportCurrentPage(exportParams: ExportCurrentPageParams<Project>) {
     this.export(exportParams);
   }
 
@@ -43,15 +35,15 @@ export class ProjectsXlsxService {
    * @param exportParams - The parameters for the export
    */
   public async exportSelected({
-    locale,
-    projectIds,
     t,
+    locale,
+    dataIds,
   }: ExportSelectedParams): Promise<void> {
     const projects = (
-      await api.post<Project[]>("/projects/list-by-ids", { ids: projectIds })
+      await api.post<Project[]>("/projects/list-by-ids", { ids: dataIds })
     ).data;
 
-    this.export({ locale, t, projects });
+    this.export({ locale, t, data: projects.sort((a, b) => a.name.localeCompare(b.name)) });
   }
 
   /**
@@ -60,7 +52,11 @@ export class ProjectsXlsxService {
    * @param param.locale - The locale to use for the date formatting
    * @param param.t - The translation function to use for the column names
    */
-  private export({ projects, locale, t }: ExportCurrentPageParams) {
+  private export({
+    t,
+    locale,
+    data: projects,
+  }: ExportCurrentPageParams<Project>) {
     const data = projects.map((project) => ({
       [t("name")]: project.name,
       [t("client")]: project.client.name,

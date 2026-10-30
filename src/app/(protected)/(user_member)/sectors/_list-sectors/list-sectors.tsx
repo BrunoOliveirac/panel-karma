@@ -33,6 +33,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import ExportMenu from "@/components/global/export-menu/export-menu";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function ListSectors() {
   const pageSize = 10;
@@ -49,6 +51,9 @@ export default function ListSectors() {
   const setTitle = useTitle((state) => state.setTitle);
   const [mainSectors, setMainSectors] = useState<Sector[]>([]);
   const sectorService = useMemo(() => new SectorService(), []);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
+
+  const selectedSectorIds = useMemo(() => [...selectedIds], [selectedIds]);
 
   const filteredSectors = useMemo(() => {
     let filteredSectors = mainSectors;
@@ -67,6 +72,22 @@ export default function ListSectors() {
     const start = (page - 1) * pageSize;
     return filteredSectors.slice(start, start + pageSize);
   }, [filteredSectors, page, pageSize]);
+
+  const pageSelection = useMemo(() => {
+    let selectedCount = 0;
+
+    for (const sector of paginatedSectors) {
+      if (selectedIds.has(sector.id)) selectedCount += 1;
+    }
+
+    return {
+      allPageSelected:
+        paginatedSectors.length > 0 &&
+        selectedCount === paginatedSectors.length,
+      somePageSelected:
+        selectedCount > 0 && selectedCount < paginatedSectors.length,
+    };
+  }, [paginatedSectors, selectedIds]);
 
   /**
    * Open the upsert sector modal.
@@ -198,11 +219,43 @@ export default function ListSectors() {
     return isActive ? "active" : "inactive";
   };
 
+  /**
+   * Select or clear every sector on the current page.
+   * @param checked Whether the page should be selected.
+   */
+  const togglePage = (checked: boolean) => {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+
+      for (const sector of paginatedSectors) {
+        if (checked) next.add(sector.id);
+        else next.delete(sector.id);
+      }
+
+      return next;
+    });
+  };
+
+  /**
+   * Select or clear a single sector.
+   * @param sectorId 
+   * @param checked Whether the sector should be selected.
+   */
+  const toggleRow = (sectorId: string, checked: boolean) => {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+
+      if (checked) next.add(sectorId);
+      else next.delete(sectorId);
+
+      return next;
+    });
+  };
+
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-hidden gap-6 pb-6">
       <div className="shrink-0 max-h-fit grid sm:flex justify-between items-center flex-wrap gap-4">
         <p className="text-lg font-medium">{t("manage_sectors")}</p>
-
         <div className="flex flex-1 justify-end items-center gap-4">
           <InputGroup className="md:min-w-44 max-w-fit">
             <InputGroupInput
@@ -216,13 +269,20 @@ export default function ListSectors() {
             </InputGroupAddon>
           </InputGroup>
 
-          <button
-            data-slot="create-sector"
-            onClick={() => openUpsertSectorModal()}
-            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-9 px-3 rounded transition-all place-content-center hover:brightness-75"
-          >
-            {t("create_sector")}
-          </button>
+          <div className="flex items-center gap-4">
+            <ExportMenu
+              type="sectors"
+              selectedIds={selectedSectorIds}
+              paginatedData={paginatedSectors}
+            />
+            <button
+              data-slot="create-sector"
+              onClick={() => openUpsertSectorModal()}
+              className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-9 px-3 rounded transition-all place-content-center hover:brightness-75"
+            >
+              {t("create_sector")}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -231,6 +291,24 @@ export default function ListSectors() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-10">
+                  <div className="flex justify-center">
+                    <Checkbox
+                      aria-label={sharedT("select_page")}
+                      data-slot="select-page"
+                      disabled={!paginatedSectors.length}
+                      checked={
+                        pageSelection.somePageSelected
+                          ? "indeterminate"
+                          : pageSelection.allPageSelected
+                      }
+                      onCheckedChange={(checked) =>
+                        togglePage(checked === true)
+                      }
+                    />
+                  </div>
+                </TableHead>
+
                 <TableHead>{sharedT("name")}</TableHead>
 
                 <TableHead className="text-center">
@@ -269,6 +347,21 @@ export default function ListSectors() {
                     key={sector.id}
                     data-slot="sector-row"
                   >
+                    <TableCell>
+                      <div className="flex justify-center">
+                        <Checkbox
+                          checked={selectedIds.has(sector.id)}
+                          aria-label={sharedT("select_name", {
+                            name: sector.name,
+                          })}
+                          data-slot={`select-sector-${sector.id}`}
+                          onCheckedChange={(checked) =>
+                            toggleRow(sector.id, checked === true)
+                          }
+                        />
+                      </div>
+                    </TableCell>
+
                     <TableCell>{sector.name}</TableCell>
 
                     <TableCell className="text-center">

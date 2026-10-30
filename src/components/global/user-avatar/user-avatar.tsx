@@ -10,12 +10,11 @@ interface UserAvatarProps {
 }
 
 export default function UserAvatar({
-  size = 24,
   name,
   avatar,
   className,
+  size = 24,
 }: UserAvatarProps) {
-  const dimension = size;
   const fallbackSrc = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=7c79d4&color=fff`;
   const isDataUrl = !!avatar?.startsWith("data:");
 
@@ -25,10 +24,10 @@ export default function UserAvatar({
       <img
         alt={name}
         src={avatar}
-        width={dimension}
-        height={dimension}
+        width={size}
+        height={size}
+        style={{ width: size, height: size }}
         className={`rounded-full object-cover ${className ?? ""}`}
-        style={{ width: dimension, height: dimension }}
       />
     );
   }
@@ -36,10 +35,11 @@ export default function UserAvatar({
   return (
     <Image
       alt={name}
-      width={dimension}
-      height={dimension}
+      width={size}
+      height={size}
       unoptimized={!!avatar}
       src={avatar || fallbackSrc}
+      style={{ width: size, height: size }}
       className={`rounded-full object-cover ${className ?? ""}`}
     />
   );

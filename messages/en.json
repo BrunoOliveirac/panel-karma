@@ -37,7 +37,9 @@
     "manage_projects": "Manage projects",
     "activate": "Activate",
     "deactivate": "Deactivate",
-    "client": "Client"
+    "client": "Client",
+    "select_page": "Select current page",
+    "select_name": "Select {name}"
   },
   "export_menu": {
     "export": "Export",
@@ -253,8 +255,6 @@
     "search": "Search projects",
     "client": "Client",
     "all_clients": "All clients",
-    "select_page": "Select current page",
-    "select_project": "Select {name}",
     "projects_not_found": "Projects not found",
     "project_deleted": "Project deleted successfully!",
     "could_not_delete": "Could not delete the project!",
