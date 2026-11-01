@@ -432,7 +432,7 @@ describe("ListProjects", () => {
       expect.objectContaining({ locale: "en" }),
     );
 
-    const exportedPage = exportCurrentPageMock.mock.calls[0][0].projects;
+    const exportedPage = exportCurrentPageMock.mock.calls[0][0].data;
     expect(exportedPage).toHaveLength(10);
     expect(exportedPage.map((project: { id: string }) => project.id)).toEqual(
       expect.arrayContaining(["01", "10"]),
@@ -442,7 +442,7 @@ describe("ListProjects", () => {
     ).not.toContain("11");
 
     expect(exportSelectedMock).toHaveBeenCalledWith(
-      expect.objectContaining({ projectIds: ["01"] }),
+      expect.objectContaining({ dataIds: ["01"] }),
     );
   });
 

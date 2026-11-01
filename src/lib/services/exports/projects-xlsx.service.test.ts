@@ -77,7 +77,7 @@ describe("ProjectsXlsxService", () => {
     const projects = [project({ id: "09", name: "Project 09" })];
     apiMock.post.mockResolvedValue({ data: projects });
 
-    await service.exportSelected({ locale, t, projectIds: ["09"] });
+    await service.exportSelected({ locale, t, dataIds: ["09"] });
 
     expect(apiMock.post).toHaveBeenCalledWith("/projects/list-by-ids", {
       ids: ["09"],
