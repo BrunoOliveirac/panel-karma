@@ -9,6 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { MembersXlsxService } from "@/lib/services/exports/members-xlsx.service";
 import { ProjectsXlsxService } from "@/lib/services/exports/projects-xlsx.service";
 import { SectorsXlsxService } from "@/lib/services/exports/sectors-xlsx.service";
 import { DownloadCloud } from "lucide-react";
@@ -19,7 +20,7 @@ import { useMemo } from "react";
 interface ExportMenuProps {
   paginatedData: any[];
   selectedIds?: string[];
-  type: "projects" | "sectors";
+  type: "members" | "projects" | "sectors";
 }
 
 enum ExportType {
@@ -36,10 +37,12 @@ export default function ExportMenu({
   const locale = useLocale();
   const t = useTranslations("export_menu");
 
+  const membersXlsxService = useMemo(() => new MembersXlsxService(), []);
   const sectorsXlsxService = useMemo(() => new SectorsXlsxService(), []);
   const projectsXlsxService = useMemo(() => new ProjectsXlsxService(), []);
 
   const services = {
+    members: membersXlsxService,
     sectors: sectorsXlsxService,
     projects: projectsXlsxService,
   };

@@ -4,6 +4,7 @@
 import PaginationControls from "@/components/global/pagination-controls/pagination-controls";
 import UserAvatar from "@/components/global/user-avatar/user-avatar";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   InputGroup,
   InputGroupAddon,
@@ -46,6 +47,7 @@ import CreateMember from "../_create-member/create-member";
 import ManagementProjects from "../_management-projects/management-projects";
 import { useTitle } from "@/lib/store/use-title-store";
 import { useDebouncedCallback } from "use-debounce";
+import ExportMenu from "@/components/global/export-menu/export-menu";
 
 export default function ListMembers() {
   const router = useRouter();
@@ -57,11 +59,14 @@ export default function ListMembers() {
   const [isPending, startTransition] = useTransition();
   const [searchInput, setSearchInput] = useState(query);
   const [syncedQuery, setSyncedQuery] = useState(query);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
 
   if (query !== syncedQuery) {
     setSyncedQuery(query);
     setSearchInput(query);
+    setSelectedIds(new Set());
   }
+
   const setTitle = useTitle((state) => state.setTitle);
   const memberService = useMemo(() => new MemberService(), []);
 
@@ -87,6 +92,29 @@ export default function ListMembers() {
   const prevFetchKey = useRef(fetchKey);
 
   const [membersPromise, setMembersPromise] = useState(fetchMembers);
+  const [pageMembers, setPageMembers] = useState<Member[]>([]);
+  const [pageMembersKey, setPageMembersKey] = useState(fetchKey);
+
+  if (pageMembersKey !== fetchKey) {
+    setPageMembersKey(fetchKey);
+    setPageMembers([]);
+  }
+
+  const selectedMemberIds = useMemo(() => [...selectedIds], [selectedIds]);
+
+  const pageSelection = useMemo(() => {
+    let selectedCount = 0;
+
+    for (const member of pageMembers) {
+      if (selectedIds.has(member.id)) selectedCount += 1;
+    }
+
+    return {
+      allPageSelected:
+        pageMembers.length > 0 && selectedCount === pageMembers.length,
+      somePageSelected: selectedCount > 0 && selectedCount < pageMembers.length,
+    };
+  }, [pageMembers, selectedIds]);
 
   /**
    * Fetch the members when the fetch key changes
@@ -158,9 +186,60 @@ export default function ListMembers() {
     updateUrl({ query: value });
   }, 300);
 
+  const syncPageMembers = useCallback((members: Member[]) => {
+    setPageMembers(members);
+  }, []);
+
+  /**
+   * Select or clear every member on the current page.
+   * @param checked Whether the page should be selected.
+   */
+  const togglePage = (checked: boolean) => {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+
+      for (const member of pageMembers) {
+        if (checked) next.add(member.id);
+        else next.delete(member.id);
+      }
+
+      return next;
+    });
+  };
+
+  /**
+   * Select or clear a single member.
+   * @param memberId The member id.
+   * @param checked Whether the member should be selected.
+   */
+  const toggleRow = (memberId: string, checked: boolean) => {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+
+      if (checked) next.add(memberId);
+      else next.delete(memberId);
+
+      return next;
+    });
+  };
+
+  /**
+   * Drop a member from the selection after it is unlinked.
+   * @param memberId The unlinked member id.
+   */
+  const unselectMember = useCallback((memberId: string) => {
+    setSelectedIds((current) => {
+      if (!current.has(memberId)) return current;
+
+      const next = new Set(current);
+      next.delete(memberId);
+      return next;
+    });
+  }, []);
+
   const fallback = (
     <TableRow>
-      <TableCell colSpan={4}>
+      <TableCell colSpan={5}>
         <div className="flex justify-center">
           <Spinner />
         </div>
@@ -190,13 +269,21 @@ export default function ListMembers() {
             </InputGroupAddon>
           </InputGroup>
 
-          <button
-            data-slot="create-member"
-            onClick={() => openCreateMemberModal()}
-            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-9 px-3 rounded transition-all place-content-center hover:brightness-75"
-          >
-            {t("create_member")}
-          </button>
+          <div className="flex items-center gap-4">
+            <ExportMenu
+              type="members"
+              selectedIds={selectedMemberIds}
+              paginatedData={pageMembers}
+            />
+
+            <button
+              data-slot="create-member"
+              onClick={() => openCreateMemberModal()}
+              className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-9 px-3 rounded transition-all place-content-center hover:brightness-75"
+            >
+              {t("create_member")}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -204,6 +291,22 @@ export default function ListMembers() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-10">
+                <div className="flex justify-center">
+                  <Checkbox
+                    aria-label={sharedT("select_page")}
+                    data-slot="select-page"
+                    disabled={!pageMembers.length || isPending}
+                    checked={
+                      pageSelection.somePageSelected
+                        ? "indeterminate"
+                        : pageSelection.allPageSelected
+                    }
+                    onCheckedChange={(checked) => togglePage(checked === true)}
+                  />
+                </div>
+              </TableHead>
+
               <TableHead>{sharedT("name")}</TableHead>
               <TableHead>{t("email")}</TableHead>
 
@@ -225,8 +328,12 @@ export default function ListMembers() {
                 <MemberRows
                   t={t}
                   sharedT={sharedT}
+                  selectedIds={selectedIds}
                   fetchMembers={fetchMembers}
+                  onToggleRow={toggleRow}
+                  onUnlinked={unselectMember}
                   membersPromise={membersPromise}
+                  onPageMembers={syncPageMembers}
                   startTransition={startTransition}
                   setMembersPromise={setMembersPromise}
                 />
@@ -248,11 +355,15 @@ export default function ListMembers() {
 }
 
 interface MemberRowsProps {
+  selectedIds: Set<string>;
+  onUnlinked: (memberId: string) => void;
+  onPageMembers: (members: Member[]) => void;
   fetchMembers: () => Promise<Pagination<Member>>;
   membersPromise: Promise<Pagination<Member>>;
   startTransition: (callback: () => void) => void;
   sharedT: _Translator<Record<string, any>, "shared">;
   t: _Translator<Record<string, any>, "list_members">;
+  onToggleRow: (memberId: string, checked: boolean) => void;
   setMembersPromise: (promise: Promise<Pagination<Member>>) => void;
 }
 
@@ -260,8 +371,12 @@ interface MemberRowsProps {
 const MemberRows = ({
   t,
   sharedT,
+  selectedIds,
+  onUnlinked,
+  onToggleRow,
   fetchMembers,
   membersPromise,
+  onPageMembers,
   startTransition,
   setMembersPromise,
 }: MemberRowsProps) => {
@@ -269,6 +384,10 @@ const MemberRows = ({
   const { openModal } = useModal();
   const memberService = new MemberService();
   const { items: members } = use(membersPromise);
+
+  useEffect(() => {
+    onPageMembers(members);
+  }, [members, onPageMembers]);
 
   /**
    * Open the modal to manage the projects assigned to a member.
@@ -302,6 +421,7 @@ const MemberRows = ({
 
       await memberService.unlinkMember(memberId);
       toast.success(t("member_unlinked"));
+      onUnlinked(memberId);
 
       startTransition(() => setMembersPromise(fetchMembers()));
     } catch (error) {
@@ -323,11 +443,27 @@ const MemberRows = ({
   return members.map((member) => (
     <TableRow id={member.id} key={member.id} data-slot="member-row">
       <TableCell>
-        <div className="flex items-center gap-3 min-w-0">
-          <UserAvatar size={32} name={member.name} avatar={member.avatar} />
-          <span className="truncate">{member.name}</span>
+        <div className="flex justify-center">
+          <Checkbox
+            checked={selectedIds.has(member.id)}
+            aria-label={sharedT("select_name", { name: member.name })}
+            data-slot={`select-member-${member.id}`}
+            onCheckedChange={(checked) =>
+              onToggleRow(member.id, checked === true)
+            }
+          />
         </div>
       </TableCell>
+
+      <TableCell>
+        <div className="flex items-center gap-3 min-w-0">
+          <UserAvatar size={32} name={member.name} avatar={member.avatar} />
+          <span className="truncate" data-slot="member-name">
+            {member.name}
+          </span>
+        </div>
+      </TableCell>
+
       <TableCell>{member.email}</TableCell>
 
       <TableCell className="text-center">

@@ -47,6 +47,7 @@
     "current_page": "Current page",
     "selected": "Selected",
     "name": "Name",
+    "email": "E-mail",
     "client": "Client",
     "status": "Status",
     "created_at": "Created at",

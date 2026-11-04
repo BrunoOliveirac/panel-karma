@@ -5,14 +5,6 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: false,
   output: "standalone",
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "ui-avatars.com",
-      },
-    ],
-  },
 };
 
 const withNextIntl = createNextIntlPlugin();

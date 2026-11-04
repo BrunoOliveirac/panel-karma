@@ -33,7 +33,8 @@ test("Should filter the list", async ({ userPage }) => {
 
   const firstMemberRow = userPage.getByTestId("member-row").first();
   const memberName =
-    (await firstMemberRow.locator("td").first().textContent())?.trim() ?? "";
+    (await firstMemberRow.getByTestId("member-name").textContent())?.trim() ??
+    "";
 
   const filterElement = userPage.getByTestId("list-members-search");
   await filterElement.fill(memberName.slice(0, 3));
@@ -80,6 +81,20 @@ test("User confirm the member unlink", async ({ userPage }) => {
   await expect(
     userPage.getByTestId(`unlink-member-${firstMemberId}`),
   ).not.toBeVisible();
+});
+
+test("Should export the current page of members", async ({ userPage }) => {
+  await userPage.goto("/members");
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
+  await expect(userPage.getByTestId("member-row").first()).toBeVisible();
+
+  await userPage.getByTestId("export-menu-members").click();
+
+  const downloadPromise = userPage.waitForEvent("download");
+  await userPage.getByRole("menuitem", { name: "Current page" }).click();
+  const download = await downloadPromise;
+
+  expect(download.suggestedFilename()).toBe("members.xlsx");
 });
 
 test("Should open the member create modal", async ({ userPage }) => {
