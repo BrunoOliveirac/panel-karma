@@ -12,6 +12,7 @@ import {
 import { MembersXlsxService } from "@/lib/services/exports/members-xlsx.service";
 import { ProjectsXlsxService } from "@/lib/services/exports/projects-xlsx.service";
 import { SectorsXlsxService } from "@/lib/services/exports/sectors-xlsx.service";
+import { TicketsXlsxService } from "@/lib/services/exports/tickets-xlsx.service";
 import { DownloadCloud } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
@@ -20,7 +21,7 @@ import { useMemo } from "react";
 interface ExportMenuProps {
   paginatedData: any[];
   selectedIds?: string[];
-  type: "members" | "projects" | "sectors";
+  type: "members" | "projects" | "sectors" | "tickets";
 }
 
 enum ExportType {
@@ -40,11 +41,13 @@ export default function ExportMenu({
   const membersXlsxService = useMemo(() => new MembersXlsxService(), []);
   const sectorsXlsxService = useMemo(() => new SectorsXlsxService(), []);
   const projectsXlsxService = useMemo(() => new ProjectsXlsxService(), []);
+  const ticketsXlsxService = useMemo(() => new TicketsXlsxService(), []);
 
   const services = {
     members: membersXlsxService,
     sectors: sectorsXlsxService,
     projects: projectsXlsxService,
+    tickets: ticketsXlsxService,
   };
 
   const handleExport = (exportType: ExportType) => {

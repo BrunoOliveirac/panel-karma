@@ -143,6 +143,24 @@ test("Should filter tickets by period", async ({ userPage }) => {
   await expect(ticketCard(userPage, title)).toBeVisible();
 });
 
+test("Should export the current page of tickets", async ({ userPage }) => {
+  await userPage.goto("/home");
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
+
+  const title = `Printer ${ticketStamp()}`;
+  await createTicket(userPage, title, "Paper jam");
+  await searchTickets(userPage, title);
+  await expect(ticketCard(userPage, title)).toBeVisible();
+
+  await userPage.getByTestId("export-menu-tickets").click();
+
+  const downloadPromise = userPage.waitForEvent("download");
+  await userPage.getByRole("menuitem", { name: "Current page" }).click();
+  const download = await downloadPromise;
+
+  expect(download.suggestedFilename()).toBe("tickets.xlsx");
+});
+
 test("Should open the support home on the open queue", async ({
   supportPage,
 }) => {

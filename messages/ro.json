@@ -52,7 +52,18 @@
     "status": "Stare",
     "created_at": "Creat la",
     "active": "Activ",
-    "inactive": "Inactiv"
+    "inactive": "Inactiv",
+    "code": "Cod",
+    "title": "Titlu",
+    "description": "Descriere",
+    "user": "Utilizator",
+    "assignee": "Responsabil",
+    "assignee_date": "Data atribuirii",
+    "completion_date": "Data finalizării",
+    "open": "Deschis",
+    "in_progress": "În așteptare",
+    "resolved": "Rezolvat",
+    "cancelled": "Anulat"
   },
   "period": {
     "start_date": "Data de început",

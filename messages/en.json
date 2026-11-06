@@ -52,7 +52,18 @@
     "status": "Status",
     "created_at": "Created at",
     "active": "Active",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "code": "Code",
+    "title": "Title",
+    "description": "Description",
+    "user": "User",
+    "assignee": "Assignee",
+    "assignee_date": "Assignee date",
+    "completion_date": "Completion date",
+    "open": "Open",
+    "in_progress": "Pending",
+    "resolved": "Resolved",
+    "cancelled": "Cancelled"
   },
   "period": {
     "start_date": "Start date",

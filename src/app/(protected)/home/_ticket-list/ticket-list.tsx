@@ -3,6 +3,7 @@
 import PaginationControls from "@/components/global/pagination-controls/pagination-controls";
 import UserAvatar from "@/components/global/user-avatar/user-avatar";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { UserTypeEnum } from "@/lib/enums/user-type.enum";
@@ -20,8 +21,10 @@ type TicketListProps = {
   isLoading: boolean;
   totalPages: number;
   viewerType: UserTypeEnum;
+  selectedIds: Set<string>;
   className?: string;
   onPageChange: (page: number) => void;
+  onToggle: (ticketId: string, checked: boolean) => void;
 };
 
 export default function TicketList({
@@ -31,10 +34,13 @@ export default function TicketList({
   className,
   totalPages,
   viewerType,
+  selectedIds,
   onPageChange,
+  onToggle,
 }: TicketListProps) {
   const format = useFormatter();
   const t = useTranslations("home");
+  const sharedT = useTranslations("shared");
 
   return (
     <div
@@ -61,33 +67,45 @@ export default function TicketList({
                 data-slot="ticket-card"
                 className="rounded-lg bg-card px-4 py-3 ring-1 ring-foreground/10"
               >
-                <div className="flex justify-between">
-                  <div data-slot="ticket-user" className="flex gap-2">
-                    <UserAvatar
-                      size={28}
-                      avatar={ticket.userAvatar}
-                      name={ticket.userName ?? ""}
+                <div className="flex justify-between gap-3">
+                  <div className="flex min-w-0 gap-3">
+                    <Checkbox
+                      className="mt-1"
+                      checked={selectedIds.has(ticket.id)}
+                      data-slot={`select-ticket-${ticket.id}`}
+                      aria-label={sharedT("select_name", { name: ticket.title })}
+                      onCheckedChange={(checked) =>
+                        onToggle(ticket.id, checked === true)
+                      }
                     />
 
-                    <div>
-                      <h4 className="truncate">
-                        {ticket.userName}
+                    <div data-slot="ticket-user" className="flex min-w-0 gap-2">
+                      <UserAvatar
+                        size={28}
+                        avatar={ticket.userAvatar}
+                        name={ticket.userName ?? ""}
+                      />
 
-                        <span className="text-muted-foreground">
-                          {" - "}
+                      <div>
+                        <h4 className="truncate">
+                          {ticket.userName}
 
-                          {ticket.code
-                            ? `#${formatTicketCode(ticket.code)} `
-                            : ""}
-                        </span>
-                      </h4>
+                          <span className="text-muted-foreground">
+                            {" - "}
 
-                      <p className="text-[10px] text-muted-foreground">
-                        {format.dateTime(parseISO(ticket.createdAt), {
-                          dateStyle: "medium",
-                          timeStyle: "short",
-                        })}
-                      </p>
+                            {ticket.code
+                              ? `#${formatTicketCode(ticket.code)} `
+                              : ""}
+                          </span>
+                        </h4>
+
+                        <p className="text-[10px] text-muted-foreground">
+                          {format.dateTime(parseISO(ticket.createdAt), {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          })}
+                        </p>
+                      </div>
                     </div>
                   </div>
 
