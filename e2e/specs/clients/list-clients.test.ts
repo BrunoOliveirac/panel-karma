@@ -133,6 +133,20 @@ test("User confirm the client deletion", async ({ userPage }) => {
   ).not.toBeVisible();
 });
 
+test("Should export the current page of clients", async ({ userPage }) => {
+  await userPage.goto("/clients");
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
+  await expect(userPage.getByTestId("client-card").first()).toBeVisible();
+
+  await userPage.getByTestId("export-menu-clients").click();
+
+  const downloadPromise = userPage.waitForEvent("download");
+  await userPage.getByRole("menuitem", { name: "Current page" }).click();
+  const download = await downloadPromise;
+
+  expect(download.suggestedFilename()).toBe("clients.xlsx");
+});
+
 test("Should open the client create modal", async ({ userPage }) => {
   await userPage.goto("/clients");
   await expect(userPage.getByTestId("spinner")).toBeHidden();

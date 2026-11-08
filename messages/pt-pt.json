@@ -63,7 +63,14 @@
     "open": "Aberto",
     "in_progress": "Pendente",
     "resolved": "Resolvido",
-    "cancelled": "Cancelado"
+    "cancelled": "Cancelado",
+    "phone": "Telefone",
+    "sector": "Setor",
+    "budget": "Orçamento",
+    "notes": "Notas",
+    "favorite": "Favorito",
+    "yes": "Sim",
+    "no": "Não"
   },
   "period": {
     "start_date": "Data inicial",

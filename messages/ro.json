@@ -63,7 +63,14 @@
     "open": "Deschis",
     "in_progress": "În așteptare",
     "resolved": "Rezolvat",
-    "cancelled": "Anulat"
+    "cancelled": "Anulat",
+    "phone": "Telefon",
+    "sector": "Sector",
+    "budget": "Buget",
+    "notes": "Note",
+    "favorite": "Favorit",
+    "yes": "Da",
+    "no": "Nu"
   },
   "period": {
     "start_date": "Data de început",

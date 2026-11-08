@@ -17,6 +17,7 @@ jest.mock("use-intl", () => ({
 
 jest.mock("next-intl", () => ({
   useTranslations: () => (t: _Translator<Record<string, any>>) => t,
+  useLocale: () => "en",
 }));
 
 jest.mock("sonner", () => ({

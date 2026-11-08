@@ -9,6 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ClientsXlsxService } from "@/lib/services/exports/clients-xlsx.service";
 import { MembersXlsxService } from "@/lib/services/exports/members-xlsx.service";
 import { ProjectsXlsxService } from "@/lib/services/exports/projects-xlsx.service";
 import { SectorsXlsxService } from "@/lib/services/exports/sectors-xlsx.service";
@@ -21,7 +22,8 @@ import { useMemo } from "react";
 interface ExportMenuProps {
   paginatedData: any[];
   selectedIds?: string[];
-  type: "members" | "projects" | "sectors" | "tickets";
+  allData?: any[];
+  type: "clients" | "members" | "projects" | "sectors" | "tickets";
 }
 
 enum ExportType {
@@ -33,17 +35,20 @@ enum ExportType {
 export default function ExportMenu({
   paginatedData,
   type,
+  allData,
   selectedIds = [],
 }: ExportMenuProps) {
   const locale = useLocale();
   const t = useTranslations("export_menu");
 
+  const clientsXlsxService = useMemo(() => new ClientsXlsxService(), []);
   const membersXlsxService = useMemo(() => new MembersXlsxService(), []);
   const sectorsXlsxService = useMemo(() => new SectorsXlsxService(), []);
   const projectsXlsxService = useMemo(() => new ProjectsXlsxService(), []);
   const ticketsXlsxService = useMemo(() => new TicketsXlsxService(), []);
 
   const services = {
+    clients: clientsXlsxService,
     members: membersXlsxService,
     sectors: sectorsXlsxService,
     projects: projectsXlsxService,
@@ -55,7 +60,11 @@ export default function ExportMenu({
 
     switch (exportType) {
       case ExportType.ALL:
-        currentService.exportAll({ locale, t });
+        if (type === "clients" && allData !== undefined) {
+          clientsXlsxService.exportAll({ locale, t, data: allData });
+        } else {
+          currentService.exportAll({ locale, t });
+        }
         break;
 
       case ExportType.CURRENT_PAGE:
