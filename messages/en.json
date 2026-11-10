@@ -150,7 +150,8 @@
     "dont_have_account": "Don't have an account? Sign up",
     "error": "We were unable to log in to your account!",
     "invalid_credentials": "Invalid credentials!",
-    "too_many_attempts": "Too many failed attempts. Your account is locked for 15 minutes."
+    "too_many_attempts": "Too many failed attempts. Your account is locked for 5 minutes.",
+    "rate_limited": "Too many requests. Try again in a moment."
   },
   "register": {
     "create_your_account": "Create your account",

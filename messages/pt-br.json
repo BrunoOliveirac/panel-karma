@@ -150,7 +150,8 @@
     "dont_have_account": "Não tem uma conta? Cadastre-se",
     "error": "Não foi possível acessar sua conta!",
     "invalid_credentials": "Credenciais inválidas!",
-    "too_many_attempts": "Muitas tentativas falhas. Sua conta foi bloqueada por 15 minutos."
+    "too_many_attempts": "Muitas tentativas falhas. Sua conta foi bloqueada por 5 minutos.",
+    "rate_limited": "Muitas requisições. Tente novamente em instantes."
   },
   "register": {
     "create_your_account": "Crie sua conta",

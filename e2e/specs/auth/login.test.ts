@@ -67,7 +67,7 @@ test("Login with wrong credentials", async ({ page }) => {
   if (response.status() === 429) {
     await expect(
       page.getByText(
-        "Too many failed attempts. Your account is locked for 15 minutes.",
+        "Too many failed attempts. Your account is locked for 5 minutes.",
       ),
     ).toBeVisible({ timeout: 5000 });
   } else {

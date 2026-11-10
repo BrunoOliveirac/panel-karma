@@ -150,7 +150,8 @@
     "dont_have_account": "Nu ai un cont? Înregistrează-te",
     "error": "Nu am putut să ne conectăm la contul tău!",
     "invalid_credentials": "Date de autentificare invalide!",
-    "too_many_attempts": "Prea multe încercări eșuate. Contul tău este blocat timp de 15 minute."
+    "too_many_attempts": "Prea multe încercări eșuate. Contul tău este blocat timp de 5 minute.",
+    "rate_limited": "Prea multe cereri. Încearcă din nou în câteva momente."
   },
   "register": {
     "create_your_account": "Creează-ți contul",

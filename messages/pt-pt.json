@@ -150,7 +150,8 @@
     "dont_have_account": "Não tem uma conta? Registe-se",
     "error": "Não foi possível iniciar sessão na sua conta!",
     "invalid_credentials": "Credenciais inválidas!",
-    "too_many_attempts": "Demasiadas tentativas falhadas. A sua conta foi bloqueada por 15 minutos."
+    "too_many_attempts": "Demasiadas tentativas falhadas. A sua conta foi bloqueada por 5 minutos.",
+    "rate_limited": "Demasiados pedidos. Tente novamente dentro de momentos."
   },
   "register": {
     "create_your_account": "Crie a sua conta",

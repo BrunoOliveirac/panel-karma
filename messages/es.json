@@ -150,7 +150,8 @@
     "dont_have_account": "¿No tienes una cuenta? Regístrate",
     "error": "¡No pudimos iniciar sesión en tu cuenta!",
     "invalid_credentials": "¡Credenciales inválidas!",
-    "too_many_attempts": "Demasiados intentos fallidos. Tu cuenta está bloqueada durante 15 minutos."
+    "too_many_attempts": "Demasiados intentos fallidos. Tu cuenta está bloqueada durante 5 minutos.",
+    "rate_limited": "Demasiadas solicitudes. Inténtalo de nuevo en unos instantes."
   },
   "register": {
     "create_your_account": "Crea tu cuenta",
