@@ -117,6 +117,20 @@ test("Should activate sector status", async ({ userPage }) => {
   await expect(sectorRow.getByTestId("active-sector-status")).toBeVisible();
 });
 
+test("Should export the current page of sectors", async ({ userPage }) => {
+  await userPage.goto("/sectors");
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
+  await expect(userPage.getByTestId("sector-row").first()).toBeVisible();
+
+  await userPage.getByTestId("export-menu-sectors").click();
+
+  const downloadPromise = userPage.waitForEvent("download");
+  await userPage.getByRole("menuitem", { name: "Current page" }).click();
+  const download = await downloadPromise;
+
+  expect(download.suggestedFilename()).toBe("sectors.xlsx");
+});
+
 test("Should open the sector create modal", async ({ userPage }) => {
   await userPage.goto("/sectors");
   await expect(userPage.getByTestId("spinner")).toBeHidden();

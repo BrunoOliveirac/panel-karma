@@ -54,7 +54,10 @@ export default function Login() {
       if (error instanceof AxiosError) {
         const status = error.response?.status ?? error.status;
 
-        if (status === 429) toast.error(t("too_many_attempts"));
+        const code = (error.response?.data as { code?: string } | undefined)?.code;
+
+        if (status === 429 && code === "RATE_LIMIT") toast.error(t("rate_limited"));
+        else if (status === 429) toast.error(t("too_many_attempts"));
         else if (status === 401) toast.error(t("invalid_credentials"));
         else toast.error(t("error"));
       }
@@ -151,7 +154,7 @@ export default function Login() {
         <Link
           href="/register"
           data-slot="register-link"
-          className="flex justify-center text-sm text-gray-600 dark:text-gray-400 cursor-pointer pt-6 pb-4"
+          className="flex justify-center text-sm text-gray-600 dark:text-gray-400 cursor-pointer py-2 mt-4 mb-2"
         >
           {t("dont_have_account")}
         </Link>

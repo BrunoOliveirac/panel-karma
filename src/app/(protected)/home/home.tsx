@@ -1,5 +1,7 @@
 "use client";
 
+import ExportMenu from "@/components/global/export-menu/export-menu";
+import { Checkbox } from "@/components/ui/checkbox";
 import { TicketStatusEnum } from "@/lib/enums/ticket-status.enum";
 import { UserTypeEnum } from "@/lib/enums/user-type.enum";
 import {
@@ -47,6 +49,7 @@ export default function Home() {
   const boot = useRef({ counts: false, list: false });
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [counts, setCounts] = useState<TicketCounts>(emptyCounts);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
 
   const [status, setStatus] = useState<TicketStatusEnum | null>(() =>
     useLoggedUserStore.getState().user?.type === UserTypeEnum.SUPPORT
@@ -65,6 +68,54 @@ export default function Home() {
   );
 
   const isSupport = user?.type === UserTypeEnum.SUPPORT;
+  const sharedT = useTranslations("shared");
+  const selectedTicketIds = useMemo(() => [...selectedIds], [selectedIds]);
+
+  const pageSelection = useMemo(() => {
+    let selectedCount = 0;
+
+    for (const ticket of tickets) {
+      if (selectedIds.has(ticket.id)) selectedCount += 1;
+    }
+
+    return {
+      allPageSelected: tickets.length > 0 && selectedCount === tickets.length,
+      somePageSelected: selectedCount > 0 && selectedCount < tickets.length,
+    };
+  }, [selectedIds, tickets]);
+
+  /**
+   * Select or clear every ticket on the current page.
+   * @param checked Whether the page should be selected.
+   */
+  const togglePage = (checked: boolean) => {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+
+      for (const ticket of tickets) {
+        if (checked) next.add(ticket.id);
+        else next.delete(ticket.id);
+      }
+
+      return next;
+    });
+  };
+
+  /**
+   * Select or clear a single ticket.
+   * @param ticketId The ticket id.
+   * @param checked Whether the ticket should be selected.
+   */
+  const toggleRow = (ticketId: string, checked: boolean) => {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+
+      if (checked) next.add(ticketId);
+      else next.delete(ticketId);
+
+      return next;
+    });
+  };
 
   const debouncedSetQuery = useDebouncedCallback((value: string) => {
     setPage(1);
@@ -232,20 +283,43 @@ export default function Home() {
     <div className="min-h-0 flex-1 overflow-y-auto px-1">
       <div className="grid gap-4 pb-6 md:h-full md:min-h-112 md:grid-cols-2 md:gap-6">
         <div className="contents md:flex md:min-h-0 md:flex-col md:gap-6 md:overflow-hidden">
-          <TicketFilters
-            search={search}
-            endDate={endDate}
-            startDate={startDate}
-            onSearchChange={(value) => {
-              setSearch(value);
-              debouncedSetQuery(value);
-            }}
-            onPeriodChange={(nextStart, nextEnd) => {
-              setPage(1);
-              setStartDate(nextStart);
-              setEndDate(nextEnd);
-            }}
-          />
+          <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center">
+            <TicketFilters
+              search={search}
+              endDate={endDate}
+              startDate={startDate}
+              className="min-w-0 flex-1"
+              onSearchChange={(value) => {
+                setSearch(value);
+                debouncedSetQuery(value);
+              }}
+              onPeriodChange={(nextStart, nextEnd) => {
+                setPage(1);
+                setStartDate(nextStart);
+                setEndDate(nextEnd);
+              }}
+            />
+
+            <div className="flex shrink-0 items-center gap-3">
+              <Checkbox
+                aria-label={sharedT("select_page")}
+                data-slot="select-page"
+                disabled={!tickets.length || isLoading}
+                checked={
+                  pageSelection.somePageSelected
+                    ? "indeterminate"
+                    : pageSelection.allPageSelected
+                }
+                onCheckedChange={(checked) => togglePage(checked === true)}
+              />
+
+              <ExportMenu
+                type="tickets"
+                selectedIds={selectedTicketIds}
+                paginatedData={tickets}
+              />
+            </div>
+          </div>
 
           <TicketList
             page={page}
@@ -253,8 +327,10 @@ export default function Home() {
             isLoading={isLoading}
             totalPages={totalPages}
             viewerType={user.type}
+            selectedIds={selectedIds}
             className="max-md:order-3"
             onPageChange={setPage}
+            onToggle={toggleRow}
           />
         </div>
 

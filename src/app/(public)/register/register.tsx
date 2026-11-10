@@ -245,7 +245,7 @@ export default function Register() {
         <Link
           href="/login"
           data-slot="login-link"
-          className="flex justify-center text-sm text-gray-600 dark:text-gray-400 cursor-pointer pt-6 pb-4"
+          className="flex justify-center text-sm text-gray-600 dark:text-gray-400 cursor-pointer py-2 mt-4 mb-2"
         >
           {registerT("login")}
         </Link>

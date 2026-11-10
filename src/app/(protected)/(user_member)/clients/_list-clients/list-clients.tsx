@@ -1,9 +1,11 @@
 "use client";
 
+import ExportMenu from "@/components/global/export-menu/export-menu";
 import PaginationControls from "@/components/global/pagination-controls/pagination-controls";
 import Swal from "sweetalert2";
 import UserAvatar from "@/components/global/user-avatar/user-avatar";
 import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   InputGroup,
   InputGroupAddon,
@@ -25,6 +27,26 @@ import UpsertClient from "../_upsert-client/upsert-client";
 import { toast } from "sonner";
 import DocumentTabs from "@/components/global/document-tabs/document-tabs";
 
+/**
+ * Drop selected ids that are no longer in the visible client list.
+ * @param current Currently selected client ids.
+ * @param clients Clients that remain visible.
+ */
+function retainVisibleSelection(current: Set<string>, clients: Client[]) {
+  if (!current.size) return current;
+
+  const visibleIds = new Set(clients.map((client) => client.id));
+  let changed = false;
+  const next = new Set<string>();
+
+  for (const id of current) {
+    if (visibleIds.has(id)) next.add(id);
+    else changed = true;
+  }
+
+  return changed ? next : current;
+}
+
 export default function ListClients() {
   const pageSize = 10;
   const router = useRouter();
@@ -40,36 +62,74 @@ export default function ListClients() {
   const setTitle = useTitle((state) => state.setTitle);
   const [mainClients, setMainClients] = useState<Client[]>([]);
   const clientService = useMemo(() => new ClientService(), []);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
+
+  const selectedClientIds = useMemo(() => [...selectedIds], [selectedIds]);
 
   const tabs = [
     { name: t("all_clients"), id: "all" },
     { name: t("favorites"), id: "favorite" },
   ];
 
+  const scopedClients = useMemo(() => {
+    if (selectedTab === "favorite") {
+      return mainClients.filter((client) => client.favorite);
+    }
+
+    return mainClients;
+  }, [mainClients, selectedTab]);
+
   const filteredClients = useMemo(() => {
-    let clients = mainClients;
     const term = search.trim().toLowerCase();
 
-    if (selectedTab === "favorite") {
-      clients = clients.filter((client) => client.favorite);
-    }
+    if (!search) return scopedClients;
 
-    if (search) {
-      clients = clients.filter(
-        (client) =>
-          client.name.toLowerCase().includes(term) ||
-          client.email.toLowerCase().includes(term) ||
-          client.notes?.toLowerCase().includes(term),
-      );
-    }
+    return scopedClients.filter(
+      (client) =>
+        client.name.toLowerCase().includes(term) ||
+        client.email.toLowerCase().includes(term) ||
+        client.notes?.toLowerCase().includes(term),
+    );
+  }, [scopedClients, search]);
 
-    return clients;
-  }, [mainClients, search, selectedTab]);
+  const visibleClientIds = filteredClients
+    .map((client) => client.id)
+    .join("\0");
+  const [trackedVisibleClientIds, setTrackedVisibleClientIds] =
+    useState(visibleClientIds);
+
+  if (visibleClientIds !== trackedVisibleClientIds) {
+    setTrackedVisibleClientIds(visibleClientIds);
+    setSelectedIds((current) =>
+      retainVisibleSelection(current, filteredClients),
+    );
+  }
+
+  const toggleTab = (tabId: string) => {
+    setSelectedTab(tabId);
+    setPage(1);
+  };
 
   const paginatedClients = useMemo(() => {
     const start = (page - 1) * pageSize;
     return filteredClients.slice(start, start + pageSize);
   }, [filteredClients, page, pageSize]);
+
+  const pageSelection = useMemo(() => {
+    let selectedCount = 0;
+
+    for (const client of paginatedClients) {
+      if (selectedIds.has(client.id)) selectedCount += 1;
+    }
+
+    return {
+      allPageSelected:
+        paginatedClients.length > 0 &&
+        selectedCount === paginatedClients.length,
+      somePageSelected:
+        selectedCount > 0 && selectedCount < paginatedClients.length,
+    };
+  }, [paginatedClients, selectedIds]);
 
   /**
    * Open the upsert client modal.
@@ -194,6 +254,39 @@ export default function ListClients() {
     }
   };
 
+  /**
+   * Select or clear every client on the current page.
+   * @param checked Whether the page should be selected.
+   */
+  const togglePage = (checked: boolean) => {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+
+      for (const client of paginatedClients) {
+        if (checked) next.add(client.id);
+        else next.delete(client.id);
+      }
+
+      return next;
+    });
+  };
+
+  /**
+   * Select or clear a single client.
+   * @param clientId The client to select or clear.
+   * @param checked Whether the client should be selected.
+   */
+  const toggleClient = (clientId: string, checked: boolean) => {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+
+      if (checked) next.add(clientId);
+      else next.delete(clientId);
+
+      return next;
+    });
+  };
+
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-hidden gap-6 pb-6">
       <div className="shrink-0 max-h-fit grid sm:flex justify-between items-center flex-wrap gap-4">
@@ -204,7 +297,10 @@ export default function ListClients() {
             <InputGroupInput
               placeholder={t("search")}
               dataSlot="list-clients-search"
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
             />
 
             <InputGroupAddon>
@@ -212,20 +308,43 @@ export default function ListClients() {
             </InputGroupAddon>
           </InputGroup>
 
-          <button
-            data-slot="create-client"
-            onClick={() => openUpsertClientModal()}
-            className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-9 px-3 rounded transition-all place-content-center hover:brightness-75"
-          >
-            {t("create_client")}
-          </button>
+          <div className="flex items-center gap-4">
+            <Checkbox
+              aria-label={sharedT("select_page")}
+              data-slot="select-page"
+              disabled={!paginatedClients.length}
+              checked={
+                pageSelection.somePageSelected
+                  ? "indeterminate"
+                  : pageSelection.allPageSelected
+              }
+              onCheckedChange={(checked) => togglePage(checked === true)}
+            />
+
+            <ExportMenu
+              type="clients"
+              selectedIds={selectedClientIds}
+              paginatedData={paginatedClients}
+              allData={
+                selectedTab === "favorite" ? scopedClients : undefined
+              }
+            />
+
+            <button
+              data-slot="create-client"
+              onClick={() => openUpsertClientModal()}
+              className="min-w-24 bg-linear-to-br! from-primary to-(--info) text-xs! sm:text-sm! text-white h-9 px-3 rounded transition-all place-content-center hover:brightness-75"
+            >
+              {t("create_client")}
+            </button>
+          </div>
         </div>
       </div>
 
       <DocumentTabs
         tabs={tabs}
         selectedTab={selectedTab}
-        toggleTab={setSelectedTab}
+        toggleTab={toggleTab}
       />
 
       {loading ? (
@@ -241,7 +360,9 @@ export default function ListClients() {
         <>
           <ClientList
             clients={paginatedClients}
+            selectedIds={selectedIds}
             deleteClient={deleteClient}
+            toggleClient={toggleClient}
             toggleFavorite={toggleFavorite}
             handleUpdateClientModal={openUpsertClientModal}
           />
@@ -263,16 +384,21 @@ export default function ListClients() {
 
 function ClientList({
   clients,
+  selectedIds,
   deleteClient,
+  toggleClient,
   toggleFavorite,
   handleUpdateClientModal,
 }: {
   clients: Client[];
+  selectedIds: Set<string>;
   deleteClient: (clientId: string) => void;
+  toggleClient: (clientId: string, checked: boolean) => void;
   toggleFavorite: (client: Client) => void;
   handleUpdateClientModal: (client: Client) => void;
 }) {
   const t = useTranslations("list_clients");
+  const sharedT = useTranslations("shared");
 
   /**
    * Toggle the favorite status of a client, emmiting the event to the parent.
@@ -311,7 +437,21 @@ function ClientList({
             onClick={() => handleUpdateClientModal(client)}
             className="cursor-pointer transition-all hover:shadow-lg hover:shadow-primary/25 hover:z-10 group"
           >
-            <CardContent>
+            <CardContent className="relative">
+              <div
+                className="absolute -top-2 left-2"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <Checkbox
+                  checked={selectedIds.has(client.id)}
+                  aria-label={sharedT("select_name", { name: client.name })}
+                  data-slot={`select-client-${client.id}`}
+                  onCheckedChange={(checked) =>
+                    toggleClient(client.id, checked === true)
+                  }
+                />
+              </div>
+
               <div className="flex justify-evenly items-center mb-3">
                 <button
                   data-slot={`favorite-client-${client.id}`}

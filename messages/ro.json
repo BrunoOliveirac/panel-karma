@@ -36,7 +36,41 @@
     "unlink": "Dezactivează legătura",
     "manage_projects": "Gestionează proiectele",
     "activate": "Activează",
-    "deactivate": "Dezactivează"
+    "deactivate": "Dezactivează",
+    "client": "Client",
+    "select_page": "Selectează pagina curentă",
+    "select_name": "Selectează {name}"
+  },
+  "export_menu": {
+    "export": "Exportă",
+    "all": "Toate",
+    "current_page": "Pagina curentă",
+    "selected": "Selectate",
+    "name": "Nume",
+    "email": "E-mail",
+    "client": "Client",
+    "status": "Stare",
+    "created_at": "Creat la",
+    "active": "Activ",
+    "inactive": "Inactiv",
+    "code": "Cod",
+    "title": "Titlu",
+    "description": "Descriere",
+    "user": "Utilizator",
+    "assignee": "Responsabil",
+    "assignee_date": "Data atribuirii",
+    "completion_date": "Data finalizării",
+    "open": "Deschis",
+    "in_progress": "În așteptare",
+    "resolved": "Rezolvat",
+    "cancelled": "Anulat",
+    "phone": "Telefon",
+    "sector": "Sector",
+    "budget": "Buget",
+    "notes": "Note",
+    "favorite": "Favorit",
+    "yes": "Da",
+    "no": "Nu"
   },
   "period": {
     "start_date": "Data de început",
@@ -116,7 +150,8 @@
     "dont_have_account": "Nu ai un cont? Înregistrează-te",
     "error": "Nu am putut să ne conectăm la contul tău!",
     "invalid_credentials": "Date de autentificare invalide!",
-    "too_many_attempts": "Prea multe încercări eșuate. Contul tău este blocat timp de 15 minute."
+    "too_many_attempts": "Prea multe încercări eșuate. Contul tău este blocat timp de 5 minute.",
+    "rate_limited": "Prea multe cereri. Încearcă din nou în câteva momente."
   },
   "register": {
     "create_your_account": "Creează-ți contul",

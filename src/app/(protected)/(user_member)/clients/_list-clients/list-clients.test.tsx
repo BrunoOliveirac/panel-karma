@@ -10,6 +10,9 @@ const deleteClientMock = jest.fn();
 const getAllClientsMock = jest.fn();
 const toggleFavoriteMock = jest.fn();
 const getAllActiveSectorsMock = jest.fn();
+const exportAllMock = jest.fn();
+const exportCurrentPageMock = jest.fn();
+const exportSelectedMock = jest.fn();
 
 jest.mock("sweetalert2", () => ({
   __esModule: true,
@@ -22,6 +25,7 @@ jest.mock("use-intl", () => ({
 
 jest.mock("next-intl", () => ({
   useTranslations: () => (t: _Translator<Record<string, any>>) => t,
+  useLocale: () => "en",
 }));
 
 jest.mock("sonner", () => ({
@@ -50,6 +54,14 @@ jest.mock("@/lib/services/sector.service", () => {
     })),
   };
 });
+
+jest.mock("@/lib/services/exports/clients-xlsx.service", () => ({
+  ClientsXlsxService: jest.fn().mockImplementation(() => ({
+    exportAll: (...args: unknown[]) => exportAllMock(...args),
+    exportCurrentPage: (...args: unknown[]) => exportCurrentPageMock(...args),
+    exportSelected: (...args: unknown[]) => exportSelectedMock(...args),
+  })),
+}));
 
 const mockClients = (count = 15) => {
   return new Array(count).fill(null).map((_, i) => {
@@ -166,6 +178,58 @@ describe("ListClients", () => {
     expect(screen.getByText("clients_not_found")).toBeInTheDocument();
   });
 
+  it("Filters the favorites tab by name", async () => {
+    getAllClientsMock.mockResolvedValue(mockClients(5));
+    renderWithProviders(<ListClients />);
+
+    await waitFor(() => {
+      expect(screen.getAllByTestId("client-card")).toHaveLength(5);
+    });
+
+    await userEvent.click(screen.getByTestId("tab-favorite"));
+    await userEvent.type(screen.getByPlaceholderText(/search/i), "Client 03");
+
+    expect(screen.getByText("Client 03")).toBeInTheDocument();
+    expect(screen.queryByText("Client 01")).not.toBeInTheDocument();
+    expect(screen.queryByText("Client 02")).not.toBeInTheDocument();
+  });
+
+  it("Returns to the first page when the search changes", async () => {
+    getAllClientsMock.mockResolvedValue(mockClients(30));
+    renderWithProviders(<ListClients />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("pagination-link-2")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTestId("pagination-link-2"));
+    expect(screen.queryByText("Client 01")).not.toBeInTheDocument();
+
+    await userEvent.type(screen.getByPlaceholderText(/search/i), "Client 01");
+
+    expect(screen.getByText("Client 01")).toBeInTheDocument();
+    expect(screen.queryByText("clients_not_found")).not.toBeInTheDocument();
+  });
+
+  it("Returns to the first page when opening favorites", async () => {
+    getAllClientsMock.mockResolvedValue(mockClients(30));
+    renderWithProviders(<ListClients />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("pagination-link-3")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTestId("pagination-link-2"));
+    expect(screen.queryByText("Client 01")).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId("tab-favorite"));
+
+    expect(screen.getByText("Client 01")).toBeInTheDocument();
+    expect(screen.queryByText("Client 21")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("pagination-link-3")).not.toBeInTheDocument();
+    expect(screen.getByTestId("pagination-link-2")).toBeInTheDocument();
+  });
+
   it("Toggle the selected category", async () => {
     getAllClientsMock.mockResolvedValue(mockClients(5));
     renderWithProviders(<ListClients />);
@@ -225,6 +289,92 @@ describe("ListClients", () => {
       expect(deleteClientMock).not.toHaveBeenCalled();
       expect(screen.getByText("Client 01")).toBeInTheDocument();
     });
+  });
+
+  it("Should export every client, the current page, and the selection", async () => {
+    getAllClientsMock.mockResolvedValue(mockClients());
+    renderWithProviders(<ListClients />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Client 01")).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByTestId("select-client-01"));
+
+    await userEvent.click(screen.getByTestId("export-menu-clients"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "all" }));
+
+    await userEvent.click(screen.getByTestId("export-menu-clients"));
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "current_page" }),
+    );
+
+    await userEvent.click(screen.getByTestId("export-menu-clients"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "selected" }));
+
+    expect(exportAllMock).toHaveBeenCalledWith(
+      expect.objectContaining({ locale: "en" }),
+    );
+
+    const exportedPage = exportCurrentPageMock.mock.calls[0][0].data;
+    expect(exportedPage).toHaveLength(10);
+    expect(exportedPage.map((item: { id: string }) => item.id)).toEqual(
+      expect.arrayContaining(["01", "10"]),
+    );
+    expect(exportedPage.map((item: { id: string }) => item.id)).not.toContain(
+      "11",
+    );
+
+    expect(exportSelectedMock).toHaveBeenCalledWith(
+      expect.objectContaining({ dataIds: ["01"] }),
+    );
+  });
+
+  it("Should export only favorites from the favorites tab", async () => {
+    getAllClientsMock.mockResolvedValue(mockClients());
+    renderWithProviders(<ListClients />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Client 01")).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByTestId("select-client-01"));
+    await userEvent.click(screen.getByTestId("select-client-02"));
+    await userEvent.click(screen.getByTestId("tab-favorite"));
+
+    await waitFor(() => {
+      expect(screen.queryByText("Client 02")).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByTestId("export-menu-clients"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "all" }));
+
+    await userEvent.click(screen.getByTestId("export-menu-clients"));
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "current_page" }),
+    );
+
+    await userEvent.click(screen.getByTestId("export-menu-clients"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "selected" }));
+
+    const exportedAll = exportAllMock.mock.calls[0][0].data;
+    expect(exportedAll).toHaveLength(8);
+    expect(
+      exportedAll.every((item: { favorite: boolean }) => item.favorite),
+    ).toBe(true);
+    expect(exportedAll.map((item: { id: string }) => item.id)).not.toContain(
+      "02",
+    );
+
+    const exportedPage = exportCurrentPageMock.mock.calls[0][0].data;
+    expect(exportedPage).toHaveLength(8);
+    expect(
+      exportedPage.every((item: { favorite: boolean }) => item.favorite),
+    ).toBe(true);
+
+    expect(exportSelectedMock).toHaveBeenCalledWith(
+      expect.objectContaining({ dataIds: ["01"] }),
+    );
   });
 
   it("Should open the client's create modal", async () => {

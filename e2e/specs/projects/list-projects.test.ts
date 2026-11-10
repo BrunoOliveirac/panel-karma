@@ -30,7 +30,7 @@ test("Should filter by project name", async ({ userPage }) => {
   await expect(firstProjectRow).toBeVisible();
 
   const projectName =
-    (await firstProjectRow.locator("td").first().textContent())?.trim() ?? "";
+    (await firstProjectRow.locator("td").nth(1).textContent())?.trim() ?? "";
 
   const suffixTimestamp = projectName.split(" ").at(-1) ?? projectName;
 
@@ -38,7 +38,7 @@ test("Should filter by project name", async ({ userPage }) => {
   const hasSecondProject = await secondProjectRow.isVisible();
 
   const secondProjectName = hasSecondProject
-    ? ((await secondProjectRow.locator("td").first().textContent())?.trim() ??
+    ? ((await secondProjectRow.locator("td").nth(1).textContent())?.trim() ??
       "")
     : "";
 
@@ -73,7 +73,7 @@ test("Should filter by project client", async ({ userPage }) => {
   const filteredRowCount = await projectRows.count();
 
   for (let index = 0; index < filteredRowCount; index++) {
-    await expect(projectRows.nth(index).locator("td").nth(1)).toHaveText(
+    await expect(projectRows.nth(index).locator("td").nth(2)).toHaveText(
       clientName,
     );
   }
@@ -140,7 +140,7 @@ test("Should deactivate project status", async ({ userPage }) => {
   );
 
   await projectRow.getByTestId(`toggle-project-status-${projectId}`).click();
-  await expect(projectRow.getByTestId("active-project-status")).toBeVisible();
+  await expect(projectRow.getByTestId("inactive-project-status")).toBeVisible();
 });
 
 test("Should activate project status", async ({ userPage }) => {
@@ -163,6 +163,20 @@ test("Should activate project status", async ({ userPage }) => {
 
   await projectRow.getByTestId(`toggle-project-status-${projectId}`).click();
   await expect(projectRow.getByTestId("active-project-status")).toBeVisible();
+});
+
+test("Should export the current page of projects", async ({ userPage }) => {
+  await userPage.goto("/projects");
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
+  await expect(userPage.getByTestId("project-row").first()).toBeVisible();
+
+  await userPage.getByTestId("export-menu-projects").click();
+
+  const downloadPromise = userPage.waitForEvent("download");
+  await userPage.getByRole("menuitem", { name: "Current page" }).click();
+  const download = await downloadPromise;
+
+  expect(download.suggestedFilename()).toBe("projects.xlsx");
 });
 
 test("Should open the project create modal", async ({ userPage }) => {

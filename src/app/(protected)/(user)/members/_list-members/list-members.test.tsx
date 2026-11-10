@@ -12,6 +12,9 @@ const getAllLinkedMembersMock = jest.fn();
 const getLinkedProjectIdsMock = jest.fn();
 const managementProjectMembersMock = jest.fn();
 const getAllActiveProjectsMock = jest.fn();
+const exportAllMock = jest.fn();
+const exportCurrentPageMock = jest.fn();
+const exportSelectedMock = jest.fn();
 const pushMock = jest.fn();
 const searchParamsGetMock = jest.fn();
 
@@ -30,6 +33,7 @@ jest.mock("next-intl", () => {
   return {
     useTranslations: () => translate,
     useFormatter: jest.fn(),
+    useLocale: () => "en",
   };
 });
 
@@ -52,9 +56,7 @@ jest.mock("@/components/ui/combobox", () => ({
       data-slot={inputDataSlot}
       value={field.value?.join(",") ?? ""}
       onChange={(event) =>
-        field.onChange(
-          event.target.value ? event.target.value.split(",") : [],
-        )
+        field.onChange(event.target.value ? event.target.value.split(",") : [])
       }
     />
   ),
@@ -85,6 +87,14 @@ jest.mock("@/lib/services/member.service", () => {
     })),
   };
 });
+
+jest.mock("@/lib/services/exports/members-xlsx.service", () => ({
+  MembersXlsxService: jest.fn().mockImplementation(() => ({
+    exportAll: (...args: unknown[]) => exportAllMock(...args),
+    exportCurrentPage: (...args: unknown[]) => exportCurrentPageMock(...args),
+    exportSelected: (...args: unknown[]) => exportSelectedMock(...args),
+  })),
+}));
 
 jest.mock("@/lib/services/project.service", () => {
   return {
@@ -231,6 +241,49 @@ describe("ListMembers", () => {
     expect(
       await screen.findByTestId("create-member-modal"),
     ).toBeInTheDocument();
+  });
+
+  it("Should select the current page and export members", async () => {
+    getAllLinkedMembersMock.mockResolvedValue(mockMembersPage(10, 2));
+    await renderWithProvidersAsync(<ListMembers />);
+
+    expect(await screen.findByText("Member 01")).toBeInTheDocument();
+    await userEvent.click(screen.getByTestId("select-member-01"));
+
+    await userEvent.click(screen.getByTestId("export-menu-members"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "all" }));
+
+    await userEvent.click(screen.getByTestId("export-menu-members"));
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "current_page" }),
+    );
+
+    await userEvent.click(screen.getByTestId("export-menu-members"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "selected" }));
+
+    expect(exportAllMock).toHaveBeenCalledWith(
+      expect.objectContaining({ locale: "en" }),
+    );
+
+    const exportedPage = exportCurrentPageMock.mock.calls[0][0].data;
+    expect(exportedPage).toHaveLength(10);
+    expect(exportedPage.map((item: { id: string }) => item.id)).toEqual(
+      expect.arrayContaining(["01", "10"]),
+    );
+
+    expect(exportSelectedMock).toHaveBeenCalledWith(
+      expect.objectContaining({ dataIds: ["01"] }),
+    );
+
+    await userEvent.click(screen.getByTestId("select-page"));
+    expect(screen.getByTestId("select-member-02")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
   });
 
   it("Should open the manage projects modal", async () => {

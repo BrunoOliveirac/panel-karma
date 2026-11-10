@@ -9,6 +9,9 @@ import Swal from "sweetalert2";
 const deleteSectorMock = jest.fn();
 const upsertSectorMock = jest.fn();
 const getAllSectorsMock = jest.fn();
+const exportAllMock = jest.fn();
+const exportCurrentPageMock = jest.fn();
+const exportSelectedMock = jest.fn();
 
 jest.mock("sweetalert2", () => ({
   __esModule: true,
@@ -25,6 +28,7 @@ jest.mock("next-intl", () => {
   return {
     useTranslations: () => translate,
     useFormatter: jest.fn(),
+    useLocale: () => "en",
   };
 });
 
@@ -53,6 +57,14 @@ jest.mock("@/lib/services/sector.service", () => {
     })),
   };
 });
+
+jest.mock("@/lib/services/exports/sectors-xlsx.service", () => ({
+  SectorsXlsxService: jest.fn().mockImplementation(() => ({
+    exportAll: (...args: unknown[]) => exportAllMock(...args),
+    exportCurrentPage: (...args: unknown[]) => exportCurrentPageMock(...args),
+    exportSelected: (...args: unknown[]) => exportSelectedMock(...args),
+  })),
+}));
 
 jest.mocked(useFormatter).mockReturnValue({
   dateTime: jest.fn().mockReturnValue("01/01/2024 10:30"),
@@ -238,6 +250,45 @@ describe("ListSectors", () => {
       expect(deleteSectorMock).not.toHaveBeenCalled();
       expect(screen.getByText("Sector 01")).toBeInTheDocument();
     });
+  });
+
+  it("Should export every sector, the current page, and the selection", async () => {
+    getAllSectorsMock.mockResolvedValue(mockSectors());
+    renderWithProviders(<ListSectors />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Sector 01")).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByTestId("select-sector-01"));
+
+    await userEvent.click(screen.getByTestId("export-menu-sectors"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "all" }));
+
+    await userEvent.click(screen.getByTestId("export-menu-sectors"));
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "current_page" }),
+    );
+
+    await userEvent.click(screen.getByTestId("export-menu-sectors"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "selected" }));
+
+    expect(exportAllMock).toHaveBeenCalledWith(
+      expect.objectContaining({ locale: "en" }),
+    );
+
+    const exportedPage = exportCurrentPageMock.mock.calls[0][0].data;
+    expect(exportedPage).toHaveLength(10);
+    expect(exportedPage.map((item: { id: string }) => item.id)).toEqual(
+      expect.arrayContaining(["01", "10"]),
+    );
+    expect(exportedPage.map((item: { id: string }) => item.id)).not.toContain(
+      "11",
+    );
+
+    expect(exportSelectedMock).toHaveBeenCalledWith(
+      expect.objectContaining({ dataIds: ["01"] }),
+    );
   });
 
   it("Should open the sector's create modal", async () => {

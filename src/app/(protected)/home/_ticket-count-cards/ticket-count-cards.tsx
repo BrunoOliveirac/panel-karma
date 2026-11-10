@@ -102,7 +102,7 @@ export default function TicketCountCards({
             data-slot={`ticket-count-${card.id}`}
             onClick={() => onStatusChange(card.status)}
             className={cn(
-              "cursor-pointer rounded-lg px-4 py-3 text-left transition-shadow duration-300 ease-out",
+              "cursor-pointer rounded-lg px-4 py-3 text-left transition-shadow duration-300 ease-out text-white",
               card.class,
               card.id === "all" && "col-span-2",
               selected ? "ticket-count-selected" : "ring-1 ring-foreground/10",

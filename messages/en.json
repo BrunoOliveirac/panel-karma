@@ -36,7 +36,41 @@
     "unlink": "Unlink",
     "manage_projects": "Manage projects",
     "activate": "Activate",
-    "deactivate": "Deactivate"
+    "deactivate": "Deactivate",
+    "client": "Client",
+    "select_page": "Select current page",
+    "select_name": "Select {name}"
+  },
+  "export_menu": {
+    "export": "Export",
+    "all": "All",
+    "current_page": "Current page",
+    "selected": "Selected",
+    "name": "Name",
+    "email": "E-mail",
+    "client": "Client",
+    "status": "Status",
+    "created_at": "Created at",
+    "active": "Active",
+    "inactive": "Inactive",
+    "code": "Code",
+    "title": "Title",
+    "description": "Description",
+    "user": "User",
+    "assignee": "Assignee",
+    "assignee_date": "Assignee date",
+    "completion_date": "Completion date",
+    "open": "Open",
+    "in_progress": "Pending",
+    "resolved": "Resolved",
+    "cancelled": "Cancelled",
+    "phone": "Phone",
+    "sector": "Sector",
+    "budget": "Budget",
+    "notes": "Notes",
+    "favorite": "Favorite",
+    "yes": "Yes",
+    "no": "No"
   },
   "period": {
     "start_date": "Start date",
@@ -116,7 +150,8 @@
     "dont_have_account": "Don't have an account? Sign up",
     "error": "We were unable to log in to your account!",
     "invalid_credentials": "Invalid credentials!",
-    "too_many_attempts": "Too many failed attempts. Your account is locked for 15 minutes."
+    "too_many_attempts": "Too many failed attempts. Your account is locked for 5 minutes.",
+    "rate_limited": "Too many requests. Try again in a moment."
   },
   "register": {
     "create_your_account": "Create your account",

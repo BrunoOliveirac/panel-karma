@@ -7,10 +7,14 @@ import {
 } from "@/lib/mocks/logged-user.mock";
 import { Ticket, TicketCounts, TicketStreamEvent } from "@/lib/models/ticket";
 import { act, fireEvent, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import Home from "./home";
 
 const listTicketsMock = jest.fn();
 const countTicketsMock = jest.fn();
+const exportAllMock = jest.fn();
+const exportCurrentPageMock = jest.fn();
+const exportSelectedMock = jest.fn();
 
 let streamListener: ((event: TicketStreamEvent) => void) | null = null;
 let resyncListener: (() => void) | null = null;
@@ -61,6 +65,14 @@ jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
 
+jest.mock("@/lib/services/exports/tickets-xlsx.service", () => ({
+  TicketsXlsxService: jest.fn().mockImplementation(() => ({
+    exportAll: (...args: unknown[]) => exportAllMock(...args),
+    exportCurrentPage: (...args: unknown[]) => exportCurrentPageMock(...args),
+    exportSelected: (...args: unknown[]) => exportSelectedMock(...args),
+  })),
+}));
+
 jest.mock("@/lib/services/ticket.service", () => ({
   TicketService: jest.fn().mockImplementation(() => ({
     listTickets: (...args: unknown[]) => listTicketsMock(...args),
@@ -93,6 +105,9 @@ describe("Home", () => {
   beforeEach(() => {
     streamListener = null;
     resyncListener = null;
+    exportAllMock.mockClear();
+    exportCurrentPageMock.mockClear();
+    exportSelectedMock.mockClear();
     countTicketsMock.mockResolvedValue({
       open: 1,
       inProgress: 1,
@@ -459,5 +474,62 @@ describe("Home", () => {
         expect.objectContaining({ page: 1, query: "printer" }),
       );
     });
+  });
+
+  it("exports the current page, every ticket, and the selection", async () => {
+    listTicketsMock.mockResolvedValue({
+      items: [
+        ticket(),
+        ticket({
+          id: "t2",
+          title: "Network",
+          description: "Loose cable",
+        }),
+      ],
+      totalPages: 1,
+      total: 2,
+    });
+
+    view = await renderWithProvidersAsync(<Home />);
+    expect(await screen.findByText("Paper jam")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId("select-ticket-t1"));
+    await userEvent.click(screen.getByTestId("export-menu-tickets"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "all" }));
+
+    await userEvent.click(screen.getByTestId("export-menu-tickets"));
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "current_page" }),
+    );
+
+    await userEvent.click(screen.getByTestId("export-menu-tickets"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "selected" }));
+
+    expect(exportAllMock).toHaveBeenCalledWith(
+      expect.objectContaining({ locale: "en" }),
+    );
+
+    const exportedPage = exportCurrentPageMock.mock.calls[0][0].data;
+    expect(exportedPage.map((item: { id: string }) => item.id)).toEqual([
+      "t1",
+      "t2",
+    ]);
+    expect(exportSelectedMock).toHaveBeenCalledWith(
+      expect.objectContaining({ dataIds: ["t1"] }),
+    );
+
+    await userEvent.click(screen.getByTestId("select-page"));
+    expect(screen.getByTestId("select-ticket-t1")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    expect(screen.getByTestId("select-ticket-t2")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
   });
 });

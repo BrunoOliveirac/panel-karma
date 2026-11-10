@@ -4,6 +4,7 @@ import { _Translator, useFormatter } from "next-intl";
 import ListProjects from "./list-projects";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { toast } from "sonner";
 import Swal from "sweetalert2";
 
 const deleteProjectMock = jest.fn();
@@ -11,6 +12,9 @@ const upsertProjectMock = jest.fn();
 const toggleProjectActiveMock = jest.fn();
 const getAllProjectsMock = jest.fn();
 const getAllClientsMock = jest.fn();
+const exportAllMock = jest.fn();
+const exportCurrentPageMock = jest.fn();
+const exportSelectedMock = jest.fn();
 
 jest.mock("sweetalert2", () => ({
   __esModule: true,
@@ -24,6 +28,7 @@ jest.mock("use-intl", () => ({
 jest.mock("next-intl", () => ({
   useTranslations: () => (t: _Translator<Record<string, any>>) => t,
   useFormatter: jest.fn(),
+  useLocale: () => "en",
 }));
 
 jest.mock("@/components/ui/tooltip", () => ({
@@ -60,6 +65,14 @@ jest.mock("@/lib/services/client.service", () => {
     })),
   };
 });
+
+jest.mock("@/lib/services/exports/projects-xlsx.service", () => ({
+  ProjectsXlsxService: jest.fn().mockImplementation(() => ({
+    exportAll: (...args: unknown[]) => exportAllMock(...args),
+    exportCurrentPage: (...args: unknown[]) => exportCurrentPageMock(...args),
+    exportSelected: (...args: unknown[]) => exportSelectedMock(...args),
+  })),
+}));
 
 jest.mocked(useFormatter).mockReturnValue({
   dateTime: jest.fn().mockReturnValue("01/01/2024 10:30"),
@@ -180,7 +193,8 @@ describe("ListProjects", () => {
     renderWithProviders(<ListProjects />);
 
     await waitFor(
-      async () => await userEvent.click(screen.getByTestId("delete-project-01")),
+      async () =>
+        await userEvent.click(screen.getByTestId("delete-project-01")),
     );
 
     expect(deleteProjectMock).toHaveBeenCalledWith("01");
@@ -206,6 +220,7 @@ describe("ListProjects", () => {
     await userEvent.click(screen.getByTestId("toggle-project-status-01"));
 
     expect(toggleProjectActiveMock).toHaveBeenCalledWith("01");
+    expect(toast.success).toHaveBeenCalledWith("successfully_deactivated");
     expect(
       within(projectRow).getByTestId("inactive-project-status"),
     ).toBeInTheDocument();
@@ -227,6 +242,7 @@ describe("ListProjects", () => {
     await userEvent.click(screen.getByTestId("toggle-project-status-01"));
 
     expect(toggleProjectActiveMock).toHaveBeenCalledWith("01");
+    expect(toast.success).toHaveBeenCalledWith("successfully_activated");
     expect(
       within(projectRow).getByTestId("active-project-status"),
     ).toBeInTheDocument();
@@ -242,6 +258,192 @@ describe("ListProjects", () => {
       expect(deleteProjectMock).not.toHaveBeenCalled();
       expect(screen.getByText("Project 01")).toBeInTheDocument();
     });
+  });
+
+  it("Should select and clear only the current page", async () => {
+    getAllProjectsMock.mockResolvedValue(mockProjects());
+    renderWithProviders(<ListProjects />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Project 01")).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByTestId("select-page"));
+
+    for (let index = 1; index <= 10; index += 1) {
+      const id = index.toString().padStart(2, "0");
+      expect(screen.getByTestId(`select-project-${id}`)).toHaveAttribute(
+        "aria-checked",
+        "true",
+      );
+    }
+
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+
+    await userEvent.click(screen.getByTestId("pagination-link-2"));
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+    expect(screen.getByTestId("select-project-11")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+
+    await userEvent.click(screen.getByTestId("pagination-link-1"));
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+
+    await userEvent.click(screen.getByTestId("select-page"));
+    expect(screen.getByTestId("select-project-01")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+  });
+
+  it("Should keep selections from other pages when the header changes", async () => {
+    getAllProjectsMock.mockResolvedValue(mockProjects());
+    renderWithProviders(<ListProjects />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Project 01")).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByTestId("select-page"));
+    await userEvent.click(screen.getByTestId("pagination-link-2"));
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+
+    await userEvent.click(screen.getByTestId("select-project-11"));
+    await userEvent.click(screen.getByTestId("pagination-link-1"));
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    expect(screen.getByTestId("select-project-01")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+
+    await userEvent.click(screen.getByTestId("select-page"));
+    await userEvent.click(screen.getByTestId("pagination-link-2"));
+    expect(screen.getByTestId("select-project-11")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "mixed",
+    );
+  });
+
+  it("Should mark the page checkbox as indeterminate for a partial page", async () => {
+    getAllProjectsMock.mockResolvedValue(mockProjects());
+    renderWithProviders(<ListProjects />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Project 01")).toBeInTheDocument();
+    });
+
+    for (let index = 1; index <= 9; index += 1) {
+      const id = index.toString().padStart(2, "0");
+      await userEvent.click(screen.getByTestId(`select-project-${id}`));
+    }
+
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "mixed",
+    );
+    expect(screen.getByTestId("select-project-10")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+
+    await userEvent.click(screen.getByTestId("select-page"));
+
+    for (let index = 1; index <= 10; index += 1) {
+      const id = index.toString().padStart(2, "0");
+      expect(screen.getByTestId(`select-project-${id}`)).toHaveAttribute(
+        "aria-checked",
+        "true",
+      );
+    }
+
+    expect(screen.getByTestId("select-page")).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+  });
+
+  it("Should drop a selection that the search hides", async () => {
+    getAllProjectsMock.mockResolvedValue(mockProjects(2));
+    renderWithProviders(<ListProjects />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Project 01")).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByTestId("select-project-01"));
+    await userEvent.type(screen.getByPlaceholderText(/search/i), "Project 02");
+
+    expect(screen.queryByTestId("select-project-01")).not.toBeInTheDocument();
+
+    await userEvent.clear(screen.getByPlaceholderText(/search/i));
+
+    expect(screen.getByTestId("select-project-01")).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+  });
+
+  it("Should export every project, the current page, and the selection", async () => {
+    getAllProjectsMock.mockResolvedValue(mockProjects());
+    renderWithProviders(<ListProjects />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Project 01")).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByTestId("select-project-01"));
+
+    await userEvent.click(screen.getByTestId("export-menu-projects"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "all" }));
+
+    await userEvent.click(screen.getByTestId("export-menu-projects"));
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "current_page" }),
+    );
+
+    await userEvent.click(screen.getByTestId("export-menu-projects"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "selected" }));
+
+    expect(exportAllMock).toHaveBeenCalledWith(
+      expect.objectContaining({ locale: "en" }),
+    );
+
+    const exportedPage = exportCurrentPageMock.mock.calls[0][0].data;
+    expect(exportedPage).toHaveLength(10);
+    expect(exportedPage.map((project: { id: string }) => project.id)).toEqual(
+      expect.arrayContaining(["01", "10"]),
+    );
+    expect(
+      exportedPage.map((project: { id: string }) => project.id),
+    ).not.toContain("11");
+
+    expect(exportSelectedMock).toHaveBeenCalledWith(
+      expect.objectContaining({ dataIds: ["01"] }),
+    );
   });
 
   it("Should open the project's create modal", async () => {

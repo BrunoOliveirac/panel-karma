@@ -36,7 +36,41 @@
     "unlink": "Desvincular",
     "manage_projects": "Gerenciar projetos",
     "activate": "Ativar",
-    "deactivate": "Desativar"
+    "deactivate": "Desativar",
+    "client": "Cliente",
+    "select_page": "Selecionar página atual",
+    "select_name": "Selecionar {name}"
+  },
+  "export_menu": {
+    "export": "Exportar",
+    "all": "Todos",
+    "current_page": "Página atual",
+    "selected": "Selecionados",
+    "name": "Nome",
+    "email": "E-mail",
+    "client": "Cliente",
+    "status": "Estado",
+    "created_at": "Criado em",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "code": "Código",
+    "title": "Título",
+    "description": "Descrição",
+    "user": "Utilizador",
+    "assignee": "Responsável",
+    "assignee_date": "Data de atribuição",
+    "completion_date": "Data de conclusão",
+    "open": "Aberto",
+    "in_progress": "Pendente",
+    "resolved": "Resolvido",
+    "cancelled": "Cancelado",
+    "phone": "Telefone",
+    "sector": "Setor",
+    "budget": "Orçamento",
+    "notes": "Notas",
+    "favorite": "Favorito",
+    "yes": "Sim",
+    "no": "Não"
   },
   "period": {
     "start_date": "Data inicial",
@@ -116,7 +150,8 @@
     "dont_have_account": "Não tem uma conta? Registe-se",
     "error": "Não foi possível iniciar sessão na sua conta!",
     "invalid_credentials": "Credenciais inválidas!",
-    "too_many_attempts": "Demasiadas tentativas falhadas. A sua conta foi bloqueada por 15 minutos."
+    "too_many_attempts": "Demasiadas tentativas falhadas. A sua conta foi bloqueada por 5 minutos.",
+    "rate_limited": "Demasiados pedidos. Tente novamente dentro de momentos."
   },
   "register": {
     "create_your_account": "Crie a sua conta",

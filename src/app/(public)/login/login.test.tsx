@@ -100,12 +100,20 @@ describe("Login", () => {
     consoleSpy.mockRestore();
   });
 
-  it("shows a rate-limit message on 429", async () => {
+  it("shows an account lock message on 429 without a rate-limit code", async () => {
     const consoleSpy = jest
       .spyOn(console, "error")
       .mockImplementation(() => undefined);
     const error = new AxiosError("Too Many Requests");
-    error.status = 429;
+    error.response = {
+      status: 429,
+      data: {
+        detail: "Account temporarily locked due to too many failed login attempts!",
+      },
+      statusText: "Too Many Requests",
+      headers: {},
+      config: { headers: {} } as never,
+    };
     loginMock.mockRejectedValue(error);
 
     renderWithProviders(<Login />);
@@ -114,6 +122,34 @@ describe("Login", () => {
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith("too_many_attempts");
+    });
+
+    consoleSpy.mockRestore();
+  });
+
+  it("shows a request rate-limit message when the API returns RATE_LIMIT", async () => {
+    const consoleSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+    const error = new AxiosError("Too Many Requests");
+    error.response = {
+      status: 429,
+      data: {
+        code: "RATE_LIMIT",
+        detail: "Too many requests. Try again later.",
+      },
+      statusText: "Too Many Requests",
+      headers: {},
+      config: { headers: {} } as never,
+    };
+    loginMock.mockRejectedValue(error);
+
+    renderWithProviders(<Login />);
+    await fillLoginForm();
+    await userEvent.click(screen.getByTestId("login-submit"));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith("rate_limited");
     });
 
     consoleSpy.mockRestore();
