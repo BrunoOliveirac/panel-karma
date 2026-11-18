@@ -7,11 +7,10 @@ import { sanitizedString } from "@/lib/validators/sanitized-string";
 export const upsertClientValidator = (t: _Translator<Record<string, any>>) => {
   return z.object({
     name: sanitizedString().pipe(z.string().min(1, t("validation.required"))),
+    cover: z.string().optional(),
+    avatar: z.string().optional(),
     email: sanitizedString().pipe(
-      z
-        .string()
-        .min(1, t("validation.required"))
-        .email(t("validation.email")),
+      z.string().min(1, t("validation.required")).email(t("validation.email")),
     ),
     phone: sanitizedString().pipe(
       z.string().min(1, t("validation.required")).min(8),

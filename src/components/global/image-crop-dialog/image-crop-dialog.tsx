@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { SpinnerButton } from "@/components/ui/spinner-button";
+import { cn } from "@/lib/utils/cn";
 import { cropImageToDataUrl } from "@/lib/utils/compress-image";
 import { useTranslations } from "next-intl";
 import { useEffect, useId, useState } from "react";
@@ -128,6 +129,7 @@ export function ImageCropDialog({
       <DialogContent
         showCloseButton
         className="sm:max-w-lg"
+
         data-slot={dataSlot}
       >
         <DialogHeader>
@@ -138,7 +140,12 @@ export function ImageCropDialog({
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="relative h-72 w-full overflow-hidden rounded-2xl bg-black/90">
+          <div
+            className={cn(
+              shape === "rect" ? "h-125" : "h-72",
+              "relative w-full overflow-hidden rounded-2xl bg-black/90",
+            )}
+          >
             {imageSrc && (
               <Cropper
                 image={imageSrc}
@@ -149,9 +156,7 @@ export function ImageCropDialog({
                 showGrid={cropConfig.showGrid}
                 onCropChange={setCrop}
                 onZoomChange={setZoom}
-                onCropComplete={(_area, pixels) =>
-                  setCroppedAreaPixels(pixels)
-                }
+                onCropComplete={(_area, pixels) => setCroppedAreaPixels(pixels)}
               />
             )}
           </div>

@@ -39,7 +39,8 @@
     "deactivate": "Deactivate",
     "client": "Client",
     "select_page": "Select current page",
-    "select_name": "Select {name}"
+    "select_name": "Select {name}",
+    "crop_avatar_description": "Drag to reposition and use the slider to zoom."
   },
   "export_menu": {
     "export": "Export",
@@ -220,7 +221,8 @@
     "could_not_unfavorite": "Could not unfavorite the client!",
     "could_not_favorite": "Could not favorite the client!",
     "could_not_delete": "Could not delete the client!",
-    "client_deleted": "Client deleted successfully!"
+    "client_deleted": "Client deleted successfully!",
+    "cover": "cover"
   },
   "upsert_client": {
     "client_details": "Client Details",
@@ -241,7 +243,12 @@
     "link_copied": "Link copied to clipboard!",
     "email_in_use": "This e-mail is already in use!",
     "select_sector": "Select sector",
-    "sector": "Sector"
+    "sector": "Sector",
+    "cover": "cover",
+    "update_cover": "Update cover",
+    "crop_avatar": "Crop avatar",
+    "crop_cover": "Crop cover",
+    "crop_cover_description": "Crop cover"
   },
   "list_sectors": {
     "sectors": "Sectors",
@@ -385,7 +392,6 @@
     "upload_avatar": "Upload photo",
     "remove_avatar": "Remove",
     "crop_avatar": "Adjust photo",
-    "crop_avatar_description": "Drag to reposition and use the slider to zoom.",
     "invalid_image": "Please select a valid image.",
     "personal_details": "Personal details",
     "personal_details_hint": "Keep your name and email up to date.",

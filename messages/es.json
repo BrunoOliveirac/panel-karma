@@ -39,7 +39,8 @@
     "deactivate": "Desactivar",
     "client": "Cliente",
     "select_page": "Seleccionar página actual",
-    "select_name": "Seleccionar {name}"
+    "select_name": "Seleccionar {name}",
+    "crop_avatar_description": "Arrastra para reposicionar y usa el control para hacer zoom."
   },
   "export_menu": {
     "export": "Exportar",
@@ -220,7 +221,8 @@
     "could_not_unfavorite": "¡No se pudo eliminar el cliente de favoritos!",
     "could_not_favorite": "¡No se pudo agregar el cliente a favoritos!",
     "could_not_delete": "¡No se pudo eliminar el cliente!",
-    "client_deleted": "¡Cliente eliminado con éxito!"
+    "client_deleted": "¡Cliente eliminado con éxito!",
+    "cover": "portada"
   },
   "upsert_client": {
     "client_details": "Detalles del cliente",
@@ -241,7 +243,12 @@
     "link_copied": "¡Enlace copiado al portapapeles!",
     "email_in_use": "¡Este correo electrónico ya está en uso!",
     "select_sector": "Seleccione un sector",
-    "sector": "Sector"
+    "sector": "Sector",
+    "cover": "portada",
+    "update_cover": "Actualizar portada",
+    "crop_avatar": "Recortar avatar",
+    "crop_cover": "Recortar portada",
+    "crop_cover_description": "Recortar portada"
   },
   "list_sectors": {
     "sectors": "Sectores",
@@ -385,7 +392,6 @@
     "upload_avatar": "Subir foto",
     "remove_avatar": "Eliminar",
     "crop_avatar": "Ajustar foto",
-    "crop_avatar_description": "Arrastra para reposicionar y usa el control para hacer zoom.",
     "invalid_image": "Selecciona una imagen válida.",
     "personal_details": "Datos personales",
     "personal_details_hint": "Mantén tu nombre y correo actualizados.",
