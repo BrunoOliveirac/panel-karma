@@ -1,7 +1,4 @@
 {
-  "topbar": {
-    "notifications_not_found": "Notifications not found"
-  },
   "sidebar": {
     "dashboard": "Dashboard",
     "supports": "Supports",
@@ -14,7 +11,9 @@
     "clients": "Clients",
     "projects": "Projects",
     "sectors": "Sectors",
-    "logout": "Logout"
+    "members": "Members",
+    "logout": "Logout",
+    "start_support": "Start support"
   },
   "shared": {
     "are_you_sure": "Are you sure?",
@@ -22,6 +21,9 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "save": "Save",
+    "crop_image": "Adjust image",
+    "crop_image_description": "Drag to reposition and use the slider to zoom.",
+    "zoom": "Zoom",
     "name": "Name",
     "created_at": "Created at",
     "status": "Status",
@@ -31,8 +33,90 @@
     "enter_name": "Enter the name",
     "delete": "Delete",
     "edit": "Edit",
+    "unlink": "Unlink",
+    "manage_projects": "Manage projects",
     "activate": "Activate",
-    "deactivate": "Deactivate"
+    "deactivate": "Deactivate",
+    "client": "Client",
+    "select_page": "Select current page",
+    "select_name": "Select {name}",
+    "crop_avatar_description": "Drag to reposition and use the slider to zoom."
+  },
+  "export_menu": {
+    "export": "Export",
+    "all": "All",
+    "current_page": "Current page",
+    "selected": "Selected",
+    "name": "Name",
+    "email": "E-mail",
+    "client": "Client",
+    "status": "Status",
+    "created_at": "Created at",
+    "active": "Active",
+    "inactive": "Inactive",
+    "code": "Code",
+    "title": "Title",
+    "description": "Description",
+    "user": "User",
+    "assignee": "Assignee",
+    "assignee_date": "Assignee date",
+    "completion_date": "Completion date",
+    "open": "Open",
+    "in_progress": "Pending",
+    "resolved": "Resolved",
+    "cancelled": "Cancelled",
+    "phone": "Phone",
+    "sector": "Sector",
+    "budget": "Budget",
+    "notes": "Notes",
+    "favorite": "Favorite",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "period": {
+    "start_date": "Start date",
+    "end_date": "End date",
+    "last_7_days": "Last 7 days",
+    "last_14_days": "Last 14 days",
+    "last_30_days": "Last 30 days",
+    "last_3_months": "Last 3 months",
+    "last_6_months": "Last 6 months",
+    "custom_range": "Custom range",
+    "clear": "Clear",
+    "apply": "Apply",
+    "previous_month": "Previous month",
+    "next_month": "Next month"
+  },
+  "notifications": {
+    "notifications": "Notifications",
+    "search": "Search by document",
+    "filters": "Filters",
+    "notification_center": "Notification Center",
+    "notifications_not_found": "Notifications not found",
+    "linked_by_user": "You have been linked to a project by <strong>{name}</strong>.",
+    "unlinked_by_user": "You have been unlinked from a project by <strong>{name}</strong>.",
+    "linked_to_project": "You have been linked to project <strong>{project}</strong> by <strong>{name}</strong>.",
+    "mark_as_read": "Mark as read",
+    "delete": "Delete",
+    "mark_all_as_read": "Mark all as read",
+    "view_all": "View all",
+    "notification_marked_as_read": "Notification marked as read",
+    "notification_mark_as_read_failed": "Failed to mark notification as read",
+    "notification_marked_all_as_read": "All notifications marked as read",
+    "notification_mark_all_as_read_failed": "Failed to mark all notifications as read",
+    "notification_deleted": "Notification deleted",
+    "notification_delete_failed": "Failed to delete notification",
+    "unread_notifications": "Unread notifications",
+    "read_notifications": "Read notifications",
+    "all_notifications": "All notifications",
+    "new_notifications_received": "New notifications received!",
+    "refresh": "Refresh",
+    "load_more": "Load more"
+  },
+  "session_expired": {
+    "title": "Session ended",
+    "description": "Your session ended at midnight. Please log in again to continue.",
+    "close": "Close"
   },
   "validation": {
     "required": "This field is required",
@@ -49,6 +133,14 @@
     "previous": "Previous",
     "next": "Next"
   },
+  "start_support": {
+    "support_created": "Support created successfully!",
+    "could_not_start_support": "Could not start the support!",
+    "title": "Title",
+    "enter_title": "Enter the title",
+    "description": "Description",
+    "enter_description": "Enter the description"
+  },
   "login": {
     "access_your_account": "Access your account",
     "email": "E-mail",
@@ -58,7 +150,9 @@
     "login": "Login",
     "dont_have_account": "Don't have an account? Sign up",
     "error": "We were unable to log in to your account!",
-    "invalid_credentials": "Invalid credentials!"
+    "invalid_credentials": "Invalid credentials!",
+    "too_many_attempts": "Too many failed attempts. Your account is locked for 5 minutes.",
+    "rate_limited": "Too many requests. Try again in a moment."
   },
   "register": {
     "create_your_account": "Create your account",
@@ -75,7 +169,35 @@
     "success": "Account created successfully!"
   },
   "home": {
-    "home": "Home"
+    "home": "Home",
+    "search": "Search supports",
+    "page_size": "Items per page",
+    "tickets_not_found": "Supports not found",
+    "user": "User",
+    "support": "Support",
+    "all": "All",
+    "open": "Open",
+    "in_progress": "Pending",
+    "resolved": "Resolved",
+    "cancelled": "Cancelled",
+    "assignee": "Assignee",
+    "assignee_date": "Assignee date",
+    "completion_date": "Completion date",
+    "accept": "Accept",
+    "open_chat": "Open chat",
+    "resolve": "Resolve",
+    "cancel_ticket": "Cancel ticket",
+    "ticket_actions": "Ticket actions",
+    "resolve_title": "Resolve this request?",
+    "resolve_description": "The conversation stays available as history.",
+    "cancel_title": "Cancel this request?",
+    "cancel_description": "This request will be closed.",
+    "ticket_accepted": "Request accepted.",
+    "ticket_resolved": "Request resolved.",
+    "ticket_cancelled": "Request cancelled.",
+    "could_not_accept": "Could not accept the request.",
+    "could_not_resolve": "Could not resolve the request.",
+    "could_not_cancel": "Could not cancel the request."
   },
   "crm": {
     "crm": "CRM"
@@ -99,7 +221,8 @@
     "could_not_unfavorite": "Could not unfavorite the client!",
     "could_not_favorite": "Could not favorite the client!",
     "could_not_delete": "Could not delete the client!",
-    "client_deleted": "Client deleted successfully!"
+    "client_deleted": "Client deleted successfully!",
+    "cover": "cover"
   },
   "upsert_client": {
     "client_details": "Client Details",
@@ -120,7 +243,12 @@
     "link_copied": "Link copied to clipboard!",
     "email_in_use": "This e-mail is already in use!",
     "select_sector": "Select sector",
-    "sector": "Sector"
+    "sector": "Sector",
+    "cover": "cover",
+    "update_cover": "Update cover",
+    "crop_avatar": "Crop avatar",
+    "crop_cover": "Crop cover",
+    "crop_cover_description": "Crop cover"
   },
   "list_sectors": {
     "sectors": "Sectors",
@@ -205,9 +333,75 @@
     "format_is_not_valid": "Format is not valid!",
     "email_in_use": "This e-mail is already in use!"
   },
-  "change_support_password": {
+  "change_password": {
     "change_password": "Change password",
     "password_updated": "Password updated successfully!",
     "could_not_update": "Could not update the password!"
+  },
+  "list_members": {
+    "members": "Members",
+    "member_list": "Member List",
+    "manage_members": "Manage Members",
+    "create_member": "Create member",
+    "search": "Search members",
+    "email": "E-mail",
+    "members_not_found": "Members not found",
+    "manage_projects": "Manage projects",
+    "unlink": "Unlink",
+    "unlink_warning": "This member will be unlinked from your account.",
+    "member_unlinked": "Member unlinked successfully!",
+    "could_not_unlink": "Could not unlink the member!",
+    "successfully_activated": "Member successfully activated!",
+    "successfully_deactivated": "Member successfully deactivated!",
+    "could_not_activate": "Could not activate the member!",
+    "could_not_deactivate": "Could not deactivate the member!",
+    "change_password": "Change password"
+  },
+  "create_member": {
+    "member_details": "Member Details",
+    "email": "E-mail",
+    "enter_email": "Enter the e-mail",
+    "projects": "Projects",
+    "select_projects": "Select projects",
+    "projects_not_found": "No projects found",
+    "member_created": "Member created successfully!",
+    "could_not_create": "Could not create the member!",
+    "could_not_load": "Could not load the projects!",
+    "format_is_not_valid": "Format is not valid!",
+    "email_in_use": "This e-mail is already in use!",
+    "already_linked": "This member is already linked!",
+    "want_link": "Do you want to link this member to your account?",
+    "member_linked": "Member linked successfully!",
+    "could_not_link": "Could not link the member!"
+  },
+  "management_projects": {
+    "manage_projects": "Manage projects",
+    "filter_projects": "Search by project or client",
+    "projects_not_found": "No projects found",
+    "projects_updated": "Projects updated successfully!",
+    "could_not_update": "Could not update the projects!",
+    "could_not_load": "Could not load the projects!"
+  },
+  "profile": {
+    "profile": "Profile",
+    "manage_profile": "Manage profile",
+    "manage_profile_description": "Update your avatar, personal details and password.",
+    "avatar": "Avatar",
+    "avatar_hint": "Use a PNG, JPG or WEBP image. It will be resized automatically.",
+    "change_avatar": "Change avatar",
+    "upload_avatar": "Upload photo",
+    "remove_avatar": "Remove",
+    "crop_avatar": "Adjust photo",
+    "invalid_image": "Please select a valid image.",
+    "personal_details": "Personal details",
+    "personal_details_hint": "Keep your name and email up to date.",
+    "password_section": "Change password",
+    "password_section_hint": "Fill this in only if you want to set a new password.",
+    "profile_updated": "Profile updated successfully!",
+    "avatar_updated": "Avatar updated successfully!",
+    "avatar_removed": "Avatar removed successfully!",
+    "could_not_update": "Could not update the profile!",
+    "could_not_update_avatar": "Could not update the avatar!",
+    "could_not_remove_avatar": "Could not remove the avatar!"
   }
 }

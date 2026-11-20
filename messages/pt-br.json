@@ -1,7 +1,4 @@
 {
-  "topbar": {
-    "notifications_not_found": "Notificações não encontradas"
-  },
   "sidebar": {
     "dashboard": "Painel",
     "supports": "Suportes",
@@ -14,7 +11,9 @@
     "clients": "Clientes",
     "projects": "Projetos",
     "sectors": "Setores",
-    "logout": "Sair"
+    "members": "Membros",
+    "logout": "Sair",
+    "start_support": "Iniciar suporte"
   },
   "shared": {
     "are_you_sure": "Tem certeza?",
@@ -22,6 +21,9 @@
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "save": "Salvar",
+    "crop_image": "Ajustar imagem",
+    "crop_image_description": "Arraste para reposicionar e use o controle para dar zoom.",
+    "zoom": "Zoom",
     "name": "Nome",
     "created_at": "Criado em",
     "status": "Status",
@@ -31,8 +33,90 @@
     "enter_name": "Digite o nome",
     "delete": "Excluir",
     "edit": "Editar",
+    "unlink": "Desvincular",
+    "manage_projects": "Gerenciar projetos",
     "activate": "Ativar",
-    "deactivate": "Desativar"
+    "deactivate": "Desativar",
+    "client": "Cliente",
+    "select_page": "Selecionar página atual",
+    "select_name": "Selecionar {name}",
+    "crop_avatar_description": "Arraste para reposicionar e use o controle para dar zoom."
+  },
+  "export_menu": {
+    "export": "Exportar",
+    "all": "Todos",
+    "current_page": "Página atual",
+    "selected": "Selecionados",
+    "name": "Nome",
+    "email": "E-mail",
+    "client": "Cliente",
+    "status": "Status",
+    "created_at": "Criado em",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "code": "Código",
+    "title": "Título",
+    "description": "Descrição",
+    "user": "Usuário",
+    "assignee": "Responsável",
+    "assignee_date": "Data de atribuição",
+    "completion_date": "Data de conclusão",
+    "open": "Aberto",
+    "in_progress": "Pendente",
+    "resolved": "Resolvido",
+    "cancelled": "Cancelado",
+    "phone": "Telefone",
+    "sector": "Setor",
+    "budget": "Orçamento",
+    "notes": "Notas",
+    "favorite": "Favorito",
+    "yes": "Sim",
+    "no": "Não"
+  },
+  "period": {
+    "start_date": "Data inicial",
+    "end_date": "Data final",
+    "last_7_days": "Últimos 7 dias",
+    "last_14_days": "Últimos 14 dias",
+    "last_30_days": "Últimos 30 dias",
+    "last_3_months": "Últimos 3 meses",
+    "last_6_months": "Últimos 6 meses",
+    "custom_range": "Intervalo personalizado",
+    "clear": "Limpar",
+    "apply": "Aplicar",
+    "previous_month": "Mês anterior",
+    "next_month": "Próximo mês"
+  },
+  "notifications": {
+    "notifications": "Notificações",
+    "search": "Buscar por documento",
+    "filters": "Filtros",
+    "notification_center": "Centro de notificações",
+    "notifications_not_found": "Notificações não encontradas",
+    "linked_by_user": "Você foi vinculado a um projeto por <strong>{name}</strong>.",
+    "unlinked_by_user": "Você foi desvinculado de um projeto por <strong>{name}</strong>.",
+    "linked_to_project": "Você foi vinculado ao projeto <strong>{project}</strong> por <strong>{name}</strong>.",
+    "mark_as_read": "Marcar como lida",
+    "delete": "Excluir",
+    "mark_all_as_read": "Marcar todas como lidas",
+    "view_all": "Ver todas",
+    "notification_marked_as_read": "Notificação marcada como lida",
+    "notification_mark_as_read_failed": "Não foi possível marcar a notificação como lida",
+    "notification_marked_all_as_read": "Todas as notificações marcadas como lidas",
+    "notification_mark_all_as_read_failed": "Não foi possível marcar todas as notificações como lidas",
+    "notification_deleted": "Notificação excluída",
+    "notification_delete_failed": "Não foi possível excluir a notificação",
+    "unread_notifications": "Notificações não lidas",
+    "read_notifications": "Notificações lidas",
+    "all_notifications": "Todas as notificações",
+    "new_notifications_received": "Novas notificações recebidas!",
+    "refresh": "Atualizar",
+    "load_more": "Carregar mais"
+  },
+  "session_expired": {
+    "title": "Sessão encerrada",
+    "description": "Sua sessão encerrou à meia-noite. Faça login novamente para continuar.",
+    "close": "Fechar"
   },
   "validation": {
     "required": "Este campo é obrigatório",
@@ -49,6 +133,14 @@
     "previous": "Anterior",
     "next": "Próximo"
   },
+  "start_support": {
+    "support_created": "Suporte criado com sucesso!",
+    "could_not_start_support": "Não foi possível iniciar o suporte!",
+    "title": "Título",
+    "enter_title": "Digite o título",
+    "description": "Descrição",
+    "enter_description": "Digite a descrição"
+  },
   "login": {
     "access_your_account": "Acesse sua conta",
     "email": "E-mail",
@@ -58,7 +150,9 @@
     "login": "Entrar",
     "dont_have_account": "Não tem uma conta? Cadastre-se",
     "error": "Não foi possível acessar sua conta!",
-    "invalid_credentials": "Credenciais inválidas!"
+    "invalid_credentials": "Credenciais inválidas!",
+    "too_many_attempts": "Muitas tentativas falhas. Sua conta foi bloqueada por 5 minutos.",
+    "rate_limited": "Muitas requisições. Tente novamente em instantes."
   },
   "register": {
     "create_your_account": "Crie sua conta",
@@ -75,7 +169,35 @@
     "success": "Conta criada com sucesso!"
   },
   "home": {
-    "home": "Início"
+    "home": "Início",
+    "search": "Pesquisar atendimentos",
+    "page_size": "Itens por página",
+    "tickets_not_found": "Atendimentos não encontrados",
+    "user": "Usuário",
+    "support": "Suporte",
+    "all": "Todos os atendimentos",
+    "open": "Atendimentos abertos",
+    "in_progress": "Atendimentos pendentes",
+    "resolved": "Atendimentos concluídos",
+    "cancelled": "Atendimentos cancelados",
+    "assignee": "Responsável",
+    "assignee_date": "Data de atribuição",
+    "completion_date": "Data de conclusão",
+    "accept": "Aceitar",
+    "open_chat": "Abrir chat",
+    "resolve": "Resolver",
+    "cancel_ticket": "Cancelar atendimento",
+    "ticket_actions": "Ações do atendimento",
+    "resolve_title": "Resolver este atendimento?",
+    "resolve_description": "A conversa continua disponível como histórico.",
+    "cancel_title": "Cancelar este atendimento?",
+    "cancel_description": "Este atendimento será encerrado.",
+    "ticket_accepted": "Atendimento aceito.",
+    "ticket_resolved": "Atendimento resolvido.",
+    "ticket_cancelled": "Atendimento cancelado.",
+    "could_not_accept": "Não foi possível aceitar o atendimento.",
+    "could_not_resolve": "Não foi possível resolver o atendimento.",
+    "could_not_cancel": "Não foi possível cancelar o atendimento."
   },
   "crm": {
     "crm": "CRM"
@@ -99,7 +221,8 @@
     "could_not_unfavorite": "Não foi possível remover o cliente dos favoritos!",
     "could_not_favorite": "Não foi possível adicionar o cliente aos favoritos!",
     "could_not_delete": "Não foi possível excluir o cliente!",
-    "client_deleted": "Cliente excluído com sucesso!"
+    "client_deleted": "Cliente excluído com sucesso!",
+    "cover": "capa"
   },
   "upsert_client": {
     "client_details": "Detalhes do cliente",
@@ -120,7 +243,12 @@
     "link_copied": "Link copiado para a área de transferência!",
     "email_in_use": "Este e-mail já está em uso!",
     "select_sector": "Selecione um setor",
-    "sector": "Setor"
+    "sector": "Setor",
+    "cover": "capa",
+    "update_cover": "Atualizar capa",
+    "crop_avatar": "Recortar avatar",
+    "crop_cover": "Recortar capa",
+    "crop_cover_description": "Recortar capa"
   },
   "list_sectors": {
     "sectors": "Setores",
@@ -205,9 +333,75 @@
     "format_is_not_valid": "Formato inválido!",
     "email_in_use": "Este e-mail já está em uso!"
   },
-  "change_support_password": {
+  "change_password": {
     "change_password": "Alterar senha",
     "password_updated": "Senha atualizada com sucesso!",
     "could_not_update": "Não foi possível atualizar a senha!"
+  },
+  "list_members": {
+    "members": "Membros",
+    "member_list": "Lista de Membros",
+    "manage_members": "Gerenciar Membros",
+    "create_member": "Criar membro",
+    "search": "Buscar membros",
+    "email": "E-mail",
+    "members_not_found": "Membros não encontrados",
+    "manage_projects": "Gerenciar projetos",
+    "unlink": "Desvincular",
+    "unlink_warning": "Este membro será desvinculado da sua conta.",
+    "member_unlinked": "Membro desvinculado com sucesso!",
+    "could_not_unlink": "Não foi possível desvincular o membro!",
+    "successfully_activated": "Membro ativado com sucesso!",
+    "successfully_deactivated": "Membro desativado com sucesso!",
+    "could_not_activate": "Não foi possível ativar o membro!",
+    "could_not_deactivate": "Não foi possível desativar o membro!",
+    "change_password": "Alterar senha"
+  },
+  "create_member": {
+    "member_details": "Detalhes do Membro",
+    "email": "E-mail",
+    "enter_email": "Digite o e-mail",
+    "projects": "Projetos",
+    "select_projects": "Selecione os projetos",
+    "projects_not_found": "Nenhum projeto encontrado",
+    "member_created": "Membro criado com sucesso!",
+    "could_not_create": "Não foi possível criar o membro!",
+    "could_not_load": "Não foi possível carregar os projetos!",
+    "format_is_not_valid": "Formato inválido!",
+    "email_in_use": "Este e-mail já está em uso!",
+    "already_linked": "Este membro já está vinculado!",
+    "want_link": "Deseja vincular este membro à sua conta?",
+    "member_linked": "Membro vinculado com sucesso!",
+    "could_not_link": "Não foi possível vincular o membro!"
+  },
+  "management_projects": {
+    "manage_projects": "Gerenciar projetos",
+    "filter_projects": "Buscar por projeto ou cliente",
+    "projects_not_found": "Nenhum projeto encontrado",
+    "projects_updated": "Projetos atualizados com sucesso!",
+    "could_not_update": "Não foi possível atualizar os projetos!",
+    "could_not_load": "Não foi possível carregar os projetos!"
+  },
+  "profile": {
+    "profile": "Perfil",
+    "manage_profile": "Gerenciar perfil",
+    "manage_profile_description": "Atualize seu avatar, dados pessoais e senha.",
+    "avatar": "Avatar",
+    "avatar_hint": "Use uma imagem PNG, JPG ou WEBP. Ela será redimensionada automaticamente.",
+    "change_avatar": "Alterar avatar",
+    "upload_avatar": "Enviar foto",
+    "remove_avatar": "Remover",
+    "crop_avatar": "Ajustar foto",
+    "invalid_image": "Selecione uma imagem válida.",
+    "personal_details": "Dados pessoais",
+    "personal_details_hint": "Mantenha seu nome e e-mail atualizados.",
+    "password_section": "Alterar senha",
+    "password_section_hint": "Preencha apenas se quiser definir uma nova senha.",
+    "profile_updated": "Perfil atualizado com sucesso!",
+    "avatar_updated": "Avatar atualizado com sucesso!",
+    "avatar_removed": "Avatar removido com sucesso!",
+    "could_not_update": "Não foi possível atualizar o perfil!",
+    "could_not_update_avatar": "Não foi possível atualizar o avatar!",
+    "could_not_remove_avatar": "Não foi possível remover o avatar!"
   }
 }

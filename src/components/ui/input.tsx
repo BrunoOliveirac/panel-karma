@@ -1,8 +1,36 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils/cn";
+import { stripHtml } from "@/lib/utils/sanitize-html";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+const SKIP_SANITIZE_TYPES = new Set([
+  "file",
+  "checkbox",
+  "radio",
+  "hidden",
+  "button",
+  "submit",
+  "reset",
+  "image",
+  "range",
+  "color",
+]);
+
+function Input({
+  className,
+  type,
+  onChange,
+  ...props
+}: React.ComponentProps<"input">) {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!SKIP_SANITIZE_TYPES.has(type ?? "text")) {
+      const sanitized = stripHtml(event.target.value);
+      if (sanitized !== event.target.value) event.target.value = sanitized;
+    }
+
+    onChange?.(event);
+  };
+
   return (
     <input
       type={type}
@@ -14,6 +42,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
         className,
       )}
       {...props}
+      onChange={handleChange}
     />
   );
 }

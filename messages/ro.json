@@ -1,7 +1,4 @@
 {
-  "topbar": {
-    "notifications_not_found": "Notificările nu au fost găsite"
-  },
   "sidebar": {
     "dashboard": "Tablou de bord",
     "supports": "Suport",
@@ -14,7 +11,9 @@
     "clients": "Clienți",
     "projects": "Proiecte",
     "sectors": "Sectoare",
-    "logout": "Deconectare"
+    "members": "Membri",
+    "logout": "Deconectare",
+    "start_support": "Începe suportul"
   },
   "shared": {
     "are_you_sure": "Ești sigur?",
@@ -22,6 +21,9 @@
     "cancel": "Anulează",
     "confirm": "Confirmă",
     "save": "Salvează",
+    "crop_image": "Ajustează imaginea",
+    "crop_image_description": "Trage pentru a repoziționa și folosește controlul pentru zoom.",
+    "zoom": "Zoom",
     "name": "Nume",
     "created_at": "Creat la",
     "status": "Stare",
@@ -31,8 +33,90 @@
     "enter_name": "Introduceți numele",
     "delete": "Șterge",
     "edit": "Editează",
+    "unlink": "Dezactivează legătura",
+    "manage_projects": "Gestionează proiectele",
     "activate": "Activează",
-    "deactivate": "Dezactivează"
+    "deactivate": "Dezactivează",
+    "client": "Client",
+    "select_page": "Selectează pagina curentă",
+    "select_name": "Selectează {name}",
+    "crop_avatar_description": "Trage pentru a repoziționa și folosește controlul pentru zoom."
+  },
+  "export_menu": {
+    "export": "Exportă",
+    "all": "Toate",
+    "current_page": "Pagina curentă",
+    "selected": "Selectate",
+    "name": "Nume",
+    "email": "E-mail",
+    "client": "Client",
+    "status": "Stare",
+    "created_at": "Creat la",
+    "active": "Activ",
+    "inactive": "Inactiv",
+    "code": "Cod",
+    "title": "Titlu",
+    "description": "Descriere",
+    "user": "Utilizator",
+    "assignee": "Responsabil",
+    "assignee_date": "Data atribuirii",
+    "completion_date": "Data finalizării",
+    "open": "Deschis",
+    "in_progress": "În așteptare",
+    "resolved": "Rezolvat",
+    "cancelled": "Anulat",
+    "phone": "Telefon",
+    "sector": "Sector",
+    "budget": "Buget",
+    "notes": "Note",
+    "favorite": "Favorit",
+    "yes": "Da",
+    "no": "Nu"
+  },
+  "period": {
+    "start_date": "Data de început",
+    "end_date": "Data de sfârșit",
+    "last_7_days": "Ultimele 7 zile",
+    "last_14_days": "Ultimele 14 zile",
+    "last_30_days": "Ultimele 30 de zile",
+    "last_3_months": "Ultimele 3 luni",
+    "last_6_months": "Ultimele 6 luni",
+    "custom_range": "Interval personalizat",
+    "clear": "Șterge",
+    "apply": "Aplică",
+    "previous_month": "Luna anterioară",
+    "next_month": "Luna următoare"
+  },
+  "notifications": {
+    "notifications": "Notificările",
+    "search": "Caută după document",
+    "filters": "Filtre",
+    "notification_center": "Centrul de notificări",
+    "notifications_not_found": "Notificările nu au fost găsite",
+    "linked_by_user": "Ai fost asociat unui proiect de către <strong>{name}</strong>.",
+    "unlinked_by_user": "Ai fost dezasociat de la un proiect de către <strong>{name}</strong>.",
+    "linked_to_project": "Ai fost asociat proiectului <strong>{project}</strong> de către <strong>{name}</strong>.",
+    "mark_as_read": "Marchează ca citită",
+    "delete": "Șterge",
+    "mark_all_as_read": "Marchează toate ca citite",
+    "view_all": "Vezi toate",
+    "notification_marked_as_read": "Notificare marcată ca citită",
+    "notification_mark_as_read_failed": "Nu s-a putut marca notificarea ca citită",
+    "notification_marked_all_as_read": "Toate notificările marcate ca citite",
+    "notification_mark_all_as_read_failed": "Nu s-a putut marca toate notificările ca citite",
+    "notification_deleted": "Notificare ștearsă",
+    "notification_delete_failed": "Nu s-a putut șterge notificarea",
+    "unread_notifications": "Notificări necitite",
+    "read_notifications": "Notificări citite",
+    "all_notifications": "Toate notificările",
+    "new_notifications_received": "Notificări noi primite!",
+    "refresh": "Actualizează",
+    "load_more": "Încarcă mai multe"
+  },
+  "session_expired": {
+    "title": "Sesiune încheiată",
+    "description": "Sesiunea ta s-a încheiat la miezul nopții. Autentifică-te din nou pentru a continua.",
+    "close": "Închide"
   },
   "validation": {
     "required": "Acest câmp este obligatoriu",
@@ -49,6 +133,14 @@
     "previous": "Anterior",
     "next": "Următor"
   },
+  "start_support": {
+    "support_created": "Suport creat cu succes!",
+    "could_not_start_support": "Nu s-a putut începe suportul!",
+    "title": "Titlu",
+    "enter_title": "Introduceți titlul",
+    "description": "Descriere",
+    "enter_description": "Introduceți descrierea"
+  },
   "login": {
     "access_your_account": "Accesează-ți contul",
     "email": "E-mail",
@@ -58,7 +150,9 @@
     "login": "Autentificare",
     "dont_have_account": "Nu ai un cont? Înregistrează-te",
     "error": "Nu am putut să ne conectăm la contul tău!",
-    "invalid_credentials": "Date de autentificare invalide!"
+    "invalid_credentials": "Date de autentificare invalide!",
+    "too_many_attempts": "Prea multe încercări eșuate. Contul tău este blocat timp de 5 minute.",
+    "rate_limited": "Prea multe cereri. Încearcă din nou în câteva momente."
   },
   "register": {
     "create_your_account": "Creează-ți contul",
@@ -75,7 +169,35 @@
     "success": "Cont creat cu succes!"
   },
   "home": {
-    "home": "Acasă"
+    "home": "Acasă",
+    "search": "Caută asistențe",
+    "page_size": "Elemente pe pagină",
+    "tickets_not_found": "Nu s-au găsit asistențe",
+    "user": "Utilizator",
+    "support": "Suport",
+    "all": "Toate asistențele",
+    "open": "Asistențe deschise",
+    "in_progress": "Asistențe în așteptare",
+    "resolved": "Asistențe finalizate",
+    "cancelled": "Asistențe anulate",
+    "assignee": "Responsabil",
+    "assignee_date": "Data atribuirii",
+    "completion_date": "Data finalizării",
+    "accept": "Acceptă",
+    "open_chat": "Deschide chatul",
+    "resolve": "Rezolvă",
+    "cancel_ticket": "Anulează asistența",
+    "ticket_actions": "Acțiuni ale asistenței",
+    "resolve_title": "Rezolvi această asistență?",
+    "resolve_description": "Conversația rămâne disponibilă ca istoric.",
+    "cancel_title": "Anulezi această asistență?",
+    "cancel_description": "Această asistență va fi închisă.",
+    "ticket_accepted": "Asistență acceptată.",
+    "ticket_resolved": "Asistență rezolvată.",
+    "ticket_cancelled": "Asistență anulată.",
+    "could_not_accept": "Nu s-a putut accepta asistența.",
+    "could_not_resolve": "Nu s-a putut rezolva asistența.",
+    "could_not_cancel": "Nu s-a putut anula asistența."
   },
   "crm": {
     "crm": "CRM"
@@ -99,7 +221,8 @@
     "could_not_unfavorite": "Nu s-a putut elimina clientul din favorite!",
     "could_not_favorite": "Nu s-a putut adăuga clientul la favorite!",
     "could_not_delete": "Nu s-a putut șterge clientul!",
-    "client_deleted": "Client șters cu succes!"
+    "client_deleted": "Client șters cu succes!",
+    "cover": "copertă"
   },
   "upsert_client": {
     "client_details": "Detalii client",
@@ -120,7 +243,12 @@
     "link_copied": "Link copiat în clipboard!",
     "email_in_use": "Acest e-mail este deja utilizat!",
     "select_sector": "Selectați un sector",
-    "sector": "Sector"
+    "sector": "Sector",
+    "cover": "copertă",
+    "update_cover": "Actualizează coperta",
+    "crop_avatar": "Decupează avatarul",
+    "crop_cover": "Decupează coperta",
+    "crop_cover_description": "Decupează coperta"
   },
   "list_sectors": {
     "sectors": "Sectoare",
@@ -205,9 +333,75 @@
     "format_is_not_valid": "Formatul nu este valid!",
     "email_in_use": "Acest e-mail este deja utilizat!"
   },
-  "change_support_password": {
+  "change_password": {
     "change_password": "Schimbă parola",
     "password_updated": "Parolă actualizată cu succes!",
     "could_not_update": "Nu s-a putut actualiza parola!"
+  },
+  "list_members": {
+    "members": "Membri",
+    "member_list": "Lista Membrilor",
+    "manage_members": "Gestionează Membrii",
+    "create_member": "Creează membru",
+    "search": "Caută membri",
+    "email": "E-mail",
+    "members_not_found": "Membri negăsiți",
+    "manage_projects": "Gestionează proiectele",
+    "unlink": "Dezactivează legătura",
+    "unlink_warning": "Acest membru va fi deconectat de la contul dvs.",
+    "member_unlinked": "Membru deconectat cu succes!",
+    "could_not_unlink": "Nu s-a putut deconecta membrul!",
+    "successfully_activated": "Membru activat cu succes!",
+    "successfully_deactivated": "Membru dezactivat cu succes!",
+    "could_not_activate": "Nu s-a putut activa membrul!",
+    "could_not_deactivate": "Nu s-a putut dezactiva membrul!",
+    "change_password": "Schimbă parola"
+  },
+  "create_member": {
+    "member_details": "Detalii Membru",
+    "email": "E-mail",
+    "enter_email": "Introduceți e-mailul",
+    "projects": "Proiecte",
+    "select_projects": "Selectați proiectele",
+    "projects_not_found": "Nu au fost găsite proiecte",
+    "member_created": "Membru creat cu succes!",
+    "could_not_create": "Nu s-a putut crea membrul!",
+    "could_not_load": "Nu s-au putut încărca proiectele!",
+    "format_is_not_valid": "Formatul nu este valid!",
+    "email_in_use": "Acest e-mail este deja utilizat!",
+    "already_linked": "Acest membru este deja asociat!",
+    "want_link": "Doriți să asociați acest membru contului dvs.?",
+    "member_linked": "Membru asociat cu succes!",
+    "could_not_link": "Nu s-a putut asocia membrul!"
+  },
+  "management_projects": {
+    "manage_projects": "Gestionează proiectele",
+    "filter_projects": "Caută după proiect sau client",
+    "projects_not_found": "Nu s-au găsit proiecte",
+    "projects_updated": "Proiecte actualizate cu succes!",
+    "could_not_update": "Nu s-au putut actualiza proiectele!",
+    "could_not_load": "Nu s-au putut încărca proiectele!"
+  },
+  "profile": {
+    "profile": "Profil",
+    "manage_profile": "Gestionează profilul",
+    "manage_profile_description": "Actualizează avatarul, datele personale și parola.",
+    "avatar": "Avatar",
+    "avatar_hint": "Folosește o imagine PNG, JPG sau WEBP. Va fi redimensionată automat.",
+    "change_avatar": "Schimbă avatarul",
+    "upload_avatar": "Încarcă poza",
+    "remove_avatar": "Elimină",
+    "crop_avatar": "Ajustează fotografia",
+    "invalid_image": "Selectează o imagine validă.",
+    "personal_details": "Date personale",
+    "personal_details_hint": "Păstrează-ți numele și e-mailul actualizate.",
+    "password_section": "Schimbă parola",
+    "password_section_hint": "Completează doar dacă vrei să setezi o parolă nouă.",
+    "profile_updated": "Profil actualizat cu succes!",
+    "avatar_updated": "Avatar actualizat cu succes!",
+    "avatar_removed": "Avatar eliminat cu succes!",
+    "could_not_update": "Nu s-a putut actualiza profilul!",
+    "could_not_update_avatar": "Nu s-a putut actualiza avatarul!",
+    "could_not_remove_avatar": "Nu s-a putut elimina avatarul!"
   }
 }

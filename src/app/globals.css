@@ -101,6 +101,7 @@
   --danger: #bc5557 !important;
   --success: #5bda1f !important;
   --gray: #333 !important;
+  --active-primary: #575495;
 }
 
 .dark {
@@ -147,6 +148,7 @@
   --danger: #bc5557 !important;
   --success: #5bda1f !important;
   --gray: #333 !important;
+  --active-primary: #a3a1d9;
 }
 
 @layer base {
@@ -192,6 +194,29 @@ html {
   z-index: -1;
 }
 
+@keyframes ticket-count-ring {
+  0% {
+    box-shadow: 0 0 0 0 var(--ticket-ring);
+  }
+  70% {
+    box-shadow: 0 0 0 3px var(--ticket-ring);
+  }
+  100% {
+    box-shadow: 0 0 0 2px var(--ticket-ring);
+  }
+}
+
+.ticket-count-selected {
+  box-shadow: 0 0 0 3px var(--ticket-ring);
+  animation: ticket-count-ring 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticket-count-selected {
+    animation: none;
+  }
+}
+
 /* Phone input */
 .react-tel-input .form-control,
 .react-tel-input .flag-dropdown {
@@ -220,4 +245,20 @@ html {
 
 .react-tel-input .country-list .country {
   background-color: transparent !important;
+}
+
+.light .swal2-modal {
+  color: #545454;
+  background: white;
+}
+
+.dark .swal2-modal {
+  color: white;
+  background: #19191a;
+}
+
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1200px !important;
+  }
 }

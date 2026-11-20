@@ -1,5 +1,5 @@
 import { api } from "../client/axios";
-import Cookies from "js-cookie";
+import { getLoggedUser } from "../helpers/get-logged-user";
 import { Client } from "../models/client";
 
 interface UpsertClientParams {
@@ -19,7 +19,7 @@ export class ClientService {
    * @returns An array of clients.
    */
   public getAllClients = async (): Promise<Client[]> => {
-    const user = JSON.parse(Cookies.get("user")!);
+    const user = getLoggedUser();
     const clients = (await api.get<Client[]>(`/clients/list/${user.id}`)).data;
     return clients;
   };
@@ -30,7 +30,7 @@ export class ClientService {
    * @returns True if the email is valid, false otherwise.
    */
   public checkEmail = async (email: string): Promise<boolean> => {
-    const user = JSON.parse(Cookies.get("user")!);
+    const user = getLoggedUser();
 
     const response = await api.post<boolean>(`/clients/check-email`, {
       email,
@@ -46,7 +46,7 @@ export class ClientService {
    * @returns The id of the created or updated client.
    */
   public upsertClient = async (client: UpsertClientParams): Promise<string> => {
-    const user = JSON.parse(Cookies.get("user")!);
+    const user = getLoggedUser();
     client.userId = user.id;
     const response = await api.post<string>(`/clients/upsert`, client);
     return response.data;

@@ -1,21 +1,39 @@
 import { test as base, type Page } from "@playwright/test";
+import { disableNextOverlay } from "../helpers/disable-next-overlay.helper";
 import { login } from "../helpers/login.helper";
 import { UserTypeEnum } from "@/lib/enums/user-type.enum";
 
 type UserFixtures = {
   userPage: Page;
+  memberPage: Page;
   adminPage: Page;
   supportPage: Page;
   emptyUserPage: Page;
 };
 
 export const test = base.extend<UserFixtures>({
+  page: async ({ page }, Use) => {
+    await disableNextOverlay(page);
+    await Use(page);
+  },
+
   userPage: async ({ page }, Use) => {
     await login({
       page,
       type: UserTypeEnum.USER,
       email: "user01@email.com",
       password: "User01@email.com",
+    });
+
+    await Use(page);
+  },
+
+  memberPage: async ({ page }, Use) => {
+    await login({
+      page,
+      type: UserTypeEnum.MEMBER,
+      email: "member01@email.com",
+      password: "Member01@email.com",
     });
 
     await Use(page);

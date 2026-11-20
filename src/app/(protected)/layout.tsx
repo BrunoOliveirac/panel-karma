@@ -1,11 +1,14 @@
 "use client";
 
+import SessionExpiredDialog from "@/components/global/session-expired-dialog/session-expired-dialog";
 import Sidebar from "@/components/layout/sidebar";
 import Topbar from "@/components/layout/topbar";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { useInactivityLogout } from "@/lib/hooks/use-inactivity-logout";
+import { SidebarItemMock } from "@/lib/mocks/sidebar-item.mock";
 import { ModalProvider } from "@/lib/providers/modal-provider";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function ProtectedLayout({
   children,
@@ -13,9 +16,26 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   useInactivityLogout();
-  const { isLoading } = useAuth();
+  const pathname = usePathname();
+  const {
+    isLoading,
+    isError,
+    data,
+    sessionExpired,
+    acknowledgeSessionExpired,
+  } = useAuth();
 
-  if (isLoading) {
+  if (sessionExpired) {
+    return <SessionExpiredDialog open onClose={acknowledgeSessionExpired} />;
+  }
+
+  const user = data?.user;
+
+  const needsRedirect =
+    !!user && !new SidebarItemMock().isAllowed(user.type, pathname);
+
+  // Wait for /profile before rendering protected UI or allowing navigation
+  if (isLoading || isError || !user || needsRedirect) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Image
@@ -32,15 +52,17 @@ export default function ProtectedLayout({
 
   return (
     <div className="flex h-dvh p-2">
-      <Sidebar />
+      <ModalProvider>
+        <Sidebar />
 
-      <div className="w-[calc(100%-3.5rem)]">
-        <Topbar />
+        <div className="w-[calc(100%-3.5rem)]">
+          <Topbar />
 
-        <div className="flex flex-col flex-1 overflow-hidden px-4 md:px-8 max-h-[calc(100dvh-4.5rem)] h-full">
-          <ModalProvider>{children}</ModalProvider>
+          <div className="flex flex-col flex-1 overflow-hidden px-4 md:px-8 max-h-[calc(100dvh-4.5rem)] h-full container mx-auto">
+            {children}
+          </div>
         </div>
-      </div>
+      </ModalProvider>
     </div>
   );
 }

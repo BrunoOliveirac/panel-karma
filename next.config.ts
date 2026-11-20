@@ -4,14 +4,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: false,
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "ui-avatars.com",
-      },
-    ],
-  },
+  output: "standalone",
 };
 
 const withNextIntl = createNextIntlPlugin();

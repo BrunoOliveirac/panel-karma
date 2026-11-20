@@ -1,6 +1,6 @@
 "use client";
 
-import SelectLanguage from "@/components/global/select-language";
+import SelectLanguage from "@/components/global/select-language/select-language";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -28,7 +28,7 @@ interface RegisterForm {
   confirmPassword: string;
 }
 
-export default function Login() {
+export default function Register() {
   const router = useRouter();
   const authService = new AuthService();
   const registerT = useTranslations("register");
@@ -245,7 +245,7 @@ export default function Login() {
         <Link
           href="/login"
           data-slot="login-link"
-          className="flex justify-self-center text-sm text-gray-600 dark:text-gray-400 cursor-pointer py-4"
+          className="flex justify-center text-sm text-gray-600 dark:text-gray-400 cursor-pointer py-2 mt-4 mb-2"
         >
           {registerT("login")}
         </Link>

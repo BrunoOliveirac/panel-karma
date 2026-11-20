@@ -1,4 +1,6 @@
+import { UserTypeEnum } from "@/lib/enums/user-type.enum";
 import { expect, test } from "@playwright/test";
+import { waitForAuthBootstrap } from "../../helpers/login.helper";
 
 test("Create user account successfully", async ({ page }) => {
   await page.goto("/register");
@@ -10,10 +12,9 @@ test("Create user account successfully", async ({ page }) => {
   await page.getByTestId("register-password").fill(password);
   await page.getByTestId("register-confirm-password").fill(password);
 
-  await page.getByTestId("register-submit").click();
-  await page.waitForTimeout(1000);
-
-  await page.waitForURL("/home");
+  await waitForAuthBootstrap(page, UserTypeEnum.USER, async () => {
+    await page.getByTestId("register-submit").click();
+  });
   await expect(page).toHaveTitle(/Home/);
 });
 

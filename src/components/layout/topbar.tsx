@@ -1,18 +1,18 @@
-import { UserRouteMap } from "@/lib/enums/user-type.enum";
+import { UserRouteMap, UserTypeEnum } from "@/lib/enums/user-type.enum";
 import { useAuth } from "@/lib/hooks/use-auth";
-import { useAppStore } from "@/lib/store/use-title-store";
+import { useTitle } from "@/lib/store/use-title-store";
 import { ChevronLeft, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
+import UserAvatar from "../global/user-avatar/user-avatar";
 import UserNotification from "./user-notification";
-import UserAvatar from "../global/user-avatar";
 
 export default function Topbar() {
   const router = useRouter();
   const { data } = useAuth();
   const pathname = usePathname();
   const { setTheme, resolvedTheme } = useTheme();
-  const title = useAppStore((state) => state.title);
+  const title = useTitle((state) => state.title);
   const displayBackButton = UserRouteMap.get(data!.user.type) !== pathname;
 
   return (
@@ -28,7 +28,7 @@ export default function Topbar() {
       </div>
 
       <div className="flex items-center gap-3">
-        <UserNotification />
+        {data?.user.type !== UserTypeEnum.ADMIN ? <UserNotification /> : null}
 
         {resolvedTheme === "dark" ? (
           <button className="cursor-pointer" onClick={() => setTheme("light")}>
@@ -41,7 +41,11 @@ export default function Topbar() {
         )}
 
         {data && (
-          <UserAvatar name={data.user.name} avatar={data?.user.avatar} />
+          <UserAvatar
+            size={28}
+            name={data.user.name}
+            avatar={data.user.avatar}
+          />
         )}
       </div>
     </div>

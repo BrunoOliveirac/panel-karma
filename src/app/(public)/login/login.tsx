@@ -1,6 +1,6 @@
 "use client";
 
-import SelectLanguage from "@/components/global/select-language";
+import SelectLanguage from "@/components/global/select-language/select-language";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -52,7 +52,14 @@ export default function Login() {
       console.error(error);
 
       if (error instanceof AxiosError) {
-        toast.error(t(error.status === 403 ? "invalid_credentials" : "error"));
+        const status = error.response?.status ?? error.status;
+
+        const code = (error.response?.data as { code?: string } | undefined)?.code;
+
+        if (status === 429 && code === "RATE_LIMIT") toast.error(t("rate_limited"));
+        else if (status === 429) toast.error(t("too_many_attempts"));
+        else if (status === 401) toast.error(t("invalid_credentials"));
+        else toast.error(t("error"));
       }
     } finally {
       setSubmitting(false);
@@ -147,7 +154,7 @@ export default function Login() {
         <Link
           href="/register"
           data-slot="register-link"
-          className="flex justify-self-center text-sm text-gray-600 dark:text-gray-400 cursor-pointer py-4"
+          className="flex justify-center text-sm text-gray-600 dark:text-gray-400 cursor-pointer py-2 mt-4 mb-2"
         >
           {t("dont_have_account")}
         </Link>

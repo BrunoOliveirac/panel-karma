@@ -256,7 +256,7 @@ describe("ListSupports", () => {
     });
 
     expect(
-      await screen.findByTestId("change-support-password-modal"),
+      await screen.findByTestId("change-password-modal"),
     ).toBeInTheDocument();
   });
 });
