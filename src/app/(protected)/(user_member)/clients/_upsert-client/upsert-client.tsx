@@ -259,7 +259,7 @@ export default function UpsertClient({
         <div className="flex justify-between gap-4 mt-4 mx-6">
           <button
             type="button"
-            data-slot="profile-avatar-trigger"
+            data-slot="upsert-client-avatar-trigger"
             onClick={() => openSelectImagePicker("avatar")}
             className="w-20 h-20 border-2 bg-primary border-primary rounded-full -mt-14 relative group transition ring-1 ring-primary/25 hover:ring-primary/50"
           >

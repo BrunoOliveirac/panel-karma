@@ -17,6 +17,16 @@ describe("upsertClientValidator", () => {
     expect(schema.parse(validInput)).toEqual(validInput);
   });
 
+  it("accepts optional avatar and cover fields", () => {
+    const payload = {
+      ...validInput,
+      avatar: "data:image/png;base64,avatar",
+      cover: "data:image/png;base64,cover",
+    };
+
+    expect(schema.parse(payload)).toMatchObject(payload);
+  });
+
   it("rejects a missing name", () => {
     expect(schema.safeParse({ ...validInput, name: "" }).success).toBe(false);
   });
