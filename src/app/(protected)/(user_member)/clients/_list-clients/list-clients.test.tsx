@@ -398,4 +398,15 @@ describe("ListClients", () => {
 
     expect(await screen.findByTestId("copy-link")).toBeInTheDocument();
   });
+
+  it("Should display client cover image when available", async () => {
+    const clientsWithCover = mockClients(1);
+    clientsWithCover[0].cover = "https://example.com/cover.png";
+    getAllClientsMock.mockResolvedValue(clientsWithCover);
+    renderWithProviders(<ListClients />);
+
+    await waitFor(() => {
+      expect(screen.getByAltText("cover")).toBeInTheDocument();
+    });
+  });
 });

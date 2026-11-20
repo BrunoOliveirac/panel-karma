@@ -39,7 +39,8 @@
     "deactivate": "Dezactivează",
     "client": "Client",
     "select_page": "Selectează pagina curentă",
-    "select_name": "Selectează {name}"
+    "select_name": "Selectează {name}",
+    "crop_avatar_description": "Trage pentru a repoziționa și folosește controlul pentru zoom."
   },
   "export_menu": {
     "export": "Exportă",
@@ -220,7 +221,8 @@
     "could_not_unfavorite": "Nu s-a putut elimina clientul din favorite!",
     "could_not_favorite": "Nu s-a putut adăuga clientul la favorite!",
     "could_not_delete": "Nu s-a putut șterge clientul!",
-    "client_deleted": "Client șters cu succes!"
+    "client_deleted": "Client șters cu succes!",
+    "cover": "copertă"
   },
   "upsert_client": {
     "client_details": "Detalii client",
@@ -241,7 +243,12 @@
     "link_copied": "Link copiat în clipboard!",
     "email_in_use": "Acest e-mail este deja utilizat!",
     "select_sector": "Selectați un sector",
-    "sector": "Sector"
+    "sector": "Sector",
+    "cover": "copertă",
+    "update_cover": "Actualizează coperta",
+    "crop_avatar": "Decupează avatarul",
+    "crop_cover": "Decupează coperta",
+    "crop_cover_description": "Decupează coperta"
   },
   "list_sectors": {
     "sectors": "Sectoare",
@@ -385,7 +392,6 @@
     "upload_avatar": "Încarcă poza",
     "remove_avatar": "Elimină",
     "crop_avatar": "Ajustează fotografia",
-    "crop_avatar_description": "Trage pentru a repoziționa și folosește controlul pentru zoom.",
     "invalid_image": "Selectează o imagine validă.",
     "personal_details": "Date personale",
     "personal_details_hint": "Păstrează-ți numele și e-mailul actualizate.",

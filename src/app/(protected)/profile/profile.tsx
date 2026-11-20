@@ -242,7 +242,7 @@ export default function Profile() {
                   className="ring-2 ring-background"
                 />
 
-                <span className="absolute inset-x-0 bottom-1 mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-primary to-(--info) text-white shadow-md ring-2 ring-[#f7f7f7] transition group-hover:brightness-110 dark:ring-[#111]">
+                <span className="absolute inset-x-0 -bottom-2 mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-primary to-(--info) text-white shadow-md ring-2 ring-[#f7f7f7] transition group-hover:brightness-110 dark:ring-[#111]">
                   <Camera size={14} />
                 </span>
               </button>
@@ -392,7 +392,7 @@ export default function Profile() {
         shape="round"
         open={!!cropImageSrc}
         imageSrc={cropImageSrc}
-        title={t("crop_avatar")}
+        title={sharedT("crop_avatar")}
         onConfirm={onConfirmCrop}
         dataSlot="profile-crop-dialog"
         zoomDataSlot="profile-avatar-zoom"

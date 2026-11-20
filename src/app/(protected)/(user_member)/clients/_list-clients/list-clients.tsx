@@ -144,9 +144,11 @@ export default function ListClients() {
         router.push(`?${params.toString()}`);
       }
 
-      const newClient = (await openModal(UpsertClient, {
-        client,
-      })) as unknown as Client;
+      const newClient = (await openModal(
+        UpsertClient,
+        { client },
+        { className: "!p-0" },
+      )) as unknown as Client;
 
       const newParams = new URLSearchParams(searchParams.toString());
       newParams.delete("client");
@@ -325,9 +327,7 @@ export default function ListClients() {
               type="clients"
               selectedIds={selectedClientIds}
               paginatedData={paginatedClients}
-              allData={
-                selectedTab === "favorite" ? scopedClients : undefined
-              }
+              allData={selectedTab === "favorite" ? scopedClients : undefined}
             />
 
             <button
@@ -437,89 +437,111 @@ function ClientList({
             onClick={() => handleUpdateClientModal(client)}
             className="cursor-pointer transition-all hover:shadow-lg hover:shadow-primary/25 hover:z-10 group"
           >
-            <CardContent className="relative">
+            <CardContent className="relative px-0">
+              <div className="relative z-10">
+                {client.cover ? (
+                  <Image
+                    width={420}
+                    unoptimized
+                    height={112}
+                    alt={t("cover")}
+                    src={client.cover}
+                    style={{ width: "100%" }}
+                    className="rounded-t-2xl object-cover absolute aspect-4/1 -top-6"
+                  />
+                ) : (
+                  <div className="absolute -top-6 left-0 bg-[#767676] dark:bg-[#858585] aspect-4/1 w-full rounded-t-2xl" />
+                )}
+              </div>
+
               <div
-                className="absolute -top-2 left-2"
+                className="absolute -top-2 left-2 z-20"
                 onClick={(event) => event.stopPropagation()}
               >
                 <Checkbox
                   checked={selectedIds.has(client.id)}
-                  aria-label={sharedT("select_name", { name: client.name })}
                   data-slot={`select-client-${client.id}`}
+                  aria-label={sharedT("select_name", { name: client.name })}
                   onCheckedChange={(checked) =>
                     toggleClient(client.id, checked === true)
                   }
                 />
               </div>
 
-              <div className="flex justify-evenly items-center mb-3">
-                <button
-                  data-slot={`favorite-client-${client.id}`}
-                  onClick={(e) => handleToggleFavorite(e, client)}
-                  id={`${client.favorite ? "" : "un"}favorited-client`}
-                  className={`border border-transparent rounded-full h-fit p-2 transition-all md:opacity-0 md:group-hover:opacity-100! ${client.favorite ? "hover:border-(--warn) hover:bg-(--warn)/10" : "hover:border-primary"}`}
-                >
-                  <Image
-                    width={20}
-                    height={20}
-                    alt={client.favorite ? "favorited" : "unfavorited"}
-                    src={`/icons/star${client.favorite ? "" : "-outline"}.svg`}
+              <div className="px-6 z-30 pt-2">
+                <div className="flex justify-evenly items-center mb-3 *:z-30">
+                  <button
+                    data-slot={`favorite-client-${client.id}`}
+                    onClick={(e) => handleToggleFavorite(e, client)}
+                    id={`${client.favorite ? "" : "un"}favorited-client`}
+                    className={`border border-transparent rounded-full h-fit p-2 transition-all md:opacity-0 md:group-hover:opacity-100! ${client.favorite ? "hover:border-(--warn) hover:bg-(--warn)/10" : "hover:border-primary"}`}
+                  >
+                    <Image
+                      width={20}
+                      height={20}
+                      alt={client.favorite ? "favorited" : "unfavorited"}
+                      src={`/icons/star${client.favorite ? "" : "-outline"}.svg`}
+                    />
+                  </button>
+
+                  <UserAvatar
+                    size={44}
+                    name="client.name"
+                    avatar={client.avatar}
                   />
-                </button>
 
-                <UserAvatar size={44} name="client.name" />
+                  <button
+                    data-slot={`delete-client-${client.id}`}
+                    onClick={(e) => handleDeleteClient(e, client.id)}
+                    className="border border-transparent rounded-full h-fit p-2 transition-all hover:border-(--danger) md:opacity-0 md:group-hover:opacity-100!"
+                  >
+                    <Trash size={20} className="text-(--danger)" />
+                  </button>
+                </div>
 
-                <button
-                  data-slot={`delete-client-${client.id}`}
-                  onClick={(e) => handleDeleteClient(e, client.id)}
-                  className="border border-transparent rounded-full h-fit p-2 transition-all hover:border-(--danger) md:opacity-0 md:group-hover:opacity-100!"
+                <p
+                  data-slot="client-name"
+                  className="text-sm text-center text-black dark:text-white font-medium"
                 >
-                  <Trash size={20} className="text-(--danger)" />
-                </button>
+                  {client.name}
+                </p>
+
+                <p
+                  data-slot="client-email"
+                  className="text-xs text-center text-gray-700 dark:text-gray-400"
+                >
+                  {client.email}
+                </p>
+
+                <Separator className="bg-primary my-3" />
+
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="text-xs">
+                    <p className="text-black dark:text-white">{t("from")}</p>
+                    <p className="text-gray-700 dark:text-gray-300">-</p>
+                  </div>
+
+                  <div className="text-xs">
+                    <p className="text-black dark:text-white">{t("sector")}</p>
+
+                    <p className="text-gray-700 dark:text-gray-300">
+                      {client.sector?.name ?? "-"}
+                    </p>
+                  </div>
+
+                  <div className="text-xs">
+                    <p className="text-black dark:text-white">{t("budget")}</p>
+
+                    <p className="text-gray-700 dark:text-gray-300">
+                      {FormatCurrency(client.budget)}
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-xs text-justify text-gray-400 line-clamp-2 mt-3">
+                  {client.notes}
+                </p>
               </div>
-
-              <p
-                data-slot="client-name"
-                className="text-sm text-center text-black dark:text-white font-medium"
-              >
-                {client.name}
-              </p>
-
-              <p
-                data-slot="client-email"
-                className="text-xs text-center text-gray-700 dark:text-gray-400"
-              >
-                {client.email}
-              </p>
-
-              <Separator className="bg-primary my-3" />
-
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="text-xs">
-                  <p className="text-black dark:text-white">{t("from")}</p>
-                  <p className="text-gray-700 dark:text-gray-300">-</p>
-                </div>
-
-                <div className="text-xs">
-                  <p className="text-black dark:text-white">{t("sector")}</p>
-
-                  <p className="text-gray-700 dark:text-gray-300">
-                    {client.sector?.name ?? "-"}
-                  </p>
-                </div>
-
-                <div className="text-xs">
-                  <p className="text-black dark:text-white">{t("budget")}</p>
-
-                  <p className="text-gray-700 dark:text-gray-300">
-                    {FormatCurrency(client.budget)}
-                  </p>
-                </div>
-              </div>
-
-              <p className="text-xs text-justify text-gray-400 line-clamp-2 mt-3">
-                {client.notes}
-              </p>
             </CardContent>
           </Card>
         ))}

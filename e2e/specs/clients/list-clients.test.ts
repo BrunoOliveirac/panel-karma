@@ -153,6 +153,11 @@ test("Should open the client create modal", async ({ userPage }) => {
   await userPage.getByTestId("create-client").click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   await expect(userPage.getByTestId("copy-link")).not.toBeVisible();
+  await expect(userPage.getByTestId("change-cover")).toBeVisible();
+
+  await expect(
+    userPage.getByTestId("upsert-client-avatar-trigger"),
+  ).toBeVisible();
 });
 
 test("Should open the client edit modal", async ({ userPage }) => {
@@ -161,4 +166,9 @@ test("Should open the client edit modal", async ({ userPage }) => {
   await userPage.getByTestId("client-card").first().click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   await expect(userPage.getByTestId("copy-link")).toBeVisible();
+  await expect(userPage.getByTestId("change-cover")).toBeVisible();
+
+  await expect(
+    userPage.getByTestId("upsert-client-avatar-trigger"),
+  ).toBeVisible();
 });

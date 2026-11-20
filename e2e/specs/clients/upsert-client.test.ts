@@ -1,4 +1,10 @@
+import path from "path";
 import { expect, test } from "../../fixtures/auth.fixture";
+
+const avatarFixture = path.join(
+  process.cwd(),
+  "e2e/fixtures/assets/avatar.png",
+);
 
 test("Should close the client upsert modal", async ({ userPage }) => {
   await userPage.goto("/clients");
@@ -15,6 +21,11 @@ test("Should open the client edit modal", async ({ userPage }) => {
   await userPage.getByTestId("client-card").first().click();
   await expect(userPage.getByText("Client Details")).toBeVisible();
   await expect(userPage.getByTestId("copy-link")).toBeVisible();
+  await expect(userPage.getByTestId("change-cover")).toBeVisible();
+
+  await expect(
+    userPage.getByTestId("upsert-client-avatar-trigger"),
+  ).toBeVisible();
 });
 
 test("Should open the edit client modal after reload", async ({ userPage }) => {
@@ -136,4 +147,60 @@ test("Should edit a client successfully", async ({ userPage }) => {
   await expect(userPage.getByTestId("client-email").first()).toHaveText(
     `client${now}@email.com`,
   );
+});
+
+test("Should upload and crop cover image", async ({ userPage }) => {
+  await userPage.goto("/clients");
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
+  await userPage.getByTestId("create-client").click();
+  await expect(userPage.getByText("Client Details")).toBeVisible();
+
+  await userPage.getByTestId("change-cover").click();
+  await userPage
+    .getByTestId("profile-cover-input")
+    .setInputFiles(avatarFixture);
+
+  await expect(userPage.getByTestId("upsert-client-crop-dialog")).toBeVisible();
+  await expect(userPage.getByText("Crop cover")).toBeVisible();
+
+  await userPage.getByTestId("upsert-client-cover-save").click();
+  await expect(userPage.getByTestId("upsert-client-crop-dialog")).toBeHidden();
+  await expect(userPage.getByAltText("cover")).toBeVisible();
+});
+
+test("Should upload and crop avatar image", async ({ userPage }) => {
+  await userPage.goto("/clients");
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
+  await userPage.getByTestId("create-client").click();
+  await expect(userPage.getByText("Client Details")).toBeVisible();
+
+  await userPage.getByTestId("upsert-client-avatar-trigger").click();
+  await userPage
+    .getByTestId("profile-avatar-input")
+    .setInputFiles(avatarFixture);
+
+  await expect(userPage.getByTestId("upsert-client-crop-dialog")).toBeVisible();
+  await expect(userPage.getByText("Crop avatar")).toBeVisible();
+
+  await userPage.getByTestId("upsert-client-avatar-save").click();
+  await expect(userPage.getByTestId("upsert-client-crop-dialog")).toBeHidden();
+});
+
+test("Should cancel crop dialog in upsert client modal", async ({
+  userPage,
+}) => {
+  await userPage.goto("/clients");
+  await expect(userPage.getByTestId("spinner")).toBeHidden();
+  await userPage.getByTestId("create-client").click();
+  await expect(userPage.getByText("Client Details")).toBeVisible();
+
+  await userPage.getByTestId("change-cover").click();
+  await userPage
+    .getByTestId("profile-cover-input")
+    .setInputFiles(avatarFixture);
+
+  await expect(userPage.getByTestId("upsert-client-crop-dialog")).toBeVisible();
+
+  await userPage.getByTestId("upsert-client-cover-cancel").click();
+  await expect(userPage.getByTestId("upsert-client-crop-dialog")).toBeHidden();
 });

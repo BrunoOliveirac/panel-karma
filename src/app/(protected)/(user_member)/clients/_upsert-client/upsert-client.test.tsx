@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderWithProviders } from "@/lib/mocks/render-with-providers.mock";
-import { screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { toast } from "sonner";
 import ListClients from "../_list-clients/list-clients";
@@ -27,6 +27,44 @@ jest.mock("sonner", () => ({
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: jest.fn() }),
   useSearchParams: () => ({ get: jest.fn() }),
+}));
+
+jest.mock("@/components/global/image-crop-dialog/image-crop-dialog", () => ({
+  ImageCropDialog: ({
+    open,
+    imageSrc,
+    onConfirm,
+    onOpenChange,
+    dataSlot,
+    confirmDataSlot,
+    cancelDataSlot,
+  }: {
+    open: boolean;
+    imageSrc: string | null;
+    onConfirm: (dataUrl: string) => void | Promise<void>;
+    onOpenChange: (open: boolean) => void;
+    dataSlot?: string;
+    confirmDataSlot?: string;
+    cancelDataSlot?: string;
+  }) =>
+    open && imageSrc ? (
+      <div data-slot={dataSlot}>
+        <button
+          type="button"
+          data-slot={confirmDataSlot}
+          onClick={() => onConfirm("data:image/jpeg;base64,cropped")}
+        >
+          save
+        </button>
+        <button
+          type="button"
+          data-slot={cancelDataSlot}
+          onClick={() => onOpenChange(false)}
+        >
+          cancel
+        </button>
+      </div>
+    ) : null,
 }));
 
 jest.mock("@/lib/services/client.service", () => {
@@ -154,6 +192,20 @@ const handleUpsertClient = async (checkEmailValue = true) => {
 };
 
 describe("UpsertClient", () => {
+  beforeAll(() => {
+    Object.defineProperty(URL, "createObjectURL", {
+      writable: true,
+      value: jest.fn(() => "blob:mock-image"),
+    });
+    Object.defineProperty(URL, "revokeObjectURL", {
+      writable: true,
+      value: jest.fn(),
+    });
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
   it("Should show error message if email is invalid", async () => {
     await handleCreateClientModal(false, "client01");
 
@@ -230,5 +282,129 @@ describe("UpsertClient", () => {
   it("Should upsert a client failed with invalid email", async () => {
     await handleUpsertClient(false);
     expect(toast.error).toHaveBeenCalledWith("email_in_use");
+  });
+
+  it("Should reject non-image file when selecting an image", async () => {
+    getAllClientsMock.mockResolvedValue(mockClients(1));
+    getAllActiveSectorsMock.mockResolvedValue(mockSectors(1));
+    renderWithProviders(<ListClients />);
+
+    await userEvent.click(screen.getByTestId("create-client"));
+
+    await userEvent.click(screen.getByTestId("change-cover"));
+    const input = screen.getByTestId("profile-cover-input");
+    fireEvent.change(input, {
+      target: {
+        files: [new File(["plain"], "doc.txt", { type: "text/plain" })],
+      },
+    });
+
+    expect(toast.error).toHaveBeenCalledWith("invalid_image");
+    expect(
+      screen.queryByTestId("upsert-client-crop-dialog"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("Should crop and set cover image", async () => {
+    getAllClientsMock.mockResolvedValue(mockClients(1));
+    getAllActiveSectorsMock.mockResolvedValue(mockSectors(1));
+    renderWithProviders(<ListClients />);
+
+    await userEvent.click(screen.getByTestId("create-client"));
+
+    await userEvent.click(screen.getByTestId("change-cover"));
+    const input = screen.getByTestId("profile-cover-input");
+    fireEvent.change(input, {
+      target: {
+        files: [new File(["cover"], "cover.png", { type: "image/png" })],
+      },
+    });
+
+    expect(
+      await screen.findByTestId("upsert-client-crop-dialog"),
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId("upsert-client-cover-save"));
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("upsert-client-crop-dialog"),
+      ).not.toBeInTheDocument();
+      expect(screen.getByAltText("cover")).toBeInTheDocument();
+    });
+  });
+
+  it("Should crop and set avatar image", async () => {
+    getAllClientsMock.mockResolvedValue(mockClients(1));
+    getAllActiveSectorsMock.mockResolvedValue(mockSectors(1));
+    renderWithProviders(<ListClients />);
+
+    await userEvent.click(screen.getByTestId("create-client"));
+
+    await userEvent.click(screen.getByTestId("upsert-client-avatar-trigger"));
+    const input = screen.getByTestId("profile-avatar-input");
+    fireEvent.change(input, {
+      target: {
+        files: [new File(["avatar"], "avatar.png", { type: "image/png" })],
+      },
+    });
+
+    expect(
+      await screen.findByTestId("upsert-client-crop-dialog"),
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId("upsert-client-avatar-save"));
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("upsert-client-crop-dialog"),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it("Should cancel crop dialog and revoke object url", async () => {
+    getAllClientsMock.mockResolvedValue(mockClients(1));
+    getAllActiveSectorsMock.mockResolvedValue(mockSectors(1));
+    renderWithProviders(<ListClients />);
+
+    await userEvent.click(screen.getByTestId("create-client"));
+
+    await userEvent.click(screen.getByTestId("change-cover"));
+    const input = screen.getByTestId("profile-cover-input");
+    fireEvent.change(input, {
+      target: {
+        files: [new File(["cover"], "cover.png", { type: "image/png" })],
+      },
+    });
+
+    expect(
+      await screen.findByTestId("upsert-client-crop-dialog"),
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId("upsert-client-cover-cancel"));
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("upsert-client-crop-dialog"),
+      ).not.toBeInTheDocument();
+      expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:mock-image");
+    });
+  });
+
+  it("Should render existing cover when editing client", async () => {
+    const clients = mockClients(1);
+    clients[0].cover = "https://example.com/existing-cover.png";
+    getAllClientsMock.mockResolvedValue(clients);
+    getAllActiveSectorsMock.mockResolvedValue(mockSectors(1));
+
+    renderWithProviders(<ListClients />);
+
+    await waitFor(async () => {
+      const clientCard = screen.getAllByTestId("client-card")[0];
+      await userEvent.click(clientCard);
+    });
+
+    const modal = await screen.findByTestId("upsert-client-modal");
+    expect(within(modal).getByAltText("cover")).toBeInTheDocument();
   });
 });
