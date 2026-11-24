@@ -1,12 +1,19 @@
 import { defineConfig, devices } from "@playwright/test";
+import dotenv from "dotenv";
+import path from "path";
 
 /**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
+ * Read environment variables from file following project environment standards.
  */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+const appEnv = process.env.APP_ENV;
+
+if (appEnv) {
+  dotenv.config({ path: path.resolve(__dirname, `.env.${appEnv}.local`) });
+  dotenv.config({ path: path.resolve(__dirname, `.env.${appEnv}`) });
+}
+
+dotenv.config({ path: path.resolve(__dirname, ".env.local") });
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -29,7 +36,10 @@ export default defineConfig({
   use: {
     testIdAttribute: "data-slot",
     /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: "http://localhost:3000",
+    baseURL:
+      process.env.PLAYWRIGHT_TEST_BASE_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "http://localhost:3000",
     headless: true,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */

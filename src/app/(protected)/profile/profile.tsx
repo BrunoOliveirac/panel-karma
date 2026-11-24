@@ -392,13 +392,13 @@ export default function Profile() {
         shape="round"
         open={!!cropImageSrc}
         imageSrc={cropImageSrc}
-        title={sharedT("crop_avatar")}
+        title={t("crop_avatar")}
         onConfirm={onConfirmCrop}
         dataSlot="profile-crop-dialog"
         zoomDataSlot="profile-avatar-zoom"
         confirmDataSlot="profile-crop-save"
         cancelDataSlot="profile-crop-cancel"
-        description={t("crop_avatar_description")}
+        description={sharedT("crop_avatar_description")}
         onOpenChange={(open) => {
           if (!open) closeCropDialog();
         }}

@@ -4,10 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:staging": "node scripts/with-env.js staging dev",
     "build": "next build",
+    "build:staging": "node scripts/with-env.js staging build",
     "start": "next start",
+    "start:staging": "node scripts/with-env.js staging start",
     "lint": "next lint",
     "test": "jest",
+    "test:e2e": "playwright test",
     "watch:e2e": "npx playwright test --ui"
   },
   "dependencies": {

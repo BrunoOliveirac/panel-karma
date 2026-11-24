@@ -90,6 +90,8 @@ const mockClients = (count = 15) => {
     const padNumber = (i + 1).toString().padStart(2, "0");
 
     return {
+      cover: "",
+      avatar: "",
       active: true,
       id: padNumber,
       budget: 175009,
