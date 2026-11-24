@@ -1,3 +1,7 @@
+import { loadEnvConfig } from "@next/env";
+
+loadEnvConfig(process.cwd());
+
 import "@testing-library/jest-dom";
 
 import { configure } from "@testing-library/dom";
